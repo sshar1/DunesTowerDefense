@@ -15,7 +15,7 @@ target_include_directories(GameDependencies INTERFACE
         /opt/homebrew/include
         external/KHR
         external/glad/include
-        includes/glm
+        external/glm
         ${OpenCV_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
 )
