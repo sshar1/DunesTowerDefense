@@ -3,16 +3,15 @@ project(DunesTowerDefense)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# 1. Find Packages
-find_package(glfw3 REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core imgcodecs imgproc videoio)
 find_package(SDL2 REQUIRED)
 
-# 2. Add Executable
 add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c)
+add_executable(UnitTests tests/test.cpp external/glad/src/glad.c)
 
-# 3. Include Directories
-target_include_directories(DunesTowerDefense PRIVATE
+add_library(GameDependencies INTERFACE)
+
+target_include_directories(GameDependencies INTERFACE
         /opt/homebrew/include
         external/KHR
         external/glad/include
@@ -21,9 +20,7 @@ target_include_directories(DunesTowerDefense PRIVATE
         ${SDL2_INCLUDE_DIRS}
 )
 
-# 4. Link Libraries
-target_link_libraries(DunesTowerDefense
-        glfw
+target_link_libraries(GameDependencies INTERFACE
         ${OpenCV_LIBS}
         ${SDL2_LIBRARIES}
         "-framework OpenGL"
@@ -31,3 +28,6 @@ target_link_libraries(DunesTowerDefense
         "-framework IOKit"
         "-framework CoreVideo"
 )
+
+target_link_libraries(DunesTowerDefense PRIVATE GameDependencies)
+target_link_libraries(UnitTests PRIVATE GameDependencies)
