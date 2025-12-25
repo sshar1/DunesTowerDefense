@@ -6,14 +6,24 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(OpenCV REQUIRED COMPONENTS core imgcodecs imgproc videoio)
 find_package(SDL2 REQUIRED)
 
-add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c)
+add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c
+        src/MainGame.cpp
+        include/MainGame.hpp
+        src/InputManager.cpp
+        include/InputManager.hpp
+        src/engine/Renderer.cpp
+        include/engine/Renderer.hpp
+        src/engine/DataLoader.cpp
+        include/engine/DataLoader.hpp)
 add_executable(UnitTests tests/test.cpp external/glad/src/glad.c)
 
 add_library(GameDependencies INTERFACE)
 
 target_include_directories(GameDependencies INTERFACE
+        include
         /opt/homebrew/include
         external/KHR
+        external/rapidcsv
         external/glad/include
         external/glm
         ${OpenCV_INCLUDE_DIRS}
