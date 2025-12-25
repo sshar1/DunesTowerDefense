@@ -35,6 +35,7 @@ private:
     GLuint topVAO = 0;
 
     const TopographyVertices* topVertices;
+    const std::unique_ptr<std::vector<GLuint>> topIndices;
 
     // Topography
     std::unique_ptr<Shader> topShader;

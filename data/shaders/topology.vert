@@ -17,5 +17,5 @@ void main() {
     float yPos = (yNorm * 2) - 1;
 
     gl_Position = vec4(xPos, yPos, 0.f, 1.f);
-    vertexColor = vec3(1.0f, 0.f, 0.f);
+    vertexColor = vec3(xNorm, yNorm, 0.1f);
 }
