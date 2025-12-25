@@ -4,7 +4,6 @@
 
 #include "engine/Renderer.hpp"
 
-#include <iostream>
 #include <ostream>
 #include <SDL2/SDL_video.h>
 
@@ -16,13 +15,14 @@ Renderer::Renderer(const int depthWidth, const int depthHeight)
 {
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
         throw std::runtime_error("Failed to initialize GLAD");
-        // std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
     topShader = std::make_unique<Shader>(TOP_VERT_PATH, TOP_FRAG_PATH);
     topShader->use();
     topShader->setInt("gridWidth", depthWidth);
     topShader->setInt("gridHeight", depthHeight);
+    topShader->setInt("tallestDepth", TALLEST_DEPTH);
+    topShader->setInt("shortestDepth", SHORTEST_DEPTH);
 
     // Create indices array for topography
     constexpr int topIndicesLen = 6 * (DataLoader::DEPTH_WIDTH - 1) * (DataLoader::DEPTH_HEIGHT - 1);
@@ -58,7 +58,7 @@ void Renderer::initVertexObjects(const TopographyVertices* topographyVertices) {
         topographyVertices->data(),
         GL_DYNAMIC_DRAW
     );
-    glVertexAttribPointer(0, 1, GL_INT, GL_FALSE, sizeof(TopographyVertex), (void*)0);
+    glVertexAttribIPointer(0, 1, GL_UNSIGNED_SHORT, sizeof(TopographyVertex), (void*)0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, topEBO);

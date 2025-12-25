@@ -32,6 +32,9 @@ private:
     static constexpr const char* TOP_VERT_PATH = "data/shaders/topology.vert";
     static constexpr const char* TOP_FRAG_PATH = "data/shaders/topology.frag";
 
+    static constexpr std::uint16_t TALLEST_DEPTH = 750;
+    static constexpr std::uint16_t SHORTEST_DEPTH = 1000;
+
     GLuint topVAO = 0;
 
     const TopographyVertices* topVertices;
