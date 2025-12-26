@@ -27,13 +27,21 @@ const TopographyVertices& DataLoader::processTopographyVertices(std::string_view
     int row = 0;
 
     while (std::getline(file, line)) {
+        if (row % RESOLUTION != 0) {
+            row++;
+            continue;
+        }
         std::stringstream ss(line);
         std::string value;
         int col = 0;
 
         while (std::getline(ss, value, ',')) {
             // topologyVertices->push_back(std::stoi(value));
-            (*topographyVertices)[DEPTH_WIDTH * row + col] = std::stoi(value);
+            if (col % RESOLUTION != 0) {
+                col++;
+                continue;
+            }
+            (*topographyVertices)[DEPTH_WIDTH * row / RESOLUTION + col / RESOLUTION] = std::stoi(value);
             col++;
         }
 

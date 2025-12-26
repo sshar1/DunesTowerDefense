@@ -47,6 +47,8 @@ void MainGame::initSystems() {
         return;
     }
 
+    SDL_GL_SetSwapInterval(1);
+
     DataLoader& dataLoader = DataLoader::getInstance();
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-05-49.csv"); // Flat
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
@@ -70,6 +72,27 @@ void MainGame::run() {
         renderer->clearBuffer();
         renderer->renderTopography();
 
+        // std::cout << calcualteFPS() << std::endl;
+
         SDL_GL_SwapWindow(window);
     }
+}
+
+float MainGame::calcualteFPS() {
+    static const int NUM_SAMPLES = 10;
+    static float frames[NUM_SAMPLES];
+    static int currentFrame = 0;
+    static float prevTicks = SDL_GetTicks();
+    static float tickSums = 0;
+
+    float currentTicks = SDL_GetTicks();
+
+    tickSums -= frames[currentFrame];
+    frames[currentFrame] = currentTicks - prevTicks;
+    tickSums += frames[currentFrame];
+
+    prevTicks = currentTicks;
+    currentFrame = (currentFrame + 1) % NUM_SAMPLES;
+
+    return 1000 / (tickSums / NUM_SAMPLES);
 }

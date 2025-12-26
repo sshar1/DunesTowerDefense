@@ -34,8 +34,9 @@ public:
     const TopographyVertices& processTopographyVertices(std::string_view filepath);
 
     // TODO these are here temporarily but we should move them to a kinect manager of some sort
-    static constexpr int DEPTH_WIDTH = 512;
-    static constexpr int DEPTH_HEIGHT = 424;
+    static constexpr int RESOLUTION = 4;
+    static constexpr int DEPTH_WIDTH = 512 / RESOLUTION;
+    static constexpr int DEPTH_HEIGHT = 424 / RESOLUTION;
 
 private:
     DataLoader();

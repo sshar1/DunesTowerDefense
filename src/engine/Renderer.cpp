@@ -82,5 +82,6 @@ void Renderer::renderTopography() {
     topShader->use();
     glBindVertexArray(topVAO);
     glDrawElements(GL_TRIANGLES, topIndices->size(), GL_UNSIGNED_INT, 0);
+    // glDrawArrays(GL_POINTS, 0, topVertices->size());
     glBindVertexArray(0);
 }

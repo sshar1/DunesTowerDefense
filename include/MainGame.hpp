@@ -27,5 +27,6 @@ private:
     bool gameQuit;
 
     void initSystems();
+    float calcualteFPS();
 };
 
