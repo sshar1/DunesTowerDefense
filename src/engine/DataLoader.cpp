@@ -15,8 +15,6 @@ DataLoader::DataLoader()
 const TopographyVertices& DataLoader::processTopographyVertices(std::string_view filepath) {
     // TODO for now, this is going to be a csv file. It won't be later.
 
-    // std::vector<TopologyVertex> topologyVertices;
-    // topologyVertices.reserve(DEPTH_WIDTH * DEPTH_HEIGHT);
     std::ifstream file(filepath.data());
     std::string line;
 
@@ -36,7 +34,6 @@ const TopographyVertices& DataLoader::processTopographyVertices(std::string_view
         int col = 0;
 
         while (std::getline(ss, value, ',')) {
-            // topologyVertices->push_back(std::stoi(value));
             if (col % RESOLUTION != 0) {
                 col++;
                 continue;

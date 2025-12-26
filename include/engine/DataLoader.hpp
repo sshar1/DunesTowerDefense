@@ -11,10 +11,6 @@
  * For example, it converts the raw kinect data to vertices, filtering
  * out the outside world
  */
-// struct TopologyVertex {
-//     float position[3];
-//     std::uint16_t data;
-// };
 using TopographyVertex = std::uint16_t;
 using TopographyVertices = std::vector<TopographyVertex>;
 
@@ -34,7 +30,7 @@ public:
     const TopographyVertices& processTopographyVertices(std::string_view filepath);
 
     // TODO these are here temporarily but we should move them to a kinect manager of some sort
-    static constexpr int RESOLUTION = 4;
+    static constexpr int RESOLUTION = 1;
     static constexpr int DEPTH_WIDTH = 512 / RESOLUTION;
     static constexpr int DEPTH_HEIGHT = 424 / RESOLUTION;
 

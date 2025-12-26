@@ -7,10 +7,12 @@ out vec3 vertexColor;
 uniform int gridWidth;
 uniform int gridHeight;
 uniform int tallestDepth;
+uniform int midDepth;
 uniform int shortestDepth;
 
-const vec3 tallColor = vec3(194.f/255, 26.f/255, 14.f/255);   // Red
-const vec3 shortColor = vec3(83.f/255, 217.f/255, 11.f/255);  // Green
+const vec3 tallColor = vec3(228.f/255, 14.f/255, 36.f/255);     // Red
+const vec3 midColor = vec3(255.f/255, 244.f/255, 0.f/255);      // Yellow
+const vec3 shortColor = vec3(19.f/255, 241.f/255, 0.f/255);     // Green
 
 void main() {
     int xidx = gl_VertexID % gridWidth;

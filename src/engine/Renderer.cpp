@@ -22,6 +22,7 @@ Renderer::Renderer(const int depthWidth, const int depthHeight)
     topShader->setInt("gridWidth", depthWidth);
     topShader->setInt("gridHeight", depthHeight);
     topShader->setInt("tallestDepth", TALLEST_DEPTH);
+    topShader->setInt("midDepth", MID_DEPTH);
     topShader->setInt("shortestDepth", SHORTEST_DEPTH);
 
     // Create indices array for topography
@@ -81,7 +82,7 @@ void Renderer::clearBuffer() {
 void Renderer::renderTopography() {
     topShader->use();
     glBindVertexArray(topVAO);
-    glDrawElements(GL_TRIANGLES, topIndices->size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, topIndices->size(), GL_UNSIGNED_INT, nullptr);
     // glDrawArrays(GL_POINTS, 0, topVertices->size());
     glBindVertexArray(0);
 }

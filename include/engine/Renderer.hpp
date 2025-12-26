@@ -9,15 +9,6 @@
 
 class Renderer {
 public:
-    // static Renderer& getInstance() {
-    //     static Renderer instance;
-    //     return instance;
-    // }
-    //
-    // Renderer(const Renderer&) = delete;
-    // Renderer& operator=(const Renderer&) = delete;
-    // Renderer(const Renderer&&) = delete;
-    // Renderer& operator=(const Renderer&&) = delete;
     Renderer(int depthWidth, int depthHeight);
     ~Renderer() = default;
 
@@ -27,13 +18,12 @@ public:
     void clearBuffer();
 
 private:
-    // Renderer();
-    // ~Renderer() = default;
     static constexpr const char* TOP_VERT_PATH = "data/shaders/topology.vert";
     static constexpr const char* TOP_FRAG_PATH = "data/shaders/topology.frag";
 
     static constexpr std::uint16_t TALLEST_DEPTH = 750;
-    static constexpr std::uint16_t SHORTEST_DEPTH = 1000;
+    static constexpr std::uint16_t MID_DEPTH = 830;
+    static constexpr std::uint16_t SHORTEST_DEPTH = 960;
 
     GLuint topVAO = 0;
 
