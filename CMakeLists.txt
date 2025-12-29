@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenCV REQUIRED COMPONENTS core imgcodecs imgproc videoio)
 find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+#add_executable(my_game ${MY_SOURCES})
+#target_link_libraries(my_game PRIVATE SDL2_image::SDL2_image)
 
 add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c
         src/MainGame.cpp
@@ -14,7 +17,15 @@ add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c
         src/engine/Renderer.cpp
         include/engine/Renderer.hpp
         src/engine/DataLoader.cpp
-        include/engine/DataLoader.hpp)
+        include/engine/DataLoader.hpp
+        src/entities/DungBeetle.cpp
+        include/entities/DungBeetle.hpp
+        src/entities/Sprite.cpp
+        include/entities/Sprite.hpp
+        src/entities/Enemy.cpp
+        include/entities/Enemy.hpp
+        src/WaveManager.cpp
+        include/WaveManager.hpp)
 add_executable(UnitTests tests/test.cpp external/glad/src/glad.c)
 
 add_library(GameDependencies INTERFACE)
@@ -28,11 +39,16 @@ target_include_directories(GameDependencies INTERFACE
         external/glm
         ${OpenCV_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
+        ${SDL2_IMAGE_INCLUDE_DIRS}
 )
 
 target_link_libraries(GameDependencies INTERFACE
         ${OpenCV_LIBS}
         ${SDL2_LIBRARIES}
+#        SDL2::SDL2
+        SDL2_image::SDL2_image
+        ${SDL2_LIBRARIES}
+#        ${SDL2_IMAGE_LIBRARIES}
         "-framework OpenGL"
         "-framework Cocoa"
         "-framework IOKit"

@@ -6,6 +6,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "WaveManager.hpp"
 #include "engine/Renderer.hpp"
 
 class MainGame {
@@ -19,14 +20,14 @@ private:
     SDL_Window* window;
     SDL_GLContext gl_context;
     std::unique_ptr<Renderer> renderer;
+    WaveManager waveManager;
+    bool gameQuit;
 
     static constexpr const char* WINDOW_TITLE = "Dunes Tower Defense";
     static constexpr int WINDOW_WIDTH = 1200;
     static constexpr int WINDOW_HEIGHT = 900;
 
-    bool gameQuit;
-
     void initSystems();
-    float calcualteFPS();
+    float calculateFPS();
 };
 

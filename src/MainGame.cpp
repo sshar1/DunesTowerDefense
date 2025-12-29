@@ -3,6 +3,9 @@
 //
 
 #include "MainGame.hpp"
+
+#include <SDL2/SDL_image.h>
+
 #include "InputManager.hpp"
 #include "engine/DataLoader.hpp"
 #include "engine/Renderer.hpp"
@@ -47,6 +50,11 @@ void MainGame::initSystems() {
         return;
     }
 
+    if (IMG_Init(IMG_INIT_PNG) == 0) {
+        gameQuit = true;
+        return;
+    }
+
     SDL_GL_SetSwapInterval(1);
 
     DataLoader& dataLoader = DataLoader::getInstance();
@@ -62,6 +70,10 @@ void MainGame::initSystems() {
 void MainGame::run() {
     initSystems();
 
+    // TODO this is just for testing
+    Enemy testEnemy("data/textures/awesomeface.png");
+    waveManager.addEnemy(testEnemy);
+
     while (!gameQuit) {
         InputManager& inputManager = InputManager::getInstance();
         InputResult inputResult = inputManager.processInput();
@@ -71,6 +83,8 @@ void MainGame::run() {
 
         renderer->clearBuffer();
         renderer->renderTopography();
+        // renderer->renderSpriteBatch()
+        renderer->renderSprite(testEnemy.getSprite());
 
         // std::cout << calcualteFPS() << std::endl;
 
@@ -78,7 +92,7 @@ void MainGame::run() {
     }
 }
 
-float MainGame::calcualteFPS() {
+float MainGame::calculateFPS() {
     static const int NUM_SAMPLES = 10;
     static float frames[NUM_SAMPLES];
     static int currentFrame = 0;
