@@ -9,26 +9,12 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_surface.h>
 
-Sprite::Sprite(const char* filePath) {
-    SDL_Surface *surface = IMG_Load(filePath);
+#include "engine/ResourceManager.hpp"
 
+Sprite::Sprite(const char* filePath) {
     position = {0, 0};
     size = {0.1, 0.1};
-
-    // TODO create texture as test
-    if (surface == nullptr) {
-        std::cout << "Could not intialize texture" << std::endl;
-    }
-
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels); // RBGA USED BECAUSE OF PNG
-    glBindTexture(GL_TEXTURE_2D, 0);
-    SDL_FreeSurface(surface);
+    texture = ResourceManager::getInstance().loadTexture(filePath);
 }
 
 const SpriteVertices Sprite::getVertices() const {
