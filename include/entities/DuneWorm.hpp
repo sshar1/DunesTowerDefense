@@ -7,12 +7,12 @@
 #include "Enemy.hpp"
 #include "glm/detail/type_vec2.hpp"
 
-class DungBeetle : public Enemy {
+class DuneWorm : public Enemy {
 public:
-    DungBeetle();
+    DuneWorm();
 
 private:
-    static constexpr const char* spriteFilePath = "data/textures/awesomeface.png";
+    static constexpr const char* spriteFilePath = "data/textures/questionBox.png";
 
     static constexpr int SPEED = 10;
     static constexpr int MAX_HEALTH = 100;

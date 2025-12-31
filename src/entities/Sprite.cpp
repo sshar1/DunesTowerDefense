@@ -2,13 +2,7 @@
 // Created by Sami Sharif  on 12/26/25.
 //
 
-#include "../../include/entities/Sprite.hpp"
-
-#include <iostream>
-#include <ostream>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_surface.h>
-
+#include "entities/Sprite.hpp"
 #include "engine/ResourceManager.hpp"
 
 Sprite::Sprite(const char* filePath) {

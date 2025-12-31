@@ -2,13 +2,13 @@
 // Created by Sami Sharif  on 12/26/25.
 //
 
-#include "entities/DungBeetle.hpp"
+#include "entities/DuneWorm.hpp"
 
-DungBeetle::DungBeetle()
+DuneWorm::DuneWorm()
     : Enemy(spriteFilePath)
 {
 }
 
-int DungBeetle::getMaxHealth() const {
+int DuneWorm::getMaxHealth() const {
     return MAX_HEALTH;
 }

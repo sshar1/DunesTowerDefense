@@ -27,7 +27,9 @@ add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c
         src/WaveManager.cpp
         include/WaveManager.hpp
         src/engine/ResourceManager.cpp
-        include/engine/ResourceManager.hpp)
+        include/engine/ResourceManager.hpp
+        src/entities/DuneWorm.cpp
+        include/entities/DuneWorm.hpp)
 add_executable(UnitTests tests/test.cpp external/glad/src/glad.c)
 
 add_library(GameDependencies INTERFACE)

@@ -2,7 +2,7 @@
 // Created by Sami Sharif  on 12/30/25.
 //
 
-#include "../../include/engine/ResourceManager.hpp"
+#include "engine/ResourceManager.hpp"
 
 #include <iostream>
 #include <ostream>
@@ -15,10 +15,18 @@ GLuint ResourceManager::loadTexture(const char* filePath) {
     auto searchResult = textureCache.find(filePath);
 
     if (searchResult == textureCache.end()) {
-        SDL_Surface* surface = IMG_Load(filePath);
+        SDL_Surface* loadedSurface = IMG_Load(filePath);
 
-        if (surface == nullptr) {
+        if (loadedSurface == nullptr) {
             std::cout << "Could not load image file: " << filePath << std::endl;
+            return 0;
+        }
+
+        SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, SDL_PIXELFORMAT_RGBA32, 0);
+        SDL_FreeSurface(loadedSurface);
+
+        if (formattedSurface == nullptr) {
+            std::cout << "Could not convert surface: " << SDL_GetError() << std::endl;
             return 0;
         }
 
@@ -28,9 +36,9 @@ GLuint ResourceManager::loadTexture(const char* filePath) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels); // RBGA USED BECAUSE OF PNG
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, formattedSurface->w, formattedSurface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, formattedSurface->pixels); // RBGA USED BECAUSE OF PNG
         glBindTexture(GL_TEXTURE_2D, 0);
-        SDL_FreeSurface(surface);
+        SDL_FreeSurface(formattedSurface);
 
         textureCache[filePath] = textureID;
 

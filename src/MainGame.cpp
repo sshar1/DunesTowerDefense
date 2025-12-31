@@ -9,6 +9,8 @@
 #include "InputManager.hpp"
 #include "engine/DataLoader.hpp"
 #include "engine/Renderer.hpp"
+#include "entities/DuneWorm.hpp"
+#include "entities/DungBeetle.hpp"
 
 MainGame::MainGame()
     : window(nullptr)
@@ -71,8 +73,9 @@ void MainGame::run() {
     initSystems();
 
     // TODO this is just for testing
-    Enemy testEnemy("data/textures/awesomeface.png");
-    waveManager.addEnemy(testEnemy);
+    // DungBeetle testBeetle;
+    DuneWorm testBeetle;
+    // waveManager.addEnemy(testBeetle);
 
     while (!gameQuit) {
         InputManager& inputManager = InputManager::getInstance();
@@ -84,7 +87,7 @@ void MainGame::run() {
         renderer->clearBuffer();
         renderer->renderTopography();
         // renderer->renderSpriteBatch()
-        renderer->renderSprite(testEnemy.getSprite());
+        renderer->renderSprite(testBeetle.getSprite());
 
         // std::cout << calcualteFPS() << std::endl;
 

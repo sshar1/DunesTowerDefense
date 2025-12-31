@@ -11,7 +11,13 @@ public:
 
     Sprite getSprite();
 
-private:
-    Sprite sprite;
+    void takeDamage(int damage);
 
+
+private:
+    virtual int getMaxHealth() const = 0;
+
+protected:
+    Sprite sprite;
+    int health;
 };

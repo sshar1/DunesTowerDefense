@@ -14,7 +14,7 @@ enum class GameState {
 };
 
 struct GameStats {
-    std::vector<Enemy> enemies{};
+    std::vector<std::unique_ptr<Enemy>> enemies{};
     glm::vec2 basePosition{};
     unsigned int baseHealth{100};
     unsigned int waveNumber{1};
@@ -26,7 +26,7 @@ class WaveManager {
 public:
     WaveManager();
 
-    void addEnemy(const Enemy& enemy);
+    void addEnemy(std::unique_ptr<Enemy> enemy);
     void startWave();
 
 private:
