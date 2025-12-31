@@ -12,7 +12,7 @@ public:
     DungBeetle();
 
 private:
-    static constexpr const char* spriteFilePath = "data/textures/awesomeface.png";
+    static constexpr const char* spriteFilePath = "data/textures/dungbeetle_spritesheet.png";
 
     static constexpr int SPEED = 10;
     static constexpr int MAX_HEALTH = 100;

@@ -30,4 +30,20 @@ void main() {
     float depthNorm = float(depth - tallestDepth) / range;
     depthNorm = clamp(depthNorm, 0.f, 1.f);
     vertexColor = mix(tallColor, shortColor, depthNorm);
+
+//    if (abs(depth - 900) < 3) {
+//        vertexColor = vec3(0.f, 0.f, 0.f);
+//    }
+//
+//    if (abs(depth - 850) < 3) {
+//        vertexColor = vec3(0.f, 0.f, 0.f);
+//    }
+//
+//    if (abs(depth - 800) < 3) {
+//        vertexColor = vec3(0.f, 0.f, 0.f);
+//    }
+//
+//    if (abs(depth - 750) < 3) {
+//        vertexColor = vec3(0.f, 0.f, 0.f);
+//    }
 }

@@ -5,7 +5,7 @@
 #include "entities/DungBeetle.hpp"
 
 DungBeetle::DungBeetle()
-    : Enemy(spriteFilePath)
+    : Enemy(spriteFilePath, MAX_HEALTH)
 {
 }
 

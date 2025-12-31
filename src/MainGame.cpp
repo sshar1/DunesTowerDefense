@@ -73,9 +73,11 @@ void MainGame::run() {
     initSystems();
 
     // TODO this is just for testing
-    // DungBeetle testBeetle;
-    DuneWorm testBeetle;
+    DungBeetle testBeetle;
+    // DuneWorm testBeetle;
     // waveManager.addEnemy(testBeetle);
+
+    float prevTicks = SDL_GetTicks();
 
     while (!gameQuit) {
         InputManager& inputManager = InputManager::getInstance();
@@ -84,10 +86,16 @@ void MainGame::run() {
             gameQuit = true;
         }
 
+        float currentTicks = SDL_GetTicks();
+        float dt = currentTicks - prevTicks;
+        prevTicks = currentTicks;
+
         renderer->clearBuffer();
         renderer->renderTopography();
         // renderer->renderSpriteBatch()
         renderer->renderSprite(testBeetle.getSprite());
+
+        testBeetle.update(dt / 1000.f);
 
         // std::cout << calcualteFPS() << std::endl;
 

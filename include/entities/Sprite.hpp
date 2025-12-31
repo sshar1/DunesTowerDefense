@@ -11,6 +11,8 @@
 
 #include <vector>
 
+// #include "Enemy.hpp"
+
 struct SpriteVertex {
     float x;
     float y;
@@ -33,8 +35,19 @@ public:
     GLuint texture;
 
     const SpriteVertices getVertices() const;
+    void update(float dt);
+    void setAnimType(int animType);
+
+    // friend void Enemy::updateAnimation();
 
 private:
+    constexpr static float TIME_BETWEEN_ANIMATE_FRAMES = 0.1; // in s
+    constexpr static int ANIM_FRAMES = 4;
+
+    int currentAnimateFrame;
+    float elapsedAnimateTime;
+    int animType;
+
     glm::vec2 position;
     glm::vec2 size;
 };
