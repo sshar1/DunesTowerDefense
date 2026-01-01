@@ -73,8 +73,8 @@ void MainGame::run() {
     initSystems();
 
     // TODO this is just for testing
-    DungBeetle testBeetle;
-    // DuneWorm testBeetle;
+    // DungBeetle testBeetle;
+    DuneWorm testBeetle;
     // waveManager.addEnemy(testBeetle);
 
     float prevTicks = SDL_GetTicks();

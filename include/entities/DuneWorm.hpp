@@ -12,7 +12,7 @@ public:
     DuneWorm();
 
 private:
-    static constexpr const char* spriteFilePath = "data/textures/questionBox.png";
+    static constexpr const char* spriteFilePath = "data/textures/duneworm_spritesheet.png";
 
     static constexpr int SPEED = 10;
     static constexpr int MAX_HEALTH = 100;

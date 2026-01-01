@@ -8,6 +8,7 @@
 Sprite::Sprite(const char* filePath)
     : currentAnimateFrame(0)
     , elapsedAnimateTime(0)
+    , animType(0)
 {
     position = {0, 0};
     size = {0.1, 0.1};

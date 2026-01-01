@@ -9,10 +9,10 @@
 
 Enemy::Enemy(const char* filePath, int health)
     : sprite(filePath)
-    , state(State::WALKING)
     , health(health)
+    , state(State::WALKING)
 {
-    // setState(State::DYING);
+    setState(State::ATTACKING);
 }
 
 void Enemy::update(float dt) {
