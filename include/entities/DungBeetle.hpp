@@ -10,6 +10,7 @@
 class DungBeetle : public Enemy {
 public:
     DungBeetle();
+    explicit DungBeetle(glm::vec2 pos);
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/dungbeetle_spritesheet.png";

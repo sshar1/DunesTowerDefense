@@ -5,7 +5,12 @@
 #include "entities/DuneWorm.hpp"
 
 DuneWorm::DuneWorm()
-    : Enemy(spriteFilePath, MAX_HEALTH)
+    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Worm)
+{
+}
+
+DuneWorm::DuneWorm(glm::vec2 pos)
+    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Worm, pos)
 {
 }
 

@@ -4,7 +4,12 @@
 
 #include "WaveManager.hpp"
 
+#include <iostream>
+#include <ostream>
 #include <random>
+
+#include "entities/DuneWorm.hpp"
+#include "entities/DungBeetle.hpp"
 
 WaveManager::WaveManager()
 {
@@ -14,6 +19,25 @@ WaveManager::WaveManager()
     gameStats.basePosition = glm::vec2{distribution(gen), distribution(gen)};
 }
 
-void WaveManager::addEnemy(std::unique_ptr<Enemy> enemy) {
-    gameStats.enemies.push_back(std::move(enemy));
+void WaveManager::addEnemy(SpriteType type, glm::vec2 position) {
+    switch (type) {
+        case SpriteType::Beetle:
+            gameStats.enemies.push_back(std::make_unique<DungBeetle>(position));
+            return;
+        case SpriteType::Worm:
+            gameStats.enemies.push_back(std::make_unique<DuneWorm>(position));
+            return;
+        default:
+            std::cout << "This is not an enemy, canot add it" << std::endl;
+    }
+}
+
+void WaveManager::update(float dt) {
+    for (const auto& enemy : gameStats.enemies) {
+        enemy->update(dt);
+    }
+}
+
+std::vector<std::unique_ptr<Enemy>>& WaveManager::getEnemies() {
+    return gameStats.enemies;
 }

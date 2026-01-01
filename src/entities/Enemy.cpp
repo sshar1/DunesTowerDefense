@@ -7,12 +7,20 @@
 #include <iostream>
 #include <ostream>
 
-Enemy::Enemy(const char* filePath, int health)
-    : sprite(filePath)
+Enemy::Enemy(const char* filePath, int health, SpriteType type)
+    : sprite(filePath, type)
     , health(health)
     , state(State::WALKING)
 {
-    setState(State::ATTACKING);
+    setState(State::WALKING);
+}
+
+Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos)
+    : sprite(filePath, type, pos)
+    , health(health)
+    , state(State::WALKING)
+{
+    setState(State::WALKING);
 }
 
 void Enemy::update(float dt) {

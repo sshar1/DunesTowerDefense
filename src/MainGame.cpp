@@ -74,8 +74,18 @@ void MainGame::run() {
 
     // TODO this is just for testing
     // DungBeetle testBeetle;
-    DuneWorm testBeetle;
+    // DuneWorm w1;
+    // DuneWorm w2;
+    // DuneWorm w3;
+    // DungBeetle b1;
+    // DungBeetle b2;
     // waveManager.addEnemy(testBeetle);
+
+    waveManager.addEnemy(SpriteType::Beetle, {0, 0});
+    waveManager.addEnemy(SpriteType::Worm, {0.2, 0});
+    waveManager.addEnemy(SpriteType::Beetle, {0, 0.3});
+    waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3});
+    waveManager.addEnemy(SpriteType::Worm, {-0.4, 0});
 
     float prevTicks = SDL_GetTicks();
 
@@ -92,12 +102,18 @@ void MainGame::run() {
 
         renderer->clearBuffer();
         renderer->renderTopography();
+
+        renderer->streamEnemies(waveManager.getEnemies());
+
+        renderer->renderSprites();
+
+        waveManager.update(dt / 1000.f);
         // renderer->renderSpriteBatch()
-        renderer->renderSprite(testBeetle.getSprite());
+        // renderer->renderSprite(testBeetle.getSprite());
 
-        testBeetle.update(dt / 1000.f);
+        // testBeetle.update(dt / 1000.f);
 
-        // std::cout << calcualteFPS() << std::endl;
+        // std::cout << calculateFPS() << std::endl;
 
         SDL_GL_SwapWindow(window);
     }

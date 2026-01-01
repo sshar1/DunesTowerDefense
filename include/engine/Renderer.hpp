@@ -4,9 +4,17 @@
 
 #pragma once
 
+#include <map>
+
 #include "DataLoader.hpp"
 #include "shader_s.h"
+#include "entities/Enemy.hpp"
 #include "entities/Sprite.hpp"
+
+struct SpriteBatch {
+    GLuint textureID;
+    std::vector<SpriteVertex> vertices;
+};
 
 class Renderer {
 public:
@@ -21,7 +29,8 @@ public:
     // For debugging only. In release, always use renderSpriteBatch
     void renderSprite(const Sprite& sprite);
 
-    void renderSpriteBatch(const std::vector<Sprite>& sprites);
+    void streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies);
+    void renderSprites();
 
 private:
     static constexpr const char* TOP_VERT_PATH = "data/shaders/topology.vert";
@@ -42,19 +51,15 @@ private:
     // Topography
     const TopographyVertices* topVertices;
     std::unique_ptr<Shader> topShader;
-    // const std::unique_ptr<std::vector<GLuint>> topIndices;
     static constexpr int TOP_INDICES_LEN = 6 * (DataLoader::DEPTH_WIDTH - 1) * (DataLoader::DEPTH_HEIGHT - 1);
 
     // Sprites
     const SpriteVertices* spriteVertices;
     std::unique_ptr<Shader> spriteShader;
-    // const std::unique_ptr<std::vector<GLuint>> spriteIndices;
-    // static constexpr std::array<GLuint, 6> spriteIndices = {
-    //     0, 1, 2,
-    //     1, 2, 3
-    // };
 
     static constexpr int MAX_SPRITES = 1000;
     static constexpr int MAX_SPRITE_VERTICES = MAX_SPRITES * 4;
     static constexpr int MAX_SPRITE_INDICES = MAX_SPRITES * 6;
+
+    std::map<SpriteType, SpriteBatch> spriteBatches;
 };

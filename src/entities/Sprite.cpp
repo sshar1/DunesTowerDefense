@@ -5,14 +5,26 @@
 #include "entities/Sprite.hpp"
 #include "engine/ResourceManager.hpp"
 
-Sprite::Sprite(const char* filePath)
+Sprite::Sprite(const char* filePath, SpriteType type)
     : currentAnimateFrame(0)
     , elapsedAnimateTime(0)
     , animType(0)
+    , spriteType(type)
 {
     position = {0, 0};
     size = {0.1, 0.1};
-    texture = ResourceManager::getInstance().loadTexture(filePath);
+    textureID = ResourceManager::getInstance().loadTexture(filePath);
+}
+
+Sprite::Sprite(const char* filePath, SpriteType type, glm::vec2 pos)
+    : currentAnimateFrame(0)
+    , elapsedAnimateTime(0)
+    , animType(0)
+    , position(pos)
+    , spriteType(type)
+{
+    size = {0.1, 0.1};
+    textureID = ResourceManager::getInstance().loadTexture(filePath);
 }
 
 void Sprite::update(float dt) {
@@ -31,6 +43,10 @@ void Sprite::setAnimType(int newAnimType) {
         animType = newAnimType;
         currentAnimateFrame = 0;
     }
+}
+
+SpriteType Sprite::getType() const {
+    return spriteType;
 }
 
 const SpriteVertices Sprite::getVertices() const {
@@ -59,4 +75,15 @@ const SpriteVertices Sprite::getVertices() const {
     vertices.bottomRight.v = animType * vMult + 0.3;
 
     return vertices;
+}
+
+void Sprite::pushVertices(std::vector<SpriteVertex> &vertexBuffer) const {
+    SpriteVertices vertices = getVertices();
+
+    vertexBuffer.push_back(vertices.topLeft);
+    vertexBuffer.push_back(vertices.topRight);
+    vertexBuffer.push_back(vertices.bottomLeft);
+    vertexBuffer.push_back(vertices.bottomRight);
+
+    // vertexBuffer.insert(vertexBuffer.end(), vertices.begin(), vertices.end());
 }

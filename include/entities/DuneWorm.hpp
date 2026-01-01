@@ -10,6 +10,7 @@
 class DuneWorm : public Enemy {
 public:
     DuneWorm();
+    explicit DuneWorm(glm::vec2 pos);
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/duneworm_spritesheet.png";

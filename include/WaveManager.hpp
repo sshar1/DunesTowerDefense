@@ -26,8 +26,12 @@ class WaveManager {
 public:
     WaveManager();
 
-    void addEnemy(std::unique_ptr<Enemy> enemy);
+    void addEnemy(SpriteType type, glm::vec2 position);
     void startWave();
+
+    void update(float dt);
+
+    std::vector<std::unique_ptr<Enemy>>& getEnemies();
 
 private:
     GameStats gameStats;

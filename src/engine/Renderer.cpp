@@ -168,10 +168,53 @@ void Renderer::renderSprite(const Sprite& sprite) {
 
     int numIndicesToDraw = 6;
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, sprite.texture);
+    glBindTexture(GL_TEXTURE_2D, sprite.textureID);
     glDrawElements(GL_TRIANGLES, numIndicesToDraw, GL_UNSIGNED_INT, nullptr);
     // glActiveTexture(GL_TEXTURE0);
     // glBindTexture(GL_TEXTURE_2D, 0);
+
+    glBindVertexArray(0);
+}
+
+void Renderer::streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies) {
+    // Clear batches
+    for (auto& [type, batch] : spriteBatches) {
+        if (isEnemy(type)) {
+            batch.vertices.clear();
+        }
+    }
+
+    // Push vertices into correct batch
+    for (const auto& enemy : enemies) {
+        auto sprite = enemy->getSprite();
+        auto type = sprite.getType();
+        sprite.pushVertices(spriteBatches[type].vertices);
+        spriteBatches[type].textureID = sprite.textureID;
+    }
+}
+
+void Renderer::renderSprites() {
+    static constexpr int vertsPerSprite = 4;
+    static constexpr int indicesPerSprite = 6;
+
+    spriteShader->use();
+    glBindVertexArray(spriteVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, spriteVBO);
+
+    glBufferData(GL_ARRAY_BUFFER, MAX_SPRITE_VERTICES * sizeof(SpriteVertex), nullptr, GL_DYNAMIC_DRAW);
+
+    // Draw batches
+    for (auto& [type, batch] : spriteBatches) {
+        if (batch.vertices.empty()) continue;
+
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(SpriteVertex) * batch.vertices.size(), batch.vertices.data());
+
+        int numIndicesToDraw = (batch.vertices.size() / vertsPerSprite) * indicesPerSprite;
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, batch.textureID);
+        glDrawElements(GL_TRIANGLES, numIndicesToDraw, GL_UNSIGNED_INT, nullptr);
+    }
 
     glBindVertexArray(0);
 }

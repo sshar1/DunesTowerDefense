@@ -28,17 +28,40 @@ struct SpriteVertices {
     SpriteVertex bottomRight;
 };
 
+enum class SpriteType {
+    // Enemies
+    FirstEnemy,
+        Beetle,
+        Worm,
+        Bee,
+    LastEnemy,
+
+    Stinger,
+
+    // Tower stuff
+    Lizard,
+    Gas,
+    Rock,
+    Tongue,
+    Base,
+};
+
+inline bool isEnemy(SpriteType type) { return type > SpriteType::FirstEnemy && type < SpriteType::LastEnemy; }
+
 class Sprite {
 public:
-    Sprite(const char* filePath);
+    Sprite(const char* filePath, SpriteType type);
+    Sprite(const char* filePath, SpriteType type, glm::vec2 pos);
 
-    GLuint texture;
+    GLuint textureID;
 
     const SpriteVertices getVertices() const;
+    void pushVertices(std::vector<SpriteVertex>& vertexBuffer) const;
     void update(float dt);
     void setAnimType(int animType);
 
     // friend void Enemy::updateAnimation();
+    SpriteType getType() const;
 
 private:
     constexpr static float TIME_BETWEEN_ANIMATE_FRAMES = 0.1; // in s
@@ -50,4 +73,5 @@ private:
 
     glm::vec2 position;
     glm::vec2 size;
+    SpriteType spriteType;
 };
