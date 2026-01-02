@@ -9,8 +9,6 @@
 #include "InputManager.hpp"
 #include "engine/DataLoader.hpp"
 #include "engine/Renderer.hpp"
-#include "entities/DuneWorm.hpp"
-#include "entities/DungBeetle.hpp"
 
 MainGame::MainGame()
     : window(nullptr)
@@ -60,8 +58,8 @@ void MainGame::initSystems() {
     SDL_GL_SetSwapInterval(1);
 
     DataLoader& dataLoader = DataLoader::getInstance();
-    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-05-49.csv"); // Flat
-    const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
+    const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-05-49.csv"); // Flat
+    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
 
@@ -71,15 +69,6 @@ void MainGame::initSystems() {
 
 void MainGame::run() {
     initSystems();
-
-    // TODO this is just for testing
-    // DungBeetle testBeetle;
-    // DuneWorm w1;
-    // DuneWorm w2;
-    // DuneWorm w3;
-    // DungBeetle b1;
-    // DungBeetle b2;
-    // waveManager.addEnemy(testBeetle);
 
     waveManager.addEnemy(SpriteType::Beetle, {0, 0});
     waveManager.addEnemy(SpriteType::Worm, {0.2, 0});
@@ -108,12 +97,6 @@ void MainGame::run() {
         renderer->renderSprites();
 
         waveManager.update(dt / 1000.f);
-        // renderer->renderSpriteBatch()
-        // renderer->renderSprite(testBeetle.getSprite());
-
-        // testBeetle.update(dt / 1000.f);
-
-        // std::cout << calculateFPS() << std::endl;
 
         SDL_GL_SwapWindow(window);
     }

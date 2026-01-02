@@ -11,7 +11,7 @@
 Renderer::Renderer(const int depthWidth, const int depthHeight)
     : topVertices(nullptr)
     , topShader(nullptr)
-    // , topIndices(std::make_unique<std::vector<GLuint>>())
+    , markerShader(nullptr)
     , spriteVertices(nullptr)
     , spriteShader(nullptr)
 {
@@ -29,6 +29,12 @@ Renderer::Renderer(const int depthWidth, const int depthHeight)
     topShader->setInt("tallestDepth", TALLEST_DEPTH);
     topShader->setInt("midDepth", MID_DEPTH);
     topShader->setInt("shortestDepth", SHORTEST_DEPTH);
+
+    markerShader = std::make_unique<Shader>(MARKER_VERT_PATH, MARKER_FRAG_PATH);
+    markerShader->use();
+    markerShader->setInt("gridWidth", depthWidth);
+    markerShader->setInt("gridHeight", depthHeight);
+    markerShader->setInt("boxDepth", BOX_DEPTH);
 
     spriteShader = std::make_unique<Shader>(SPRITE_VERT_PATH, SPRITE_FRAG_PATH);
     spriteShader->use();
@@ -139,6 +145,7 @@ void Renderer::clearBuffer() {
 
 void Renderer::renderTopography() {
     topShader->use();
+    // markerShader->use();
     glBindVertexArray(topVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, topVBO);

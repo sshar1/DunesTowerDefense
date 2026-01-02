@@ -36,12 +36,17 @@ private:
     static constexpr const char* TOP_VERT_PATH = "data/shaders/topology.vert";
     static constexpr const char* TOP_FRAG_PATH = "data/shaders/topology.frag";
 
+    static constexpr const char* MARKER_VERT_PATH = "data/shaders/box_marker.vert";
+    static constexpr const char* MARKER_FRAG_PATH = "data/shaders/box_marker.frag";
+
     static constexpr const char* SPRITE_VERT_PATH = "data/shaders/sprite.vert";
     static constexpr const char* SPRITE_FRAG_PATH = "data/shaders/sprite.frag";
 
     static constexpr std::uint16_t TALLEST_DEPTH = 750;
     static constexpr std::uint16_t MID_DEPTH = 830;
     static constexpr std::uint16_t SHORTEST_DEPTH = 960;
+
+    static constexpr std::uint16_t BOX_DEPTH = 750;
 
     GLuint topVAO{};
     GLuint topVBO{};
@@ -52,6 +57,9 @@ private:
     const TopographyVertices* topVertices;
     std::unique_ptr<Shader> topShader;
     static constexpr int TOP_INDICES_LEN = 6 * (DataLoader::DEPTH_WIDTH - 1) * (DataLoader::DEPTH_HEIGHT - 1);
+
+    // Vision marker
+    std::unique_ptr<Shader> markerShader;
 
     // Sprites
     const SpriteVertices* spriteVertices;
