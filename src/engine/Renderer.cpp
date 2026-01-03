@@ -7,6 +7,8 @@
 #include <ostream>
 #include <SDL2/SDL_video.h>
 
+#include "engine/VisionManager.hpp"
+
 
 Renderer::Renderer(const int depthWidth, const int depthHeight)
     : topVertices(nullptr)
@@ -29,6 +31,7 @@ Renderer::Renderer(const int depthWidth, const int depthHeight)
     topShader->setInt("tallestDepth", TALLEST_DEPTH);
     topShader->setInt("midDepth", MID_DEPTH);
     topShader->setInt("shortestDepth", SHORTEST_DEPTH);
+    topShader->setMat3("warpMatrix", Vision::calculateWarpMatrix());
 
     markerShader = std::make_unique<Shader>(MARKER_VERT_PATH, MARKER_FRAG_PATH);
     markerShader->use();
