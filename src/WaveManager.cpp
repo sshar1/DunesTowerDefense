@@ -13,10 +13,15 @@
 
 WaveManager::WaveManager()
 {
+}
+
+void WaveManager::initSystems() {
     // Randomize base position
     std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<float> distribution(-0.1f, 0.1f);
-    gameStats.basePosition = glm::vec2{distribution(gen), distribution(gen)};
+    glm::vec2 basePosition = glm::vec2{distribution(gen), distribution(gen)};
+
+    gameStats.base = std::make_unique<Base>(basePosition);
 }
 
 void WaveManager::addEnemy(SpriteType type, glm::vec2 position) {
@@ -28,7 +33,7 @@ void WaveManager::addEnemy(SpriteType type, glm::vec2 position) {
             gameStats.enemies.push_back(std::make_unique<DuneWorm>(position));
             return;
         default:
-            std::cout << "This is not an enemy, canot add it" << std::endl;
+            std::cout << "This is not an enemy, cannot add it" << std::endl;
     }
 }
 
@@ -40,4 +45,8 @@ void WaveManager::update(float dt) {
 
 std::vector<std::unique_ptr<Enemy>>& WaveManager::getEnemies() {
     return gameStats.enemies;
+}
+
+Base* WaveManager::getBase() const {
+    return gameStats.base.get();
 }

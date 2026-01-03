@@ -9,21 +9,23 @@ Sprite::Sprite(const char* filePath, SpriteType type)
     : currentAnimateFrame(0)
     , elapsedAnimateTime(0)
     , animType(0)
+    , uvRect(0, 0, 1, 1)
     , spriteType(type)
 {
     position = {0, 0};
-    size = {0.1, 0.1};
+    size = {0.3, 0.3};
     textureID = ResourceManager::getInstance().loadTexture(filePath);
 }
 
-Sprite::Sprite(const char* filePath, SpriteType type, glm::vec2 pos)
+Sprite::Sprite(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size)
     : currentAnimateFrame(0)
     , elapsedAnimateTime(0)
     , animType(0)
+    , uvRect(0, 0, 1, 1)
     , position(pos)
+    , size(size)
     , spriteType(type)
 {
-    size = {0.1, 0.1};
     textureID = ResourceManager::getInstance().loadTexture(filePath);
 }
 
@@ -35,6 +37,10 @@ void Sprite::update(float dt) {
         currentAnimateFrame %= ANIM_FRAMES;
 
         elapsedAnimateTime = 0;
+    }
+
+    if (isAnimatable(spriteType)) {
+        updateAnimation();
     }
 }
 
@@ -49,30 +55,39 @@ SpriteType Sprite::getType() const {
     return spriteType;
 }
 
+void Sprite::updateAnimation() {
+    static constexpr float spriteWidth = 0.243;
+    static constexpr float spriteHeight = 0.33;
+
+    uvRect.u = spriteWidth * currentAnimateFrame;
+    uvRect.v = spriteHeight * animType;
+    uvRect.w = spriteWidth;
+    uvRect.h = spriteHeight;
+}
+
 const SpriteVertices Sprite::getVertices() const {
-    static constexpr float uMult = 0.243;
-    static constexpr float vMult = 0.33;
+
+    const float halfW = size.x / 2.0f;
+    const float halfH = size.y / 2.0f;
 
     SpriteVertices vertices;
-    vertices.topLeft.x = position.x - (size.x / 2.0f);
-    vertices.topLeft.y = position.y + (size.y / 2.0f);
-    vertices.topLeft.u = currentAnimateFrame * uMult + 0;
-    vertices.topLeft.v = animType * vMult + 0;
+    vertices.topLeft.x      = position.x - halfW;
+    vertices.topLeft.y      = position.y + halfH;
+    vertices.topRight.x     = position.x + halfW;
+    vertices.topRight.y     = position.y + halfH;
+    vertices.bottomLeft.x   = position.x - halfW;
+    vertices.bottomLeft.y   = position.y - halfH;
+    vertices.bottomRight.x  = position.x + halfW;
+    vertices.bottomRight.y  = position.y - halfH;
 
-    vertices.topRight.x = position.x + (size.x / 2.0f);
-    vertices.topRight.y = position.y + (size.y / 2.0f);
-    vertices.topRight.u = currentAnimateFrame * uMult + uMult;
-    vertices.topRight.v = animType * vMult + 0;
-
-    vertices.bottomLeft.x = position.x - (size.x / 2.0f);
-    vertices.bottomLeft.y = position.y - (size.y / 2.0f);
-    vertices.bottomLeft.u = currentAnimateFrame * uMult + 0;
-    vertices.bottomLeft.v = animType * vMult + 0.3;
-
-    vertices.bottomRight.x = position.x + (size.x / 2.0f);
-    vertices.bottomRight.y = position.y - (size.y / 2.0f);
-    vertices.bottomRight.u = currentAnimateFrame * uMult + uMult;
-    vertices.bottomRight.v = animType * vMult + 0.3;
+    vertices.topLeft.u      = uvRect.u;
+    vertices.topLeft.v      = uvRect.v;
+    vertices.topRight.u     = uvRect.u + uvRect.w;
+    vertices.topRight.v     = uvRect.v;
+    vertices.bottomLeft.u   = uvRect.u;
+    vertices.bottomLeft.v   = uvRect.v + uvRect.h;
+    vertices.bottomRight.u  = uvRect.u + uvRect.w;
+    vertices.bottomRight.v  = uvRect.v + uvRect.h;
 
     return vertices;
 }

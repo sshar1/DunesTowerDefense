@@ -14,6 +14,7 @@ public:
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/dungbeetle_spritesheet.png";
+    static constexpr glm::vec2 spriteSize = {0.1, 0.1};
 
     static constexpr int SPEED = 10;
     static constexpr int MAX_HEALTH = 100;

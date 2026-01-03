@@ -200,6 +200,15 @@ void Renderer::streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies)
     }
 }
 
+void Renderer::streamBase(const Base* base) {
+    spriteBatches[SpriteType::Base].vertices.clear();
+
+    auto sprite = base->getSprite();
+    auto type = sprite.getType();
+    sprite.pushVertices(spriteBatches[type].vertices);
+    spriteBatches[type].textureID = sprite.textureID;
+}
+
 void Renderer::renderSprites() {
     static constexpr int vertsPerSprite = 4;
     static constexpr int indicesPerSprite = 6;

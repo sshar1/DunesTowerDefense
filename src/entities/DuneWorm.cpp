@@ -10,7 +10,7 @@ DuneWorm::DuneWorm()
 }
 
 DuneWorm::DuneWorm(glm::vec2 pos)
-    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Worm, pos)
+    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Worm, pos, spriteSize)
 {
 }
 

@@ -65,6 +65,8 @@ void MainGame::initSystems() {
 
     renderer = std::make_unique<Renderer>(DataLoader::DEPTH_WIDTH, DataLoader::DEPTH_HEIGHT);
     renderer->initVertexObjects(&topVertices);
+
+    waveManager.initSystems();
 }
 
 void MainGame::run() {
@@ -92,11 +94,12 @@ void MainGame::run() {
         renderer->clearBuffer();
         renderer->renderTopography();
 
+        waveManager.update(dt / 1000.f);
+
         renderer->streamEnemies(waveManager.getEnemies());
+        renderer->streamBase(waveManager.getBase());
 
         renderer->renderSprites();
-
-        waveManager.update(dt / 1000.f);
 
         SDL_GL_SwapWindow(window);
     }

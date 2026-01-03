@@ -11,16 +11,13 @@
 
 #include <vector>
 
-// #include "Enemy.hpp"
-
 struct SpriteVertex {
     float x;
     float y;
     float u;
     float v;
 };
-/* These MUST be in the form top left, top right, bottom right, bottom left */
-// using SpriteVertices = std::array<SpriteVertex, 4>;
+
 struct SpriteVertices {
     SpriteVertex topLeft;
     SpriteVertex topRight;
@@ -48,10 +45,26 @@ enum class SpriteType {
 
 inline bool isEnemy(SpriteType type) { return type > SpriteType::FirstEnemy && type < SpriteType::LastEnemy; }
 
+// Maybe replace this with bitwise flags?
+inline bool isAnimatable(SpriteType type) {
+    switch (type) {
+        case SpriteType::Stinger:
+        case SpriteType::Base:
+            return false;
+        default:
+            return true;
+    }
+}
+
+/* u, v is coords of top left corner */
+struct UVRect {
+    float u, v, w, h;
+};
+
 class Sprite {
 public:
     Sprite(const char* filePath, SpriteType type);
-    Sprite(const char* filePath, SpriteType type, glm::vec2 pos);
+    Sprite(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size);
 
     GLuint textureID;
 
@@ -70,8 +83,11 @@ private:
     int currentAnimateFrame;
     float elapsedAnimateTime;
     int animType;
+    UVRect uvRect;
 
     glm::vec2 position;
     glm::vec2 size;
     SpriteType spriteType;
+
+    void updateAnimation();
 };

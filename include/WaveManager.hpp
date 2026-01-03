@@ -5,6 +5,7 @@
 #pragma once
 #include <vector>
 
+#include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
 
 enum class GameState {
@@ -15,7 +16,7 @@ enum class GameState {
 
 struct GameStats {
     std::vector<std::unique_ptr<Enemy>> enemies{};
-    glm::vec2 basePosition{};
+    std::unique_ptr<Base> base;
     unsigned int baseHealth{100};
     unsigned int waveNumber{1};
     GameState gameState{GameState::PreWave};
@@ -26,12 +27,15 @@ class WaveManager {
 public:
     WaveManager();
 
+    void initSystems();
+
     void addEnemy(SpriteType type, glm::vec2 position);
     void startWave();
 
     void update(float dt);
 
     std::vector<std::unique_ptr<Enemy>>& getEnemies();
+    Base* getBase() const;
 
 private:
     GameStats gameStats;

@@ -15,7 +15,7 @@ enum class State {
 class Enemy {
 public:
     Enemy(const char* filePath, int health, SpriteType type);
-    Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos);
+    Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size);
 
     Sprite getSprite();
 

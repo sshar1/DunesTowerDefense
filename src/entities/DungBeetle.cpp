@@ -10,7 +10,7 @@ DungBeetle::DungBeetle()
 }
 
 DungBeetle::DungBeetle(glm::vec2 pos)
-    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Beetle, pos)
+    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Beetle, pos, spriteSize)
 {
 }
 

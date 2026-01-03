@@ -15,8 +15,8 @@ Enemy::Enemy(const char* filePath, int health, SpriteType type)
     setState(State::WALKING);
 }
 
-Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos)
-    : sprite(filePath, type, pos)
+Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size)
+    : sprite(filePath, type, pos, size)
     , health(health)
     , state(State::WALKING)
 {
