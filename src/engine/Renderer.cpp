@@ -29,7 +29,6 @@ Renderer::Renderer(const int depthWidth, const int depthHeight)
     topShader->setInt("gridWidth", depthWidth);
     topShader->setInt("gridHeight", depthHeight);
     topShader->setInt("tallestDepth", TALLEST_DEPTH);
-    topShader->setInt("midDepth", MID_DEPTH);
     topShader->setInt("shortestDepth", SHORTEST_DEPTH);
     topShader->setMat3("warpMatrix", Vision::calculateWarpMatrix());
 
@@ -223,16 +222,24 @@ void Renderer::renderSprites() {
     glBufferData(GL_ARRAY_BUFFER, MAX_SPRITE_VERTICES * sizeof(SpriteVertex), nullptr, GL_DYNAMIC_DRAW);
 
     // Draw batches
+    int vertexByteOffset = 0;
+    int currentVertexCount = 0;
     for (auto& [type, batch] : spriteBatches) {
         if (batch.vertices.empty()) continue;
 
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(SpriteVertex) * batch.vertices.size(), batch.vertices.data());
+        int numVertices = batch.vertices.size();
+        int batchByteSize = sizeof(SpriteVertex) * numVertices;
 
-        int numIndicesToDraw = (batch.vertices.size() / vertsPerSprite) * indicesPerSprite;
+        glBufferSubData(GL_ARRAY_BUFFER, vertexByteOffset, batchByteSize, batch.vertices.data());
+
+        int numIndicesToDraw = (numVertices / vertsPerSprite) * indicesPerSprite;
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, batch.textureID);
-        glDrawElements(GL_TRIANGLES, numIndicesToDraw, GL_UNSIGNED_INT, nullptr);
+        glDrawElementsBaseVertex(GL_TRIANGLES, numIndicesToDraw, GL_UNSIGNED_INT, nullptr, currentVertexCount);
+
+        vertexByteOffset += batchByteSize;
+        currentVertexCount += numVertices;
     }
 
     glBindVertexArray(0);
