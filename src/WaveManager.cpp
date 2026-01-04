@@ -24,13 +24,13 @@ void WaveManager::initSystems() {
     gameStats.base = std::make_unique<Base>(basePosition);
 }
 
-void WaveManager::addEnemy(SpriteType type, glm::vec2 position) {
+void WaveManager::addEnemy(SpriteType type, glm::vec2 position, glm::vec2 targetPosition) {
     switch (type) {
         case SpriteType::Beetle:
-            gameStats.enemies.push_back(std::make_unique<DungBeetle>(position));
+            gameStats.enemies.push_back(std::make_unique<DungBeetle>(position, targetPosition));
             return;
         case SpriteType::Worm:
-            gameStats.enemies.push_back(std::make_unique<DuneWorm>(position));
+            gameStats.enemies.push_back(std::make_unique<DuneWorm>(position, targetPosition));
             return;
         default:
             std::cout << "This is not an enemy, cannot add it" << std::endl;

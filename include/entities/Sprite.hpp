@@ -75,6 +75,8 @@ public:
 
     // friend void Enemy::updateAnimation();
     SpriteType getType() const;
+    glm::vec2 getPosition() const;
+    void setPosition(glm::vec2 position);
 
 private:
     constexpr static float TIME_BETWEEN_ANIMATE_FRAMES = 0.1; // in s

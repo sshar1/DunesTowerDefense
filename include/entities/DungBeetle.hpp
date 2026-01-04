@@ -10,14 +10,16 @@
 class DungBeetle : public Enemy {
 public:
     DungBeetle();
-    explicit DungBeetle(glm::vec2 pos);
+    explicit DungBeetle(glm::vec2 pos, glm::vec2 targetPosition);
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/dungbeetle_spritesheet.png";
     static constexpr glm::vec2 spriteSize = {0.1, 0.1};
 
-    static constexpr int SPEED = 10;
+    static constexpr float SPEED = 0.5f;
     static constexpr int MAX_HEALTH = 100;
 
     int getMaxHealth() const override;
+    float getSpeed() const override;
+    void calculateWaypoints() override;
 };

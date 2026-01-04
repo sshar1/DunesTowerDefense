@@ -72,11 +72,15 @@ void MainGame::initSystems() {
 void MainGame::run() {
     initSystems();
 
-    waveManager.addEnemy(SpriteType::Beetle, {0, 0});
-    waveManager.addEnemy(SpriteType::Worm, {0.2, 0});
-    waveManager.addEnemy(SpriteType::Beetle, {0, 0.3});
-    waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3});
-    waveManager.addEnemy(SpriteType::Worm, {-0.4, 0});
+    glm::vec2 basePosition = waveManager.getBase()->getSprite().getPosition();
+
+    // waveManager.addEnemy(SpriteType::Beetle, {-0.8, 0}, basePosition);
+    waveManager.addEnemy(SpriteType::Worm, {-0.8, 0}, basePosition);
+    waveManager.addEnemy(SpriteType::Worm, {0.8, 0}, basePosition);
+    waveManager.addEnemy(SpriteType::Worm, {-0.8, 0.7}, basePosition);
+    // waveManager.addEnemy(SpriteType::Beetle, {0, 0.85}, basePosition);
+    // waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3});
+    // waveManager.addEnemy(SpriteType::Worm, {-0.4, 0});
 
     float prevTicks = SDL_GetTicks();
 

@@ -9,11 +9,18 @@ DungBeetle::DungBeetle()
 {
 }
 
-DungBeetle::DungBeetle(glm::vec2 pos)
-    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Beetle, pos, spriteSize)
+DungBeetle::DungBeetle(glm::vec2 pos, glm::vec2 targetPosition)
+    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Beetle, pos, spriteSize, targetPosition)
 {
 }
 
 int DungBeetle::getMaxHealth() const {
     return MAX_HEALTH;
+}
+
+float DungBeetle::getSpeed() const {
+    return SPEED;
+}
+
+void DungBeetle::calculateWaypoints() {
 }

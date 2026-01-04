@@ -55,6 +55,14 @@ SpriteType Sprite::getType() const {
     return spriteType;
 }
 
+glm::vec2 Sprite::getPosition() const {
+    return position;
+}
+
+void Sprite::setPosition(glm::vec2 position) {
+    this->position = position;
+}
+
 void Sprite::updateAnimation() {
     static constexpr float spriteWidth = 0.243;
     static constexpr float spriteHeight = 0.33;
@@ -99,6 +107,4 @@ void Sprite::pushVertices(std::vector<SpriteVertex> &vertexBuffer) const {
     vertexBuffer.push_back(vertices.topRight);
     vertexBuffer.push_back(vertices.bottomLeft);
     vertexBuffer.push_back(vertices.bottomRight);
-
-    // vertexBuffer.insert(vertexBuffer.end(), vertices.begin(), vertices.end());
 }

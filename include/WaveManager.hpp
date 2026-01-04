@@ -29,7 +29,7 @@ public:
 
     void initSystems();
 
-    void addEnemy(SpriteType type, glm::vec2 position);
+    void addEnemy(SpriteType type, glm::vec2 position, glm::vec2 targetPosition);
     void startWave();
 
     void update(float dt);
