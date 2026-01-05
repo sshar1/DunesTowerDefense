@@ -4,12 +4,23 @@
 
 #include "entities/Sprite.hpp"
 #include "engine/ResourceManager.hpp"
+#include "glm/gtx/matrix_transform_2d.hpp"
+#include <glm/gtx/vector_angle.hpp>
+
+float lookVectorToOrientation(const glm::vec2& lookVector) {
+    if (lookVector.x < 0) {
+        return glm::angle(lookVector, glm::vec2(-1, 0));
+    }
+
+    return glm::angle(lookVector, glm::vec2(1, 0));
+}
 
 Sprite::Sprite(const char* filePath, SpriteType type)
     : currentAnimateFrame(0)
     , elapsedAnimateTime(0)
     , animType(0)
     , uvRect(0, 0, 1, 1)
+    , lookVector(1, 0)
     , spriteType(type)
 {
     position = {0, 0};
@@ -24,6 +35,7 @@ Sprite::Sprite(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 s
     , uvRect(0, 0, 1, 1)
     , position(pos)
     , size(size)
+    , lookVector(1, 0)
     , spriteType(type)
 {
     textureID = ResourceManager::getInstance().loadTexture(filePath);
@@ -63,6 +75,10 @@ void Sprite::setPosition(glm::vec2 position) {
     this->position = position;
 }
 
+void Sprite::setLookVector(glm::vec2 lookVector) {
+    this->lookVector = lookVector;
+}
+
 void Sprite::updateAnimation() {
     static constexpr float spriteWidth = 0.243;
     static constexpr float spriteHeight = 0.33;
@@ -78,15 +94,32 @@ const SpriteVertices Sprite::getVertices() const {
     const float halfW = size.x / 2.0f;
     const float halfH = size.y / 2.0f;
 
+    // Transformation matrices are in reverse order. First, we rotate the
+    // vectors. Then, we bring them to their position
+    const float angle = -lookVectorToOrientation(lookVector);
+    glm::mat3 rotationMat = glm::mat3(1.f);
+    rotationMat = glm::translate(rotationMat, position);
+    rotationMat = glm::rotate(rotationMat, angle);
+    if (lookVector.x < 0) {
+        rotationMat = glm::scale(rotationMat, glm::vec2(-1, 1));
+    }
+
+    glm::vec2 corners[4] = {
+        {-halfW, halfH},
+        {halfW, halfH},
+        {-halfW, -halfH},
+        {halfW, -halfH}
+    };
+
     SpriteVertices vertices;
-    vertices.topLeft.x      = position.x - halfW;
-    vertices.topLeft.y      = position.y + halfH;
-    vertices.topRight.x     = position.x + halfW;
-    vertices.topRight.y     = position.y + halfH;
-    vertices.bottomLeft.x   = position.x - halfW;
-    vertices.bottomLeft.y   = position.y - halfH;
-    vertices.bottomRight.x  = position.x + halfW;
-    vertices.bottomRight.y  = position.y - halfH;
+    auto applyTransformation = [&rotationMat](const glm::vec2& vertex) {
+        return glm::vec2(rotationMat * glm::vec3(vertex, 1.f));
+    };
+
+    vertices.topLeft.position = applyTransformation(corners[0]);
+    vertices.topRight.position = applyTransformation(corners[1]);
+    vertices.bottomLeft.position = applyTransformation(corners[2]);
+    vertices.bottomRight.position = applyTransformation(corners[3]);
 
     vertices.topLeft.u      = uvRect.u;
     vertices.topLeft.v      = uvRect.v;

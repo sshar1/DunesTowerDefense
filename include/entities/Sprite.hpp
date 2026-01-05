@@ -12,8 +12,9 @@
 #include <vector>
 
 struct SpriteVertex {
-    float x;
-    float y;
+    // float x;
+    // float y;
+    glm::vec2 position;
     float u;
     float v;
 };
@@ -77,6 +78,7 @@ public:
     SpriteType getType() const;
     glm::vec2 getPosition() const;
     void setPosition(glm::vec2 position);
+    void setLookVector(glm::vec2 lookVector);
 
 private:
     constexpr static float TIME_BETWEEN_ANIMATE_FRAMES = 0.1; // in s
@@ -89,6 +91,7 @@ private:
 
     glm::vec2 position;
     glm::vec2 size;
+    glm::vec2 lookVector;
     SpriteType spriteType;
 
     void updateAnimation();

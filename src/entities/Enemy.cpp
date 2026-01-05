@@ -59,6 +59,9 @@ void Enemy::followPath(float dt) {
     if (glm::all(atTarget)) return;
     if (currentWaypointIdx >= waypoints.size() - 1) return;
 
+    glm::vec2 directionVector = glm::normalize(currentTarget - sprite.getPosition());
+    sprite.setLookVector(directionVector);
+
     float distanceToTarget = glm::distance(sprite.getPosition(), currentTarget);
     float distanceTravelling = getSpeed() * dt;
 
@@ -67,7 +70,6 @@ void Enemy::followPath(float dt) {
         currentWaypointIdx++;
     }
     else {
-        glm::vec2 directionVector = glm::normalize(currentTarget - sprite.getPosition());
         sprite.setPosition(sprite.getPosition() + directionVector * distanceTravelling);
     }
 
