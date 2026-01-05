@@ -23,8 +23,8 @@ public:
     ~Renderer() = default;
 
     // TODO temporarily take a vector of data from kinect and render it
-    void renderTopography();
-    void initVertexObjects(const TopographyVertices* topographyVertices);
+    void renderTopography(const TopographyVertices& topVertices);
+    void initVertexObjects();
     void clearBuffer();
 
     // For debugging only. In release, always use renderSpriteBatch
@@ -55,7 +55,7 @@ private:
     GLuint spriteVBO{};
 
     // Topography
-    const TopographyVertices* topVertices;
+    // const TopographyVertices* topVertices;
     std::unique_ptr<Shader> topShader;
     static constexpr int TOP_INDICES_LEN = 6 * (DataLoader::DEPTH_WIDTH - 1) * (DataLoader::DEPTH_HEIGHT - 1);
 

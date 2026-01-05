@@ -11,8 +11,8 @@
 
 
 Renderer::Renderer(const int depthWidth, const int depthHeight)
-    : topVertices(nullptr)
-    , topShader(nullptr)
+    // : topVertices(nullptr)
+    : topShader(nullptr)
     , markerShader(nullptr)
     , spriteVertices(nullptr)
     , spriteShader(nullptr)
@@ -43,8 +43,8 @@ Renderer::Renderer(const int depthWidth, const int depthHeight)
     spriteShader->setInt("tex", 0);
 }
 
-void Renderer::initVertexObjects(const TopographyVertices* topographyVertices) {
-    topVertices = topographyVertices;
+void Renderer::initVertexObjects() {
+    // topVertices = topographyVertices;
 
     GLuint topEBO;
     glGenVertexArrays(1, &topVAO);
@@ -62,9 +62,9 @@ void Renderer::initVertexObjects(const TopographyVertices* topographyVertices) {
     glBindBuffer(GL_ARRAY_BUFFER, topVBO);
     glBufferData(
         GL_ARRAY_BUFFER,
-        sizeof(TopographyVertex) * topographyVertices->size(),
-        topographyVertices->data(),
-        GL_STATIC_DRAW
+        sizeof(TopographyVertex) * DataLoader::DEPTH_WIDTH * DataLoader::DEPTH_HEIGHT,
+        nullptr,
+        GL_DYNAMIC_DRAW
     );
     glVertexAttribIPointer(0, 1, GL_UNSIGNED_SHORT, sizeof(TopographyVertex), (void*)0);
     glEnableVertexAttribArray(0);
@@ -145,13 +145,13 @@ void Renderer::clearBuffer() {
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::renderTopography() {
+void Renderer::renderTopography(const TopographyVertices& topVertices) {
     topShader->use();
     // markerShader->use();
     glBindVertexArray(topVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, topVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TopographyVertex) * topVertices->size(), topVertices->data());
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TopographyVertex) * topVertices.size(), topVertices.data());
 
     glDrawElements(GL_TRIANGLES, TOP_INDICES_LEN, GL_UNSIGNED_INT, nullptr);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

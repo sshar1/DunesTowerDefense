@@ -57,14 +57,14 @@ void MainGame::initSystems() {
 
     SDL_GL_SetSwapInterval(1);
 
-    DataLoader& dataLoader = DataLoader::getInstance();
+    // DataLoader& dataLoader = DataLoader::getInstance();
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-05-49.csv"); // Flat
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
-    const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
+    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
 
     renderer = std::make_unique<Renderer>(DataLoader::DEPTH_WIDTH, DataLoader::DEPTH_HEIGHT);
-    renderer->initVertexObjects(&topVertices);
+    renderer->initVertexObjects();
 
     waveManager.initSystems();
 }
@@ -84,6 +84,10 @@ void MainGame::run() {
 
     float prevTicks = SDL_GetTicks();
 
+    // TODO move this inside the loop using multithreading
+    DataLoader& dataLoader = DataLoader::getInstance();
+    const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
+
     while (!gameQuit) {
         InputManager& inputManager = InputManager::getInstance();
         InputResult inputResult = inputManager.processInput();
@@ -96,16 +100,16 @@ void MainGame::run() {
         prevTicks = currentTicks;
 
         renderer->clearBuffer();
-        renderer->renderTopography();
+        renderer->renderTopography(topVertices);
 
         waveManager.update(dt / 1000.f);
-
         renderer->streamEnemies(waveManager.getEnemies());
         renderer->streamBase(waveManager.getBase());
-
         renderer->renderSprites();
 
         SDL_GL_SwapWindow(window);
+
+        std::cout << calculateFPS() << std::endl;
     }
 }
 
