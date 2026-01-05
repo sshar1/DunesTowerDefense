@@ -5,6 +5,7 @@
 #pragma once
 #include <vector>
 
+#include "engine/DataLoader.hpp"
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
 
@@ -32,7 +33,7 @@ public:
     void addEnemy(SpriteType type, glm::vec2 position, glm::vec2 targetPosition);
     void startWave();
 
-    void update(float dt);
+    void update(const TopographyVertices& topVertices, float dt);
 
     std::vector<std::unique_ptr<Enemy>>& getEnemies();
     Base* getBase() const;

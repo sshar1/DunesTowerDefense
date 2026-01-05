@@ -22,5 +22,5 @@ float DungBeetle::getSpeed() const {
     return SPEED;
 }
 
-void DungBeetle::calculateWaypoints() {
+void DungBeetle::calculateWaypoints(const TopographyVertices& topVertices) {
 }

@@ -11,7 +11,6 @@
 
 
 Renderer::Renderer(const int depthWidth, const int depthHeight)
-    // : topVertices(nullptr)
     : topShader(nullptr)
     , markerShader(nullptr)
     , spriteVertices(nullptr)

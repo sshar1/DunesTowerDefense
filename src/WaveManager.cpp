@@ -37,9 +37,9 @@ void WaveManager::addEnemy(SpriteType type, glm::vec2 position, glm::vec2 target
     }
 }
 
-void WaveManager::update(float dt) {
+void WaveManager::update(const TopographyVertices& topVertices, float dt) {
     for (const auto& enemy : gameStats.enemies) {
-        enemy->update(dt);
+        enemy->update(topVertices, dt);
     }
 }
 

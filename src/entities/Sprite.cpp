@@ -99,9 +99,12 @@ const SpriteVertices Sprite::getVertices() const {
     const float angle = -lookVectorToOrientation(lookVector);
     glm::mat3 rotationMat = glm::mat3(1.f);
     rotationMat = glm::translate(rotationMat, position);
-    rotationMat = glm::rotate(rotationMat, angle);
     if (lookVector.x < 0) {
+        rotationMat = glm::rotate(rotationMat, -angle);
         rotationMat = glm::scale(rotationMat, glm::vec2(-1, 1));
+    }
+    else {
+        rotationMat = glm::rotate(rotationMat, angle);
     }
 
     glm::vec2 corners[4] = {

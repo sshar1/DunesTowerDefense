@@ -78,6 +78,7 @@ void MainGame::run() {
     waveManager.addEnemy(SpriteType::Worm, {-0.8, 0}, basePosition);
     waveManager.addEnemy(SpriteType::Worm, {0.8, 0}, basePosition);
     waveManager.addEnemy(SpriteType::Worm, {-0.8, 0.7}, basePosition);
+    waveManager.addEnemy(SpriteType::Worm, {0.8, 0.8}, basePosition);
     // waveManager.addEnemy(SpriteType::Beetle, {0, 0.85}, basePosition);
     // waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3});
     // waveManager.addEnemy(SpriteType::Worm, {-0.4, 0});
@@ -102,14 +103,14 @@ void MainGame::run() {
         renderer->clearBuffer();
         renderer->renderTopography(topVertices);
 
-        waveManager.update(dt / 1000.f);
+        waveManager.update(topVertices, dt / 1000.f);
         renderer->streamEnemies(waveManager.getEnemies());
         renderer->streamBase(waveManager.getBase());
         renderer->renderSprites();
 
         SDL_GL_SwapWindow(window);
 
-        std::cout << calculateFPS() << std::endl;
+        // std::cout << calculateFPS() << std::endl;
     }
 }
 

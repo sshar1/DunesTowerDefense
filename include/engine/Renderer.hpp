@@ -55,7 +55,6 @@ private:
     GLuint spriteVBO{};
 
     // Topography
-    // const TopographyVertices* topVertices;
     std::unique_ptr<Shader> topShader;
     static constexpr int TOP_INDICES_LEN = 6 * (DataLoader::DEPTH_WIDTH - 1) * (DataLoader::DEPTH_HEIGHT - 1);
 

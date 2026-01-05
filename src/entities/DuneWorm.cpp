@@ -22,7 +22,7 @@ float DuneWorm::getSpeed() const {
     return SPEED;
 }
 
-void DuneWorm::calculateWaypoints() {
+void DuneWorm::calculateWaypoints(const TopographyVertices& topVertices) {
     static constexpr float baseRadius = 0.2f;
 
     waypoints.clear();

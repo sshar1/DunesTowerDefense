@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Sprite.hpp"
+#include "engine/DataLoader.hpp"
 
 enum class State {
     WALKING,
@@ -22,7 +23,7 @@ public:
 
     void takeDamage(int damage);
 
-    void update(float dt);
+    void update(const TopographyVertices& topVertices, float dt);
 
 private:
     static constexpr int WALK_ANIM_TYPE = 0;
@@ -31,9 +32,10 @@ private:
 
     virtual int getMaxHealth() const = 0;
     virtual float getSpeed() const = 0;
-    virtual void calculateWaypoints() = 0;
+    virtual void calculateWaypoints(const TopographyVertices& topVertices) = 0;
 
-    void followPath(float dt);
+    void followPath(const TopographyVertices& topVertices, float dt);
+    float getSpeedOverPoints(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 to);
 
     void updateAnimation();
     void setState(State newState);

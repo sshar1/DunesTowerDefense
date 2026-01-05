@@ -21,5 +21,5 @@ private:
 
     int getMaxHealth() const override;
     float getSpeed() const override;
-    void calculateWaypoints() override;
+    void calculateWaypoints(const TopographyVertices& topVertices) override;
 };

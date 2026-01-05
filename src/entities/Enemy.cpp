@@ -26,16 +26,16 @@ Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, g
     setState(State::WALKING);
 }
 
-void Enemy::update(float dt) {
+void Enemy::update(const TopographyVertices& topVertices, float dt) {
     sprite.update(dt);
 
     switch (state) {
         case State::WALKING: {
             if (waypoints.empty()) {
-                calculateWaypoints();
+                calculateWaypoints(topVertices);
             }
 
-            followPath(dt);
+            followPath(topVertices, dt);
 
             if (currentWaypointIdx >= waypoints.size() - 1) {
                 setState(State::ATTACKING);
@@ -52,7 +52,7 @@ void Enemy::update(float dt) {
     }
 }
 
-void Enemy::followPath(float dt) {
+void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
     glm::vec2 currentTarget = waypoints[currentWaypointIdx + 1];
 
     auto atTarget = glm::epsilonEqual(sprite.getPosition(), targetPosition, glm::epsilon<float>());
@@ -63,16 +63,24 @@ void Enemy::followPath(float dt) {
     sprite.setLookVector(directionVector);
 
     float distanceToTarget = glm::distance(sprite.getPosition(), currentTarget);
-    float distanceTravelling = getSpeed() * dt;
+    glm::vec2 approxFinalPosition = sprite.getPosition() + directionVector * getSpeed() * dt;
+    float speed = getSpeedOverPoints(topVertices, sprite.getPosition(), approxFinalPosition);
+    float travelDistance = speed * dt;
 
-    if (distanceTravelling >= distanceToTarget) {
-        sprite.setPosition(currentTarget);
+    glm::vec2 finalPosition;
+    if (travelDistance >= distanceToTarget) {
+        finalPosition = currentTarget;
         currentWaypointIdx++;
     }
     else {
-        sprite.setPosition(sprite.getPosition() + directionVector * distanceTravelling);
+        finalPosition = sprite.getPosition() + directionVector * travelDistance;
     }
 
+    sprite.setPosition(finalPosition);
+}
+
+float Enemy::getSpeedOverPoints(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 to) {
+    return getSpeed();
 }
 
 void Enemy::takeDamage(int damage) {
