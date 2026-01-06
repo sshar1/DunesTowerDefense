@@ -35,7 +35,8 @@ private:
     virtual void calculateWaypoints(const TopographyVertices& topVertices) = 0;
 
     void followPath(const TopographyVertices& topVertices, float dt);
-    float getSpeedOverPoints(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 to);
+    // float getSpeedOverPoints(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 to);
+    float getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction);
 
     void updateAnimation();
     void setState(State newState);

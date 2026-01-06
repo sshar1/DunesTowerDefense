@@ -75,10 +75,12 @@ void MainGame::run() {
     glm::vec2 basePosition = waveManager.getBase()->getSprite().getPosition();
 
     // waveManager.addEnemy(SpriteType::Beetle, {-0.8, 0}, basePosition);
+
     waveManager.addEnemy(SpriteType::Worm, {-0.8, 0}, basePosition);
     waveManager.addEnemy(SpriteType::Worm, {0.8, 0}, basePosition);
     waveManager.addEnemy(SpriteType::Worm, {-0.8, 0.7}, basePosition);
     waveManager.addEnemy(SpriteType::Worm, {0.8, 0.8}, basePosition);
+
     // waveManager.addEnemy(SpriteType::Beetle, {0, 0.85}, basePosition);
     // waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3});
     // waveManager.addEnemy(SpriteType::Worm, {-0.4, 0});

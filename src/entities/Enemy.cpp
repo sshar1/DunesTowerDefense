@@ -7,6 +7,7 @@
 #include <iostream>
 #include <ostream>
 
+#include "engine/VisionManager.hpp"
 #include "glm/gtc/epsilon.hpp"
 
 Enemy::Enemy(const char* filePath, int health, SpriteType type)
@@ -63,8 +64,9 @@ void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
     sprite.setLookVector(directionVector);
 
     float distanceToTarget = glm::distance(sprite.getPosition(), currentTarget);
-    glm::vec2 approxFinalPosition = sprite.getPosition() + directionVector * getSpeed() * dt;
-    float speed = getSpeedOverPoints(topVertices, sprite.getPosition(), approxFinalPosition);
+    // glm::vec2 approxFinalPosition = sprite.getPosition() + directionVector * getSpeed() * dt;
+    // float speed = getSpeedOverPoints(topVertices, sprite.getPosition(), approxFinalPosition);
+    float speed = getDirectionalSpeed(topVertices, sprite.getPosition(), directionVector);
     float travelDistance = speed * dt;
 
     glm::vec2 finalPosition;
@@ -79,8 +81,57 @@ void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
     sprite.setPosition(finalPosition);
 }
 
-float Enemy::getSpeedOverPoints(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 to) {
-    return getSpeed();
+float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction) {
+    // To get the directional speed, we sample the destination point to be
+    // 5% of screen dimensions
+    static constexpr float range = 0.05f;
+    static constexpr int sampleFinalPoints = 5;
+    static constexpr int sampleInitialPoints = 9;
+
+    // TODO find a better way for this
+    static const glm::mat3 warpMat = Vision::calculateWarpMatrix();
+    static const glm::mat3 unwarpMat = glm::inverse(warpMat);
+
+    auto getSafeDepth = [&](glm::vec2 p) -> int {
+        // p is [-1, 1] so we must convert to [0, 1]
+        float u = (p.x + 1.f) * 0.5f;
+        float v = (1.f - p.y) * 0.5f;
+
+        glm::vec3 unwarpedHomogenous = unwarpMat * glm::vec3(u, v, 1.f);
+        if (unwarpedHomogenous.z == 0) return 0;
+        glm::vec2 gridUV = glm::vec2(unwarpedHomogenous.x, unwarpedHomogenous.y) / unwarpedHomogenous.z;
+
+        int c = std::clamp(static_cast<int>(DataLoader::DEPTH_WIDTH * gridUV.x), 0, DataLoader::DEPTH_WIDTH - 1);
+        int r = std::clamp(static_cast<int>(DataLoader::DEPTH_HEIGHT * gridUV.y), 0, DataLoader::DEPTH_HEIGHT - 1);
+
+        return topVertices[r * DataLoader::DEPTH_WIDTH + c];
+    };
+
+    int initialDepthAvg = 0;
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            float w = i * 0.01f;
+            float h = j * 0.01f;
+            glm::vec2 point = glm::vec2(w, h) + from;
+            initialDepthAvg += getSafeDepth(point);
+        }
+    }
+    initialDepthAvg /= sampleInitialPoints;
+
+    int finalDepthAvg = 0;
+    for (int i = 1; i <= sampleFinalPoints; i++) {
+        float vectorMultiplier = range * (float(i) / sampleFinalPoints);
+        glm::vec2 destPoint = from + direction * vectorMultiplier;
+
+        finalDepthAvg += getSafeDepth(destPoint);
+    }
+    finalDepthAvg /= sampleFinalPoints;
+
+    float speedMultiplier = (finalDepthAvg - initialDepthAvg) / 20.f + 1;
+    speedMultiplier = std::clamp(speedMultiplier, 0.2f, 2.f);
+
+    return speedMultiplier * getSpeed();
+
 }
 
 void Enemy::takeDamage(int damage) {
@@ -100,6 +151,7 @@ void Enemy::updateAnimation() {
             sprite.setAnimType(ATTACKING_ANIM_TYPE);
             return;
         case State::DYING:
+        case State::DEAD:
             sprite.setAnimType(DYING_ANIM_TYPE);
     }
 }
