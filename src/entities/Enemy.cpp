@@ -64,8 +64,6 @@ void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
     sprite.setLookVector(directionVector);
 
     float distanceToTarget = glm::distance(sprite.getPosition(), currentTarget);
-    // glm::vec2 approxFinalPosition = sprite.getPosition() + directionVector * getSpeed() * dt;
-    // float speed = getSpeedOverPoints(topVertices, sprite.getPosition(), approxFinalPosition);
     float speed = getDirectionalSpeed(topVertices, sprite.getPosition(), directionVector);
     float travelDistance = speed * dt;
 

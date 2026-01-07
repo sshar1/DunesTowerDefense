@@ -243,3 +243,107 @@ void Renderer::renderSprites() {
 
     glBindVertexArray(0);
 }
+
+void Renderer::DEBUG_rengerMat(const cv::Mat& inputMat) {
+    if (inputMat.empty()) return;
+
+    // --- 1. Static Resources (Initialized Once) ---
+    static GLuint debugTex = 0;
+    static GLuint debugVAO = 0;
+    static GLuint debugShader = 0;
+
+    if (debugTex == 0) {
+        // A. Create Texture
+        glGenTextures(1, &debugTex);
+        glBindTexture(GL_TEXTURE_2D, debugTex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // B. Create Empty VAO (We use gl_VertexID to generate coords, no VBO needed)
+        glGenVertexArrays(1, &debugVAO);
+
+        // C. Create Simple Shader
+        const char* vsSrc = R"(
+            #version 330 core
+            out vec2 TexCoord;
+            void main() {
+                // Generate a full screen triangle strip
+                // ID: 0 -> (-1, -1), 1 -> (1, -1), 2 -> (-1, 1), 3 -> (1, 1)
+                vec2 verts[4] = vec2[](vec2(-1, -1), vec2(1, -1), vec2(-1, 1), vec2(1, 1));
+                // Flip Y for OpenCV (OpenCV 0,0 is Top-Left, OpenGL is Bottom-Left)
+                vec2 uvs[4]   = vec2[](vec2(0, 1),   vec2(1, 1),   vec2(0, 0),   vec2(1, 0));
+
+                gl_Position = vec4(verts[gl_VertexID], 0.0, 1.0);
+                TexCoord = uvs[gl_VertexID];
+            }
+        )";
+
+        const char* fsSrc = R"(
+            #version 330 core
+            in vec2 TexCoord;
+            out vec4 FragColor;
+            uniform sampler2D screenTexture;
+            void main() {
+                FragColor = texture(screenTexture, TexCoord);
+                // Optional: Visualize Red channel as Grayscale if input is 1-channel
+                // FragColor = vec4(vec3(texture(screenTexture, TexCoord).r), 1.0);
+            }
+        )";
+
+        auto compile = [](GLenum type, const char* src) {
+            GLuint s = glCreateShader(type);
+            glShaderSource(s, 1, &src, nullptr);
+            glCompileShader(s);
+            // (Add error checking here if needed)
+            return s;
+        };
+        GLuint vs = compile(GL_VERTEX_SHADER, vsSrc);
+        GLuint fs = compile(GL_FRAGMENT_SHADER, fsSrc);
+        debugShader = glCreateProgram();
+        glAttachShader(debugShader, vs);
+        glAttachShader(debugShader, fs);
+        glLinkProgram(debugShader);
+        glDeleteShader(vs);
+        glDeleteShader(fs);
+    }
+
+    // --- 2. Prepare Data ---
+    // OpenCV rows might not be 4-byte aligned. Tell OpenGL to read byte-by-byte.
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    GLenum format = GL_BGR; // Standard OpenCV color format
+    GLenum internalFormat = GL_RGB;
+
+    if (inputMat.channels() == 1) {
+        format = GL_RED;
+        internalFormat = GL_RED;
+        // Or use GL_LUMINANCE for legacy / swizzle mask for modern to make it look B&W
+        GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_ONE};
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+    } else {
+        // Reset swizzle for color images
+        GLint swizzleMask[] = {GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA};
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+    }
+
+    // --- 3. Upload & Draw ---
+    glUseProgram(debugShader);
+
+    // Bind Texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, debugTex);
+
+    // Upload Mat Data
+    // Note: Re-allocating every frame is fine for debugging, but for prod use glTexSubImage2D
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, inputMat.cols, inputMat.rows,
+                 0, format, GL_UNSIGNED_BYTE, inputMat.data);
+
+    glBindVertexArray(debugVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Cleanup state
+    glBindVertexArray(0);
+    glUseProgram(0);
+}

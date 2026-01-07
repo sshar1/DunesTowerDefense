@@ -11,6 +11,9 @@
 
 class MainGame {
 public:
+    static constexpr int WINDOW_WIDTH = 1200;
+    static constexpr int WINDOW_HEIGHT = 900;
+
     MainGame();
     ~MainGame();
 
@@ -24,8 +27,6 @@ private:
     bool gameQuit;
 
     static constexpr const char* WINDOW_TITLE = "Dunes Tower Defense";
-    static constexpr int WINDOW_WIDTH = 1200;
-    static constexpr int WINDOW_HEIGHT = 900;
 
     void initSystems();
     float calculateFPS();

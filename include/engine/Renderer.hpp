@@ -5,6 +5,7 @@
 #pragma once
 
 #include <map>
+#include <opencv2/core/mat.hpp>
 
 #include "DataLoader.hpp"
 #include "shader_s.h"
@@ -33,6 +34,7 @@ public:
     void streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies);
     void streamBase(const Base* base);
     void renderSprites();
+    void DEBUG_rengerMat(const cv::Mat& inputMat);
 
 private:
     static constexpr const char* TOP_VERT_PATH = "data/shaders/topology.vert";

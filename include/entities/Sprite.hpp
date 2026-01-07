@@ -12,8 +12,6 @@
 #include <vector>
 
 struct SpriteVertex {
-    // float x;
-    // float y;
     glm::vec2 position;
     float u;
     float v;

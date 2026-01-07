@@ -9,6 +9,7 @@
 #include "InputManager.hpp"
 #include "engine/DataLoader.hpp"
 #include "engine/Renderer.hpp"
+#include "engine/VisionManager.hpp"
 
 MainGame::MainGame()
     : window(nullptr)
@@ -77,10 +78,9 @@ void MainGame::run() {
     // waveManager.addEnemy(SpriteType::Beetle, {-0.8, 0}, basePosition);
 
     waveManager.addEnemy(SpriteType::Worm, {-0.8, 0}, basePosition);
-    waveManager.addEnemy(SpriteType::Worm, {0.8, 0}, basePosition);
-    waveManager.addEnemy(SpriteType::Worm, {-0.8, 0.7}, basePosition);
-    waveManager.addEnemy(SpriteType::Worm, {0.8, 0.8}, basePosition);
-
+    // waveManager.addEnemy(SpriteType::Worm, {0.8, 0}, basePosition);
+    // waveManager.addEnemy(SpriteType::Worm, {-0.8, 0.7}, basePosition);
+    // waveManager.addEnemy(SpriteType::Worm, {0.8, 0.8}, basePosition);
     // waveManager.addEnemy(SpriteType::Beetle, {0, 0.85}, basePosition);
     // waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3});
     // waveManager.addEnemy(SpriteType::Worm, {-0.4, 0});
@@ -90,8 +90,11 @@ void MainGame::run() {
     // TODO move this inside the loop using multithreading
     DataLoader& dataLoader = DataLoader::getInstance();
     const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
+    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
+    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
 
     while (!gameQuit) {
+
         InputManager& inputManager = InputManager::getInstance();
         InputResult inputResult = inputManager.processInput();
         if (inputResult == InputResult::QUIT) {
@@ -103,12 +106,18 @@ void MainGame::run() {
         prevTicks = currentTicks;
 
         renderer->clearBuffer();
-        renderer->renderTopography(topVertices);
 
-        waveManager.update(topVertices, dt / 1000.f);
-        renderer->streamEnemies(waveManager.getEnemies());
-        renderer->streamBase(waveManager.getBase());
-        renderer->renderSprites();
+        if (true) {
+            renderer->DEBUG_rengerMat(Vision::findHills(topVertices));
+        }
+        else {
+            renderer->renderTopography(topVertices);
+
+            waveManager.update(topVertices, dt / 1000.f);
+            renderer->streamEnemies(waveManager.getEnemies());
+            renderer->streamBase(waveManager.getBase());
+            renderer->renderSprites();
+        }
 
         SDL_GL_SwapWindow(window);
 
