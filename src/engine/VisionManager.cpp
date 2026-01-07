@@ -27,7 +27,9 @@ namespace Vision {
 
     cv::Mat findHills(const TopographyVertices& topVertices) {
         static constexpr int hillThreshold = 200;
+        static constexpr int minHillArea = 100;
         static const cv::Size dsize{DataLoader::DEPTH_WIDTH, DataLoader::DEPTH_HEIGHT};
+        static const cv::Size kernelSize{5, 5};
 
         static auto normToPixel = [](std::array<cv::Point2f, 4> normCoords) -> std::array<cv::Point2f, 4> {
             std::array<cv::Point2f, 4> pixelCoords;
@@ -64,8 +66,33 @@ namespace Vision {
         cv::normalize(clampedData, viewableImg, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 
         cv::Mat masked;
-        cv::threshold(viewableImg, masked, hillThreshold, 255, cv::THRESH_BINARY);
+        cv::threshold(viewableImg, masked, hillThreshold, 255, cv::THRESH_BINARY_INV);
 
-        return masked;
+        cv::Mat morphed;
+        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, kernelSize);
+        cv::morphologyEx(masked, morphed, cv::MORPH_OPEN, kernel);
+
+        cv::Mat debugImg;
+        cv::cvtColor(morphed, debugImg, cv::COLOR_GRAY2BGR);
+        cv::Scalar color(255, 0, 0);
+
+        std::vector<std::vector<cv::Point>> contours;
+        cv::findContours(morphed, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contours.size(); i++) {
+            const auto& contour = contours[i];
+            double area = cv::contourArea(contour);
+            if (area > minHillArea) {
+                cv::drawContours(debugImg, contours, i, color, 2);
+                cv::Moments moment = cv::moments(contour);
+                if (moment.m00 != 0) {
+                    float centerX = moment.m10 / moment.m00;
+                    float centerY = moment.m01 / moment.m00;
+
+                    hills.emplace_back(centerX / DataLoader::DEPTH_WIDTH, centerY / DataLoader::DEPTH_HEIGHT);
+                }
+            }
+        }
+
+        return debugImg;
     }
 }
