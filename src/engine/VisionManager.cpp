@@ -25,7 +25,9 @@ namespace Vision {
         return warpMat;
     }
 
-    std::vector<glm::vec2> findHills(const TopographyVertices& topVertices) {
+    // std::vector<glm::vec2> findHills(const TopographyVertices& topVertices) {
+    // cv::Mat findHills(const TopographyVertices& topVertices) {
+    void Manager::evaluateHills(const TopographyVertices& topVertices) {
         static constexpr int hillThreshold = 200;
         static constexpr int minHillArea = 200;
         static const cv::Size dsize{DataLoader::DEPTH_WIDTH, DataLoader::DEPTH_HEIGHT};
@@ -43,7 +45,8 @@ namespace Vision {
         static const std::array<cv::Point2f, 4> outputPointsPixel = normToPixel(outputPointsNorm);
         static const std::array<cv::Point2f, 4> inputPointsPixel = normToPixel(inputPointsNorm);
 
-        std::vector<glm::vec2> hills;
+        // std::vector<glm::vec2> hills;
+        hills.clear();
 
         cv::Mat rawData = cv::Mat(DataLoader::DEPTH_HEIGHT, DataLoader::DEPTH_WIDTH, CV_16UC1, (void*)topVertices.data());
 
@@ -93,11 +96,32 @@ namespace Vision {
                     float centerX = moment.m10 / moment.m00;
                     float centerY = moment.m01 / moment.m00;
 
-                    hills.emplace_back(centerX / DataLoader::DEPTH_WIDTH, centerY / DataLoader::DEPTH_HEIGHT);
+                    glm::vec2 cartesianPoint = glm::vec2{centerX / DataLoader::DEPTH_WIDTH, centerY / DataLoader::DEPTH_HEIGHT};
+                    hills.push_back(cartesianToNDC(cartesianPoint));
                 }
             }
         }
 
-        return hills;
+        // return hills;
+        // return debugImg;
+    }
+
+    glm::vec2 cartesianToNDC(const glm::vec2 point) {
+        // Cartesian:
+        // (0,0)---------(1,0)
+        // ------------------
+        // ------------------
+        // (0,1)---------(1,1)
+
+        // NDC:
+        // (-1,1)---------(1,1)
+        // ------------------
+        // ------------------
+        // (-1,-1)---------(1,-1)
+
+        // x: [0,1] -> [-1, 1]
+        // y: [0,1] -> [1, -1]
+
+        return glm::vec2{point.x * 2 - 1, -(point.y * 2 - 1)};
     }
 }

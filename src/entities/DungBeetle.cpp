@@ -4,6 +4,8 @@
 
 #include "entities/DungBeetle.hpp"
 
+#include "glm/gtx/norm.hpp"
+
 DungBeetle::DungBeetle()
     : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Beetle)
 {
@@ -23,4 +25,22 @@ float DungBeetle::getSpeed() const {
 }
 
 void DungBeetle::calculateWaypoints(const TopographyVertices& topVertices) {
+    static constexpr float baseRadius = 0.2f;
+
+    waypoints.clear();
+    currentWaypointIdx = 0;
+
+    glm::vec2 origin = getSprite().getPosition();
+
+    glm::vec2 directionVector = glm::normalize(basePosition - origin);
+    glm::vec2 adjustedTarget = basePosition - directionVector * baseRadius;
+
+    waypoints.push_back(origin);
+    waypoints.push_back(adjustedTarget);
+}
+
+bool DungBeetle::validAttackPosition(const TopographyVertices &topVertices) {
+    static constexpr float maxDistSquared = 0.1f;
+
+    return glm::distance2(getSprite().getPosition(), basePosition) < maxDistSquared;
 }

@@ -18,11 +18,11 @@ Enemy::Enemy(const char* filePath, int health, SpriteType type)
     setState(State::WALKING);
 }
 
-Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 targetPosition)
+Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 basePosition)
     : sprite(filePath, type, pos, size)
     , health(health)
     , state(State::WALKING)
-    , targetPosition(targetPosition)
+    , basePosition(basePosition)
 {
     setState(State::WALKING);
 }
@@ -32,9 +32,7 @@ void Enemy::update(const TopographyVertices& topVertices, float dt) {
 
     switch (state) {
         case State::WALKING: {
-            if (waypoints.empty()) {
-                calculateWaypoints(topVertices);
-            }
+            calculateWaypoints(topVertices);
 
             followPath(topVertices, dt);
 
@@ -45,7 +43,12 @@ void Enemy::update(const TopographyVertices& topVertices, float dt) {
             break;
         }
         case State::ATTACKING:
-            // Continue attacking
+            sprite.setLookVector(glm::normalize(basePosition - sprite.getPosition()));
+
+            if (!validAttackPosition(topVertices)) {
+                setState(State::WALKING);
+            }
+
             break;
         case State::DYING:
             // Finish dying then switch to dead
@@ -55,8 +58,9 @@ void Enemy::update(const TopographyVertices& topVertices, float dt) {
 
 void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
     glm::vec2 currentTarget = waypoints[currentWaypointIdx + 1];
+    glm::vec2 finalTarget = waypoints[waypoints.size() - 1];
 
-    auto atTarget = glm::epsilonEqual(sprite.getPosition(), targetPosition, glm::epsilon<float>());
+    auto atTarget = glm::epsilonEqual(sprite.getPosition(), finalTarget, glm::epsilon<float>());
     if (glm::all(atTarget)) return;
     if (currentWaypointIdx >= waypoints.size() - 1) return;
 
@@ -90,7 +94,7 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
     static const glm::mat3 warpMat = Vision::calculateWarpMatrix();
     static const glm::mat3 unwarpMat = glm::inverse(warpMat);
 
-    auto getSafeDepth = [&](glm::vec2 p) -> int {
+    static auto getSafeDepth = [&](glm::vec2 p) -> int {
         // p is [-1, 1] so we must convert to [0, 1]
         float u = (p.x + 1.f) * 0.5f;
         float v = (1.f - p.y) * 0.5f;
@@ -104,6 +108,9 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
 
         return topVertices[r * DataLoader::DEPTH_WIDTH + c];
     };
+
+    // TODO this is kinda nasty but we go for it
+    if (sprite.getType() == SpriteType::Bee) return getSpeed();
 
     int initialDepthAvg = 0;
     for (int i = -1; i <= 1; i++) {
@@ -129,7 +136,6 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
     speedMultiplier = std::clamp(speedMultiplier, 0.2f, 2.f);
 
     return speedMultiplier * getSpeed();
-
 }
 
 void Enemy::takeDamage(int damage) {

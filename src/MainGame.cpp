@@ -82,16 +82,17 @@ void MainGame::run() {
     // waveManager.addEnemy(SpriteType::Worm, {-0.8, 0.7}, basePosition);
     // waveManager.addEnemy(SpriteType::Worm, {0.8, 0.8}, basePosition);
     // waveManager.addEnemy(SpriteType::Beetle, {0, 0.85}, basePosition);
-    // waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3});
+    waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3}, basePosition);
     // waveManager.addEnemy(SpriteType::Worm, {-0.4, 0});
+    waveManager.addEnemy(SpriteType::Bee, {-0.9, 0.9}, basePosition);
 
     float prevTicks = SDL_GetTicks();
 
     // TODO move this inside the loop using multithreading
     DataLoader& dataLoader = DataLoader::getInstance();
-    const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
+    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
-    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
+    const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
 
     while (!gameQuit) {
 

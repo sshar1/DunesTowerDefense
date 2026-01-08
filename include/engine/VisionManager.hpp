@@ -8,7 +8,7 @@
 
 #include "DataLoader.hpp"
 #include "glm/detail/type_mat.hpp"
-#include "glm/detail/type_vec.hpp"
+#include "glm/vec2.hpp"
 
 namespace Vision {
     static const std::array<cv::Point2f, 4> outputPointsNorm = {
@@ -33,6 +33,29 @@ namespace Vision {
     static constexpr int MIN_DEPTH_VAL = 500;
 
     glm::mat3 calculateWarpMatrix();
-    std::vector<glm::vec2> findHills(const TopographyVertices& topVertices);
+    // std::vector<glm::vec2> findHills(const TopographyVertices& topVertices);
     // cv::Mat findHills(const TopographyVertices& topVertices);
+
+    glm::vec2 cartesianToNDC(const glm::vec2 point);
+
+    class Manager {
+    public:
+        Manager(Manager const&) = delete;
+        Manager& operator= (Manager const&) = delete;
+        Manager(Manager const&&) = delete;
+        Manager& operator= (Manager const&&) = delete;
+
+        static Manager& getInstance() {
+            static Manager instance;
+            return instance;
+        }
+
+        void evaluateHills(const TopographyVertices& topVertices);
+        std::vector<glm::vec2>& getHills() { return hills; };
+    private:
+        Manager() = default;
+        ~Manager() = default;
+
+        std::vector<glm::vec2> hills{};
+    };
 }

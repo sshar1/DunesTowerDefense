@@ -8,6 +8,8 @@
 #include <ostream>
 #include <random>
 
+#include "engine/VisionManager.hpp"
+#include "entities/Bee.hpp"
 #include "entities/DuneWorm.hpp"
 #include "entities/DungBeetle.hpp"
 
@@ -32,12 +34,16 @@ void WaveManager::addEnemy(SpriteType type, glm::vec2 position, glm::vec2 target
         case SpriteType::Worm:
             gameStats.enemies.push_back(std::make_unique<DuneWorm>(position, targetPosition));
             return;
+        case SpriteType::Bee:
+            gameStats.enemies.push_back(std::make_unique<Bee>(position, targetPosition));
+            return;
         default:
             std::cout << "This is not an enemy, cannot add it" << std::endl;
     }
 }
 
 void WaveManager::update(const TopographyVertices& topVertices, float dt) {
+    Vision::Manager::getInstance().evaluateHills(topVertices);
     for (const auto& enemy : gameStats.enemies) {
         enemy->update(topVertices, dt);
     }

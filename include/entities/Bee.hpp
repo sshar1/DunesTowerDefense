@@ -1,20 +1,19 @@
 //
-// Created by Sami Sharif  on 12/26/25.
+// Created by Sami Sharif  on 1/7/26.
 //
-
 #pragma once
 
 #include "Enemy.hpp"
 #include "glm/detail/type_vec2.hpp"
 
-class DungBeetle : public Enemy {
+class Bee: public Enemy {
 public:
-    DungBeetle();
-    explicit DungBeetle(glm::vec2 pos, glm::vec2 targetPosition);
+    Bee();
+    explicit Bee(glm::vec2 pos, glm::vec2 targetPosition);
 
 private:
-    static constexpr const char* spriteFilePath = "data/textures/dungbeetle_spritesheet.png";
-    static constexpr glm::vec2 spriteSize = {0.1, 0.1};
+    static constexpr const char* spriteFilePath = "data/textures/bee_spritesheet.png";
+    static constexpr glm::vec2 spriteSize = {0.2, 0.2};
 
     static constexpr float SPEED = 0.05f;
     static constexpr int MAX_HEALTH = 100;

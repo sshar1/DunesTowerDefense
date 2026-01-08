@@ -4,6 +4,8 @@
 
 #include "entities/DuneWorm.hpp"
 
+#include "glm/gtx/norm.hpp"
+
 DuneWorm::DuneWorm()
     : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Worm)
 {
@@ -30,9 +32,15 @@ void DuneWorm::calculateWaypoints(const TopographyVertices& topVertices) {
 
     glm::vec2 origin = getSprite().getPosition();
 
-    glm::vec2 directionVector = targetPosition - origin;
-    glm::vec2 adjustedTarget = targetPosition - directionVector * baseRadius;
+    glm::vec2 directionVector = glm::normalize(basePosition - origin);
+    glm::vec2 adjustedTarget = basePosition - directionVector * baseRadius;
 
     waypoints.push_back(origin);
     waypoints.push_back(adjustedTarget);
+}
+
+bool DuneWorm::validAttackPosition(const TopographyVertices &topVertices) {
+    static constexpr float maxDistSquared = 0.1;
+
+    return glm::distance2(getSprite().getPosition(), basePosition) < maxDistSquared;
 }
