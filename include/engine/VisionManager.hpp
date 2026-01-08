@@ -33,6 +33,6 @@ namespace Vision {
     static constexpr int MIN_DEPTH_VAL = 500;
 
     glm::mat3 calculateWarpMatrix();
-    // std::vector<glm::vec2> findHills(const TopographyVertices& topVertices);
-    cv::Mat findHills(const TopographyVertices& topVertices);
+    std::vector<glm::vec2> findHills(const TopographyVertices& topVertices);
+    // cv::Mat findHills(const TopographyVertices& topVertices);
 }

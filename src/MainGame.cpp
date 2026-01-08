@@ -107,17 +107,16 @@ void MainGame::run() {
 
         renderer->clearBuffer();
 
-        if (true) {
-            renderer->DEBUG_rengerMat(Vision::findHills(topVertices));
-        }
-        else {
-            renderer->renderTopography(topVertices);
+#ifdef DEBUG_MODE
+            // renderer->DEBUG_rengerMat(Vision::findHills(topVertices));
+#else
+        renderer->renderTopography(topVertices);
 
-            waveManager.update(topVertices, dt / 1000.f);
-            renderer->streamEnemies(waveManager.getEnemies());
-            renderer->streamBase(waveManager.getBase());
-            renderer->renderSprites();
-        }
+        waveManager.update(topVertices, dt / 1000.f);
+        renderer->streamEnemies(waveManager.getEnemies());
+        renderer->streamBase(waveManager.getBase());
+        renderer->renderSprites();
+#endif
 
         SDL_GL_SwapWindow(window);
 

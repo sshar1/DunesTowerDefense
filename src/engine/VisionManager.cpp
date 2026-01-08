@@ -25,9 +25,9 @@ namespace Vision {
         return warpMat;
     }
 
-    cv::Mat findHills(const TopographyVertices& topVertices) {
+    std::vector<glm::vec2> findHills(const TopographyVertices& topVertices) {
         static constexpr int hillThreshold = 200;
-        static constexpr int minHillArea = 100;
+        static constexpr int minHillArea = 200;
         static const cv::Size dsize{DataLoader::DEPTH_WIDTH, DataLoader::DEPTH_HEIGHT};
         static const cv::Size kernelSize{5, 5};
 
@@ -58,28 +58,33 @@ namespace Vision {
         if (minVal < MIN_DEPTH_VAL) minVal = MIN_DEPTH_VAL;
         if (maxVal > MAX_DEPTH_VAL) maxVal = MAX_DEPTH_VAL;
 
-        cv::Mat clampedData;
-        cv::max(warped, minVal, clampedData);
-        cv::min(clampedData, maxVal, clampedData);
+        cv::max(warped, minVal, warped);
+        cv::min(warped, maxVal, warped);
 
-        cv::Mat viewableImg;
-        cv::normalize(clampedData, viewableImg, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+        cv::normalize(warped, warped, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+        cv::threshold(warped, warped, hillThreshold, 255, cv::THRESH_BINARY_INV);
 
-        cv::Mat masked;
-        cv::threshold(viewableImg, masked, hillThreshold, 255, cv::THRESH_BINARY_INV);
+        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
+        cv::morphologyEx(warped, warped, cv::MORPH_OPEN, kernel);
 
-        cv::Mat morphed;
-        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, kernelSize);
-        cv::morphologyEx(masked, morphed, cv::MORPH_OPEN, kernel);
+        cv::copyMakeBorder(warped, warped, 1, 1, 1, 1, cv::BORDER_CONSTANT, cv::Scalar(0));
 
         cv::Mat debugImg;
-        cv::cvtColor(morphed, debugImg, cv::COLOR_GRAY2BGR);
+        cv::cvtColor(warped, debugImg, cv::COLOR_GRAY2BGR);
         cv::Scalar color(255, 0, 0);
 
         std::vector<std::vector<cv::Point>> contours;
-        cv::findContours(morphed, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+        cv::findContours(warped, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
         for (int i = 0; i < contours.size(); i++) {
             const auto& contour = contours[i];
+            cv::Rect bounds = cv::boundingRect(contour);
+
+            bool touchesBorder = (bounds.x <= 1 || bounds.y <= 1 ||
+                                bounds.x + bounds.width >= dsize.width - 2 ||
+                                bounds.y + bounds.height >= dsize.height - 2);
+
+            if (touchesBorder) continue;
+
             double area = cv::contourArea(contour);
             if (area > minHillArea) {
                 cv::drawContours(debugImg, contours, i, color, 2);
@@ -93,6 +98,6 @@ namespace Vision {
             }
         }
 
-        return debugImg;
+        return hills;
     }
 }
