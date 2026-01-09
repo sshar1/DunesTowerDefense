@@ -44,3 +44,11 @@ bool DungBeetle::validAttackPosition(const TopographyVertices &topVertices) {
 
     return glm::distance2(getSprite().getPosition(), basePosition) < maxDistSquared;
 }
+
+float DungBeetle::getAttackCooldown() const {
+    return ATTACK_COOLDOWN;
+}
+
+void DungBeetle::attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile> > &projectiles) {
+
+}

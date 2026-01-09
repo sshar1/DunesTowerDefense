@@ -51,12 +51,19 @@ void WaveManager::update(const TopographyVertices& topVertices, float dt) {
     Vision::Manager::getInstance().calculateWarpMatrix(topVertices);
     Vision::Manager::getInstance().evaluateHills();
     for (const auto& enemy : gameStats.enemies) {
-        enemy->update(topVertices, dt);
+        enemy->update(topVertices, gameStats.projectiles, dt);
+    }
+    for (const auto& projectile : gameStats.projectiles) {
+        projectile->update(dt);
     }
 }
 
 std::vector<std::unique_ptr<Enemy>>& WaveManager::getEnemies() {
     return gameStats.enemies;
+}
+
+std::vector<std::unique_ptr<Projectile>>& WaveManager::getProjectiles() {
+    return gameStats.projectiles;
 }
 
 Base* WaveManager::getBase() const {

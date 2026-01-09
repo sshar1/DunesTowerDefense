@@ -8,6 +8,7 @@
 #include "engine/DataLoader.hpp"
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
+#include "entities/Projectile.hpp"
 
 enum class GameState {
     PreWave,
@@ -17,6 +18,7 @@ enum class GameState {
 
 struct GameStats {
     std::vector<std::unique_ptr<Enemy>> enemies{};
+    std::vector<std::unique_ptr<Projectile>> projectiles{};
     std::unique_ptr<Base> base;
     unsigned int baseHealth{100};
     unsigned int waveNumber{1};
@@ -36,6 +38,7 @@ public:
     void update(const TopographyVertices& topVertices, float dt);
 
     std::vector<std::unique_ptr<Enemy>>& getEnemies();
+    std::vector<std::unique_ptr<Projectile>>& getProjectiles();
     Base* getBase() const;
 
 private:

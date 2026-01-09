@@ -77,14 +77,14 @@ void MainGame::run() {
 
     // waveManager.addEnemy(SpriteType::Beetle, {-0.8, 0}, basePosition);
 
-    waveManager.addEnemy(SpriteType::Worm, {100, 200}, basePosition);
+    // waveManager.addEnemy(SpriteType::Worm, {100, 200}, basePosition);
     // waveManager.addEnemy(SpriteType::Worm, {0.8, 0}, basePosition);
     // waveManager.addEnemy(SpriteType::Worm, {-0.8, 0.7}, basePosition);
     // waveManager.addEnemy(SpriteType::Worm, {0.8, 0.8}, basePosition);
-    // waveManager.addEnemy(SpriteType::Beetle, {1100, 750}, basePosition);
+    waveManager.addEnemy(SpriteType::Beetle, {1100, 750}, basePosition);
     // waveManager.addEnemy(SpriteType::Beetle, {0.3, 0.3}, basePosition);
     // waveManager.addEnemy(SpriteType::Worm, {-0.4, 0});
-    // waveManager.addEnemy(SpriteType::Bee, {200, 200}, basePosition);
+    waveManager.addEnemy(SpriteType::Bee, {300, 400}, basePosition);
 
     float prevTicks = SDL_GetTicks();
 
@@ -115,6 +115,7 @@ void MainGame::run() {
 
         waveManager.update(topVertices, dt / 1000.f);
         renderer->streamEnemies(waveManager.getEnemies());
+        renderer->streamProjectiles(waveManager.getProjectiles());
         renderer->streamBase(waveManager.getBase());
         renderer->renderSprites();
 #endif

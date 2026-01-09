@@ -35,7 +35,11 @@ add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c
         include/engine/VisionManager.hpp
         src/engine/VisionManager.cpp
         src/entities/Bee.cpp
-        include/entities/Bee.hpp)
+        include/entities/Bee.hpp
+        src/entities/Projectile.cpp
+        include/entities/Projectile.hpp
+        src/entities/Stinger.cpp
+        include/entities/Stinger.hpp)
 add_executable(UnitTests tests/test.cpp external/glad/src/glad.c)
 
 add_library(GameDependencies INTERFACE)

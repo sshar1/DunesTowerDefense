@@ -43,6 +43,7 @@ enum class SpriteType {
 };
 
 inline bool isEnemy(SpriteType type) { return type > SpriteType::FirstEnemy && type < SpriteType::LastEnemy; }
+inline bool isProjectile(SpriteType type) { return type == SpriteType::Stinger || type == SpriteType::Rock; }
 
 // Maybe replace this with bitwise flags?
 inline bool isAnimatable(SpriteType type) {
@@ -75,6 +76,7 @@ public:
     // friend void Enemy::updateAnimation();
     SpriteType getType() const;
     glm::vec2 getPosition() const;
+    glm::vec2 getLookVector() const;
     void setPosition(glm::vec2 position);
     void setLookVector(glm::vec2 lookVector);
 

@@ -11,6 +11,7 @@
 #include "shader_s.h"
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
+#include "entities/Projectile.hpp"
 #include "entities/Sprite.hpp"
 
 struct SpriteBatch {
@@ -32,6 +33,7 @@ public:
     void renderSprite(const Sprite& sprite);
 
     void streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies);
+    void streamProjectiles(const std::vector<std::unique_ptr<Projectile>>& projectiles);
     void streamBase(const Base* base);
     void renderSprites();
     void DEBUG_rengerMat(const cv::Mat& inputMat);

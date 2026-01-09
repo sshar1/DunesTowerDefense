@@ -3,17 +3,18 @@
 //
 
 #pragma once
+#include "Projectile.hpp"
 #include "Sprite.hpp"
 #include "engine/DataLoader.hpp"
 
-enum class State {
-    WALKING,
-    ATTACKING,
-    DYING,
-    DEAD,
-};
 
 class Enemy {
+    enum class State {
+        WALKING,
+        ATTACKING,
+        DYING,
+        DEAD,
+    };
 public:
     Enemy(const char* filePath, int health, SpriteType type);
     Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 basePosition);
@@ -23,7 +24,7 @@ public:
 
     void takeDamage(int damage);
 
-    void update(const TopographyVertices& topVertices, float dt);
+    void update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt);
 
 private:
     static constexpr int WALK_ANIM_TYPE = 0;
@@ -31,9 +32,11 @@ private:
     static constexpr int DYING_ANIM_TYPE = 2;
 
     virtual int getMaxHealth() const = 0;
+    virtual float getAttackCooldown() const = 0;
     virtual float getSpeed() const = 0;
     virtual void calculateWaypoints(const TopographyVertices& topVertices) = 0;
     virtual bool validAttackPosition(const TopographyVertices& topVertices) = 0;
+    virtual void attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile>>& projectiles) = 0;
 
     void followPath(const TopographyVertices& topVertices, float dt);
     virtual float getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction);
@@ -48,4 +51,6 @@ protected:
     std::vector<glm::vec2> waypoints;
     glm::vec2 basePosition;
     int currentWaypointIdx;
+
+    float elapsedAttackTime = 0.f;
 };

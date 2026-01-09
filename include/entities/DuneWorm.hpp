@@ -14,14 +14,16 @@ public:
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/duneworm_spritesheet.png";
-    // static constexpr glm::vec2 spriteSize = {0.1, 0.1};
     static constexpr glm::vec2 spriteSize = {1200/20, 900/20};
 
     static constexpr float SPEED = 60.f;//0.1f;
     static constexpr int MAX_HEALTH = 100;
+    static constexpr float ATTACK_COOLDOWN = 1.f;
 
     int getMaxHealth() const override;
+    float getAttackCooldown() const override;
     float getSpeed() const override;
     void calculateWaypoints(const TopographyVertices& topVertices) override;
     bool validAttackPosition(const TopographyVertices &topVertices) override;
+    void attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile>>& projectiles) override;
 };

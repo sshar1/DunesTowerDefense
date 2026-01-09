@@ -75,7 +75,11 @@ void Sprite::setPosition(glm::vec2 position) {
 }
 
 void Sprite::setLookVector(glm::vec2 lookVector) {
-    this->lookVector = lookVector;
+    this->lookVector = glm::normalize(lookVector);
+}
+
+glm::vec2 Sprite::getLookVector() const {
+    return lookVector;
 }
 
 void Sprite::updateAnimation() {

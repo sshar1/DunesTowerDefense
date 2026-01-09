@@ -5,6 +5,7 @@
 #include "entities/Bee.hpp"
 
 #include "engine/VisionManager.hpp"
+#include "entities/Stinger.hpp"
 #include "glm/detail/func_geometric.inl"
 #include "glm/gtx/norm.inl"
 
@@ -70,4 +71,15 @@ bool Bee::validAttackPosition(const TopographyVertices &topVertices) {
 
 float Bee::getDirectionalSpeed(const TopographyVertices &topVertices, glm::vec2 from, glm::vec2 direction) {
     return SPEED;
+}
+
+float Bee::getAttackCooldown() const {
+    return ATTACK_COOLDOWN;
+}
+
+void Bee::attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile>> &projectiles) {
+    static constexpr float spacing = 50.f;
+
+    glm::vec2 origin = sprite.getPosition() + sprite.getLookVector() * spacing;
+    projectiles.push_back(std::make_unique<Stinger>(origin, targetPosition));
 }

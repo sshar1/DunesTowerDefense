@@ -194,7 +194,25 @@ void Renderer::streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies)
 
     // Push vertices into correct batch
     for (const auto& enemy : enemies) {
+        // TODO check that enemy is alive
         auto sprite = enemy->getSprite();
+        auto type = sprite.getType();
+        sprite.pushVertices(spriteBatches[type].vertices);
+        spriteBatches[type].textureID = sprite.textureID;
+    }
+}
+
+void Renderer::streamProjectiles(const std::vector<std::unique_ptr<Projectile>>& projectiles) {
+    // Clear batches
+    for (auto& [type, batch] : spriteBatches) {
+        if (isProjectile(type)) {
+            batch.vertices.clear();
+        }
+    }
+
+    // Push vertices into correct batch
+    for (const auto& projectile : projectiles) {
+        auto sprite = projectile->getSprite();
         auto type = sprite.getType();
         sprite.pushVertices(spriteBatches[type].vertices);
         spriteBatches[type].textureID = sprite.textureID;

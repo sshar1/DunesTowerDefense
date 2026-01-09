@@ -44,3 +44,11 @@ bool DuneWorm::validAttackPosition(const TopographyVertices &topVertices) {
 
     return glm::distance2(getSprite().getPosition(), basePosition) < maxDistSquared;
 }
+
+float DuneWorm::getAttackCooldown() const {
+    return ATTACK_COOLDOWN;
+}
+
+void DuneWorm::attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile> > &projectiles) {
+
+}

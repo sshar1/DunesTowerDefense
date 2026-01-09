@@ -28,7 +28,7 @@ Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, g
     setState(State::WALKING);
 }
 
-void Enemy::update(const TopographyVertices& topVertices, float dt) {
+void Enemy::update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt) {
     sprite.update(dt);
 
     switch (state) {
@@ -48,6 +48,13 @@ void Enemy::update(const TopographyVertices& topVertices, float dt) {
 
             if (!validAttackPosition(topVertices)) {
                 setState(State::WALKING);
+            }
+            else {
+                elapsedAttackTime += dt;
+                if (elapsedAttackTime > getAttackCooldown()) {
+                    elapsedAttackTime = 0;
+                    attack(basePosition, projectiles);
+                }
             }
 
             break;
@@ -165,3 +172,9 @@ void Enemy::setState(State newState) {
 Sprite Enemy::getSprite() {
     return sprite;
 }
+
+// TODO
+// Store a projectiles buffer in wave manager and send it as a parameter to enemies.update()
+// enemies can then push onto this buffer
+// We just need projectile abstract class and then subclasses for mortar and stinger
+// Also need to streamProjectiles() in renderer
