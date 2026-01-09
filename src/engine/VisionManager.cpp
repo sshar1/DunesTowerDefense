@@ -45,7 +45,6 @@ namespace Vision {
         static const std::array<cv::Point2f, 4> outputPointsPixel = normToPixel(outputPointsNorm);
         static const std::array<cv::Point2f, 4> inputPointsPixel = normToPixel(inputPointsNorm);
 
-        // std::vector<glm::vec2> hills;
         hills.clear();
 
         cv::Mat rawData = cv::Mat(DataLoader::DEPTH_HEIGHT, DataLoader::DEPTH_WIDTH, CV_16UC1, (void*)topVertices.data());
@@ -96,8 +95,8 @@ namespace Vision {
                     float centerX = moment.m10 / moment.m00;
                     float centerY = moment.m01 / moment.m00;
 
-                    glm::vec2 cartesianPoint = glm::vec2{centerX / DataLoader::DEPTH_WIDTH, centerY / DataLoader::DEPTH_HEIGHT};
-                    hills.push_back(cartesianToNDC(cartesianPoint));
+                    // glm::vec2 cartesianPoint = glm::vec2{centerX / DataLoader::DEPTH_WIDTH, centerY / DataLoader::DEPTH_HEIGHT};
+                    hills.emplace_back(centerX * MainGame::WINDOW_WIDTH / dsize.width, centerY * MainGame::WINDOW_HEIGHT / dsize.height);
                 }
             }
         }
@@ -105,6 +104,10 @@ namespace Vision {
         // return hills;
         // return debugImg;
     }
+
+    // void Manager::calculateWarpMatrix() {
+    //
+    // }
 
     glm::vec2 cartesianToNDC(const glm::vec2 point) {
         // Cartesian:
@@ -125,3 +128,9 @@ namespace Vision {
         return glm::vec2{point.x * 2 - 1, -(point.y * 2 - 1)};
     }
 }
+
+// TODO
+// Cache the warped matrix so it can be used for getting depth values. Make sure we run it every
+// frame.
+// In the getDirectionalSpeed() method, we just convert pixel positions to indices in
+// this matrix

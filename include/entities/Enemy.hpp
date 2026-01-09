@@ -36,7 +36,7 @@ private:
     virtual bool validAttackPosition(const TopographyVertices& topVertices) = 0;
 
     void followPath(const TopographyVertices& topVertices, float dt);
-    float getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction);
+    virtual float getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction);
 
     void updateAnimation();
     void setState(State newState);

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <ostream>
 
+#include "MainGame.hpp"
 #include "engine/VisionManager.hpp"
 #include "glm/gtc/epsilon.hpp"
 
@@ -85,12 +86,11 @@ void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
 
 float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction) {
     // To get the directional speed, we sample the destination point to be
-    // 5% of screen dimensions
-    static constexpr float range = 0.05f;
+    // 10% ahead
+    static constexpr float range = 0.1f;
     static constexpr int sampleFinalPoints = 5;
     static constexpr int sampleInitialPoints = 9;
 
-    // TODO find a better way for this
     static const glm::mat3 warpMat = Vision::calculateWarpMatrix();
     static const glm::mat3 unwarpMat = glm::inverse(warpMat);
 
@@ -99,7 +99,7 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
         float u = (p.x + 1.f) * 0.5f;
         float v = (1.f - p.y) * 0.5f;
 
-        glm::vec3 unwarpedHomogenous = unwarpMat * glm::vec3(u, v, 1.f);
+        glm::vec3 unwarpedHomogenous = unwarpMat * glm::vec3(p.x, p.y, 1.f);
         if (unwarpedHomogenous.z == 0) return 0;
         glm::vec2 gridUV = glm::vec2(unwarpedHomogenous.x, unwarpedHomogenous.y) / unwarpedHomogenous.z;
 
@@ -109,15 +109,14 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
         return topVertices[r * DataLoader::DEPTH_WIDTH + c];
     };
 
-    // TODO this is kinda nasty but we go for it
-    if (sprite.getType() == SpriteType::Bee) return getSpeed();
+    glm::vec2 fromNorm = glm::vec2{from.x / MainGame::WINDOW_WIDTH, from.y / MainGame::WINDOW_HEIGHT};
 
     int initialDepthAvg = 0;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
             float w = i * 0.01f;
             float h = j * 0.01f;
-            glm::vec2 point = glm::vec2(w, h) + from;
+            glm::vec2 point = glm::vec2(w, h) + fromNorm;
             initialDepthAvg += getSafeDepth(point);
         }
     }
@@ -126,13 +125,13 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
     int finalDepthAvg = 0;
     for (int i = 1; i <= sampleFinalPoints; i++) {
         float vectorMultiplier = range * (float(i) / sampleFinalPoints);
-        glm::vec2 destPoint = from + direction * vectorMultiplier;
+        glm::vec2 destPoint = fromNorm + direction * vectorMultiplier;
 
         finalDepthAvg += getSafeDepth(destPoint);
     }
     finalDepthAvg /= sampleFinalPoints;
 
-    float speedMultiplier = (finalDepthAvg - initialDepthAvg) / 20.f + 1;
+    float speedMultiplier = (finalDepthAvg - initialDepthAvg) / 2.f + 1;
     speedMultiplier = std::clamp(speedMultiplier, 0.2f, 2.f);
 
     return speedMultiplier * getSpeed();

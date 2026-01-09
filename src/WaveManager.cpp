@@ -8,6 +8,7 @@
 #include <ostream>
 #include <random>
 
+#include "MainGame.hpp"
 #include "engine/VisionManager.hpp"
 #include "entities/Bee.hpp"
 #include "entities/DuneWorm.hpp"
@@ -19,9 +20,13 @@ WaveManager::WaveManager()
 
 void WaveManager::initSystems() {
     // Randomize base position
+    const float w = MainGame::WINDOW_WIDTH;
+    const float h = MainGame::WINDOW_HEIGHT;
+
     std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<float> distribution(-0.1f, 0.1f);
-    glm::vec2 basePosition = glm::vec2{distribution(gen), distribution(gen)};
+    std::uniform_real_distribution<float> xDistribution(w/2 - 0.1 * w, w/2 + 0.1 * w);
+    std::uniform_real_distribution<float> yDistribution(h/2 - 0.1 * h, h/2 + 0.1 * h);
+    glm::vec2 basePosition = glm::vec2{xDistribution(gen), yDistribution(gen)};
 
     gameStats.base = std::make_unique<Base>(basePosition);
 }

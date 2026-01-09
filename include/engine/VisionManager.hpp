@@ -50,6 +50,7 @@ namespace Vision {
             return instance;
         }
 
+        // void calculateWarpMatrix();
         void evaluateHills(const TopographyVertices& topVertices);
         std::vector<glm::vec2>& getHills() { return hills; };
     private:
@@ -57,5 +58,6 @@ namespace Vision {
         ~Manager() = default;
 
         std::vector<glm::vec2> hills{};
+        cv::Mat warpedDepth;
     };
 }

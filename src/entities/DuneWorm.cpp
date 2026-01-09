@@ -25,7 +25,7 @@ float DuneWorm::getSpeed() const {
 }
 
 void DuneWorm::calculateWaypoints(const TopographyVertices& topVertices) {
-    static constexpr float baseRadius = 0.2f;
+    static constexpr float baseRadius = 130.f;
 
     waypoints.clear();
     currentWaypointIdx = 0;
@@ -40,7 +40,7 @@ void DuneWorm::calculateWaypoints(const TopographyVertices& topVertices) {
 }
 
 bool DuneWorm::validAttackPosition(const TopographyVertices &topVertices) {
-    static constexpr float maxDistSquared = 0.1;
+    static constexpr float maxDistSquared = 40000.f;
 
     return glm::distance2(getSprite().getPosition(), basePosition) < maxDistSquared;
 }

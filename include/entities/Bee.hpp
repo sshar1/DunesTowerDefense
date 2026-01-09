@@ -13,13 +13,16 @@ public:
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/bee_spritesheet.png";
-    static constexpr glm::vec2 spriteSize = {0.2, 0.2};
+    // static constexpr glm::vec2 spriteSize = {0.2, 0.2};
+    static constexpr glm::vec2 spriteSize = {1200/10, 900/10};
 
-    static constexpr float SPEED = 0.05f;
+    static constexpr float SPEED = 30.f;//0.05f;
     static constexpr int MAX_HEALTH = 100;
 
     int getMaxHealth() const override;
     float getSpeed() const override;
     void calculateWaypoints(const TopographyVertices& topVertices) override;
     bool validAttackPosition(const TopographyVertices &topVertices) override;
+
+    float getDirectionalSpeed(const TopographyVertices &topVertices, glm::vec2 from, glm::vec2 direction) override;
 };

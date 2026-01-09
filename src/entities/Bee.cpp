@@ -27,7 +27,7 @@ float Bee::getSpeed() const {
 }
 
 void Bee::calculateWaypoints(const TopographyVertices& topVertices) {
-    static constexpr float baseRadius = 0.2f;
+    static constexpr float baseRadius = 30.f;
 
     waypoints.clear();
     currentWaypointIdx = 0;
@@ -59,11 +59,15 @@ void Bee::calculateWaypoints(const TopographyVertices& topVertices) {
 }
 
 bool Bee::validAttackPosition(const TopographyVertices &topVertices) {
-    static constexpr float epsilon = 0.01;
+    static constexpr float epsilon = 50;
 
     std::vector<glm::vec2>& hills = Vision::Manager::getInstance().getHills();
 
     return std::any_of(hills.begin(), hills.end(), [&](const glm::vec2& hill) {
         return glm::distance2(hill, sprite.getPosition()) < epsilon;
     });
+}
+
+float Bee::getDirectionalSpeed(const TopographyVertices &topVertices, glm::vec2 from, glm::vec2 direction) {
+    return SPEED;
 }

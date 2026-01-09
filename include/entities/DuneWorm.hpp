@@ -14,9 +14,10 @@ public:
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/duneworm_spritesheet.png";
-    static constexpr glm::vec2 spriteSize = {0.1, 0.1};
+    // static constexpr glm::vec2 spriteSize = {0.1, 0.1};
+    static constexpr glm::vec2 spriteSize = {1200/20, 900/20};
 
-    static constexpr float SPEED = 0.1f;
+    static constexpr float SPEED = 60.f;//0.1f;
     static constexpr int MAX_HEALTH = 100;
 
     int getMaxHealth() const override;
