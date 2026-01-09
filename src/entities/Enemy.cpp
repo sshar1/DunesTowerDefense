@@ -86,27 +86,23 @@ void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
 
 float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction) {
     // To get the directional speed, we sample the destination point to be
-    // 10% ahead
-    static constexpr float range = 0.1f;
+    // 5% ahead
+    static constexpr float range = 0.05f;
     static constexpr int sampleFinalPoints = 5;
     static constexpr int sampleInitialPoints = 9;
 
-    static const glm::mat3 warpMat = Vision::calculateWarpMatrix();
-    static const glm::mat3 unwarpMat = glm::inverse(warpMat);
-
+    // Takes a point in [0,1] x [0,1] coord system and returns the depth value
+    // at that point
     static auto getSafeDepth = [&](glm::vec2 p) -> int {
-        // p is [-1, 1] so we must convert to [0, 1]
-        float u = (p.x + 1.f) * 0.5f;
-        float v = (1.f - p.y) * 0.5f;
+        const cv::Mat& warpedDepth = Vision::Manager::getInstance().getWarpedDepth();
 
-        glm::vec3 unwarpedHomogenous = unwarpMat * glm::vec3(p.x, p.y, 1.f);
-        if (unwarpedHomogenous.z == 0) return 0;
-        glm::vec2 gridUV = glm::vec2(unwarpedHomogenous.x, unwarpedHomogenous.y) / unwarpedHomogenous.z;
+        int xIdx = p.x * DataLoader::DEPTH_WIDTH;
+        int yIdx = p.y * DataLoader::DEPTH_HEIGHT;
 
-        int c = std::clamp(static_cast<int>(DataLoader::DEPTH_WIDTH * gridUV.x), 0, DataLoader::DEPTH_WIDTH - 1);
-        int r = std::clamp(static_cast<int>(DataLoader::DEPTH_HEIGHT * gridUV.y), 0, DataLoader::DEPTH_HEIGHT - 1);
+        xIdx = std::clamp(xIdx, 0, DataLoader::DEPTH_WIDTH - 1);
+        yIdx = std::clamp(yIdx, 0, DataLoader::DEPTH_HEIGHT - 1);
 
-        return topVertices[r * DataLoader::DEPTH_WIDTH + c];
+        return warpedDepth.at<uint16_t>(yIdx, xIdx);
     };
 
     glm::vec2 fromNorm = glm::vec2{from.x / MainGame::WINDOW_WIDTH, from.y / MainGame::WINDOW_HEIGHT};
@@ -131,7 +127,7 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
     }
     finalDepthAvg /= sampleFinalPoints;
 
-    float speedMultiplier = (finalDepthAvg - initialDepthAvg) / 2.f + 1;
+    float speedMultiplier = (finalDepthAvg - initialDepthAvg) / 20.f + 1;
     speedMultiplier = std::clamp(speedMultiplier, 0.2f, 2.f);
 
     return speedMultiplier * getSpeed();

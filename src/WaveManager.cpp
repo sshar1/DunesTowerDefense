@@ -48,7 +48,8 @@ void WaveManager::addEnemy(SpriteType type, glm::vec2 position, glm::vec2 target
 }
 
 void WaveManager::update(const TopographyVertices& topVertices, float dt) {
-    Vision::Manager::getInstance().evaluateHills(topVertices);
+    Vision::Manager::getInstance().calculateWarpMatrix(topVertices);
+    Vision::Manager::getInstance().evaluateHills();
     for (const auto& enemy : gameStats.enemies) {
         enemy->update(topVertices, dt);
     }

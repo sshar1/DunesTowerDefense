@@ -33,8 +33,6 @@ namespace Vision {
     static constexpr int MIN_DEPTH_VAL = 500;
 
     glm::mat3 calculateWarpMatrix();
-    // std::vector<glm::vec2> findHills(const TopographyVertices& topVertices);
-    // cv::Mat findHills(const TopographyVertices& topVertices);
 
     glm::vec2 cartesianToNDC(const glm::vec2 point);
 
@@ -50,12 +48,16 @@ namespace Vision {
             return instance;
         }
 
-        // void calculateWarpMatrix();
-        void evaluateHills(const TopographyVertices& topVertices);
+        void calculateWarpMatrix(const TopographyVertices& topVertices);
+        void evaluateHills();
+
         std::vector<glm::vec2>& getHills() { return hills; };
+        const cv::Mat& getWarpedDepth() { return warpedDepth; };
     private:
         Manager() = default;
         ~Manager() = default;
+
+        static inline const cv::Size dsize{DataLoader::DEPTH_WIDTH, DataLoader::DEPTH_HEIGHT};
 
         std::vector<glm::vec2> hills{};
         cv::Mat warpedDepth;
