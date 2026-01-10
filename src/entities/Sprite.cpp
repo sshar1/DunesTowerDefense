@@ -32,6 +32,7 @@ Sprite::Sprite(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 s
     , elapsedAnimateTime(0)
     , animType(0)
     , uvRect(0, 0, 1, 1)
+    , loopAnimation(true)
     , position(pos)
     , size(size)
     , lookVector(1, 0)
@@ -40,19 +41,31 @@ Sprite::Sprite(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 s
     textureID = ResourceManager::getInstance().loadTexture(filePath);
 }
 
+void Sprite::playAnimation(bool loop) {
+    loopAnimation = loop;
+    currentAnimateFrame = 0;
+    elapsedAnimateTime = 0;
+}
+
 void Sprite::update(float dt) {
+    if (!isAnimatable(spriteType)) return;
+
     elapsedAnimateTime += dt;
 
     if (elapsedAnimateTime >= TIME_BETWEEN_ANIMATE_FRAMES) {
-        currentAnimateFrame++;
-        currentAnimateFrame %= ANIM_FRAMES;
-
+        if (currentAnimateFrame < ANIM_FRAMES - 1) {
+            currentAnimateFrame++;
+        }
+        else if (loopAnimation) {
+            currentAnimateFrame = 0;
+        }
         elapsedAnimateTime = 0;
     }
+    updateUVRect();
+}
 
-    if (isAnimatable(spriteType)) {
-        updateAnimation();
-    }
+void Sprite::resetAnimation() {
+    currentAnimateFrame = 0;
 }
 
 void Sprite::setAnimType(int newAnimType) {
@@ -82,7 +95,7 @@ glm::vec2 Sprite::getLookVector() const {
     return lookVector;
 }
 
-void Sprite::updateAnimation() {
+void Sprite::updateUVRect() {
     static constexpr float spriteWidth = 0.243;
     static constexpr float spriteHeight = 0.33;
 

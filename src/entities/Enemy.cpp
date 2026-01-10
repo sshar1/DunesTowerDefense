@@ -34,13 +34,10 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
     switch (state) {
         case State::WALKING: {
             calculateWaypoints(topVertices);
-
             followPath(topVertices, dt);
-
             if (currentWaypointIdx >= waypoints.size() - 1) {
                 setState(State::ATTACKING);
             }
-
             break;
         }
         case State::ATTACKING:
@@ -48,19 +45,23 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
 
             if (!validAttackPosition(topVertices)) {
                 setState(State::WALKING);
+                break;
             }
-            else {
-                elapsedAttackTime += dt;
-                if (elapsedAttackTime > getAttackCooldown()) {
-                    elapsedAttackTime = 0;
-                    attack(basePosition, projectiles);
-                }
+
+            elapsedAttackTime += dt;
+            if (elapsedAttackTime >= getAttackCooldown()) {
+                sprite.playAnimation(false);
+                elapsedAttackTime = 0;
+                attack(basePosition, projectiles);
             }
 
             break;
         case State::DYING:
-            // Finish dying then switch to dead
+            sprite.playAnimation(false);
+            // TODO if animation finished, switch to dead
             break;
+        case State::DEAD:
+            return;
     }
 }
 
@@ -152,9 +153,11 @@ void Enemy::updateAnimation() {
     switch (state) {
         case State::WALKING:
             sprite.setAnimType(WALK_ANIM_TYPE);
+            sprite.playAnimation(true);
             return;
         case State::ATTACKING:
             sprite.setAnimType(ATTACKING_ANIM_TYPE);
+            sprite.playAnimation(false);
             return;
         case State::DYING:
         case State::DEAD:
@@ -172,9 +175,3 @@ void Enemy::setState(State newState) {
 Sprite Enemy::getSprite() {
     return sprite;
 }
-
-// TODO
-// Store a projectiles buffer in wave manager and send it as a parameter to enemies.update()
-// enemies can then push onto this buffer
-// We just need projectile abstract class and then subclasses for mortar and stinger
-// Also need to streamProjectiles() in renderer

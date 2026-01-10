@@ -70,7 +70,6 @@ public:
 
     const SpriteVertices getVertices() const;
     void pushVertices(std::vector<SpriteVertex>& vertexBuffer) const;
-    void update(float dt);
     void setAnimType(int animType);
 
     // friend void Enemy::updateAnimation();
@@ -80,6 +79,10 @@ public:
     void setPosition(glm::vec2 position);
     void setLookVector(glm::vec2 lookVector);
 
+    void update(float dt);
+    void playAnimation(bool loop);
+    void resetAnimation();
+
 private:
     constexpr static float TIME_BETWEEN_ANIMATE_FRAMES = 0.1; // in s
     constexpr static int ANIM_FRAMES = 4;
@@ -88,11 +91,12 @@ private:
     float elapsedAnimateTime;
     int animType;
     UVRect uvRect;
+    bool loopAnimation;
 
     glm::vec2 position;
     glm::vec2 size;
     glm::vec2 lookVector;
     SpriteType spriteType;
 
-    void updateAnimation();
+    void updateUVRect();
 };
