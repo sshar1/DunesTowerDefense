@@ -13,6 +13,7 @@
 #include "entities/Enemy.hpp"
 #include "entities/Projectile.hpp"
 #include "entities/Sprite.hpp"
+#include "entities/Tower.hpp"
 
 struct SpriteBatch {
     GLuint textureID;
@@ -34,6 +35,7 @@ public:
 
     void streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies);
     void streamProjectiles(const std::vector<std::unique_ptr<Projectile>>& projectiles);
+    void streamTowerData(const std::vector<std::unique_ptr<Tower>>& towers);
     void streamBase(const Base* base);
     void renderSprites();
     void DEBUG_rengerMat(const cv::Mat& inputMat);

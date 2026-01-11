@@ -119,9 +119,3 @@ namespace Vision {
         return glm::vec2{point.x * 2 - 1, -(point.y * 2 - 1)};
     }
 }
-
-// TODO
-// Cache the warped matrix so it can be used for getting depth values. Make sure we run it every
-// frame.
-// In the getDirectionalSpeed() method, we just convert pixel positions to indices in
-// this matrix

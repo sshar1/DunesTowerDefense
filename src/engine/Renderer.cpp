@@ -219,6 +219,23 @@ void Renderer::streamProjectiles(const std::vector<std::unique_ptr<Projectile>>&
     }
 }
 
+void Renderer::streamTowerData(const std::vector<std::unique_ptr<Tower>>& towers) {
+    // Clear batches
+    for (auto& [type, batch] : spriteBatches) {
+        if (isTowerData(type)) {
+            batch.vertices.clear();
+        }
+    }
+
+    // Push vertices into correct batch
+    for (const auto& tower : towers) {
+        auto sprite = tower->getAttackSprite();
+        auto type = sprite.getType();
+        sprite.pushVertices(spriteBatches[type].vertices);
+        spriteBatches[type].textureID = sprite.textureID;
+    }
+}
+
 void Renderer::streamBase(const Base* base) {
     spriteBatches[SpriteType::Base].vertices.clear();
 

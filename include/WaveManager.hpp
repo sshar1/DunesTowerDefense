@@ -9,6 +9,7 @@
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
 #include "entities/Projectile.hpp"
+#include "entities/Tower.hpp"
 
 enum class GameState {
     PreWave,
@@ -16,8 +17,21 @@ enum class GameState {
     GameOver,
 };
 
+enum class TowerType {
+    Sprayer,
+    Frog,
+    Mortar,
+};
+
+enum class EnemyType {
+    Beetle,
+    Worm,
+    Bee,
+};
+
 struct GameStats {
     std::vector<std::unique_ptr<Enemy>> enemies{};
+    std::vector<std::unique_ptr<Tower>> towers{};
     std::vector<std::unique_ptr<Projectile>> projectiles{};
     std::unique_ptr<Base> base;
     unsigned int baseHealth{100};
@@ -32,13 +46,15 @@ public:
 
     void initSystems();
 
-    void addEnemy(SpriteType type, glm::vec2 position, glm::vec2 targetPosition);
+    void addEnemy(EnemyType type, glm::vec2 position, glm::vec2 targetPosition);
+    void addTower(TowerType type, glm::vec2 position);
     void startWave();
 
     void update(const TopographyVertices& topVertices, float dt);
 
     std::vector<std::unique_ptr<Enemy>>& getEnemies();
     std::vector<std::unique_ptr<Projectile>>& getProjectiles();
+    std::vector<std::unique_ptr<Tower>>& getTowers();
     Base* getBase() const;
 
 private:

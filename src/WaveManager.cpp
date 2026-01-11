@@ -13,6 +13,7 @@
 #include "entities/Bee.hpp"
 #include "entities/DuneWorm.hpp"
 #include "entities/DungBeetle.hpp"
+#include "entities/Sprayer.hpp"
 
 WaveManager::WaveManager()
 {
@@ -31,17 +32,33 @@ void WaveManager::initSystems() {
     gameStats.base = std::make_unique<Base>(basePosition);
 }
 
-void WaveManager::addEnemy(SpriteType type, glm::vec2 position, glm::vec2 targetPosition) {
+void WaveManager::addEnemy(EnemyType type, glm::vec2 position, glm::vec2 targetPosition) {
     switch (type) {
-        case SpriteType::Beetle:
+        case EnemyType::Beetle:
             gameStats.enemies.push_back(std::make_unique<DungBeetle>(position, targetPosition));
             return;
-        case SpriteType::Worm:
+        case EnemyType::Worm:
             gameStats.enemies.push_back(std::make_unique<DuneWorm>(position, targetPosition));
             return;
-        case SpriteType::Bee:
+        case EnemyType::Bee:
             gameStats.enemies.push_back(std::make_unique<Bee>(position, targetPosition));
             return;
+        default:
+            std::cout << "This is not an enemy, cannot add it" << std::endl;
+    }
+}
+
+void WaveManager::addTower(TowerType type, glm::vec2 position) {
+    switch (type) {
+        case TowerType::Sprayer:
+            gameStats.towers.push_back(std::make_unique<Sprayer>(position));
+            return;
+        // case TowerType::Frog:
+        //     gameStats.enemies.push_back(std::make_unique<Frog>(position, targetPosition));
+        //     return;
+        // case TowerType::Mortar:
+        //     gameStats.enemies.push_back(std::make_unique<Mortar>(position, targetPosition));
+        //     return;
         default:
             std::cout << "This is not an enemy, cannot add it" << std::endl;
     }
@@ -56,6 +73,9 @@ void WaveManager::update(const TopographyVertices& topVertices, float dt) {
     for (const auto& projectile : gameStats.projectiles) {
         projectile->update(dt);
     }
+    for (const auto& tower : gameStats.towers) {
+        tower->update(gameStats.enemies, dt);
+    }
 }
 
 std::vector<std::unique_ptr<Enemy>>& WaveManager::getEnemies() {
@@ -64,6 +84,10 @@ std::vector<std::unique_ptr<Enemy>>& WaveManager::getEnemies() {
 
 std::vector<std::unique_ptr<Projectile>>& WaveManager::getProjectiles() {
     return gameStats.projectiles;
+}
+
+std::vector<std::unique_ptr<Tower>>& WaveManager::getTowers() {
+    return gameStats.towers;
 }
 
 Base* WaveManager::getBase() const {

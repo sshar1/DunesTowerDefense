@@ -25,7 +25,6 @@ struct SpriteVertices {
 };
 
 enum class SpriteType {
-    // Enemies
     FirstEnemy,
         Beetle,
         Worm,
@@ -33,17 +32,19 @@ enum class SpriteType {
     LastEnemy,
 
     Stinger,
-
-    // Tower stuff
-    Lizard,
-    Gas,
     Rock,
-    Tongue,
+
+    FirstTowerData,
+        Gas,
+        Tongue,
+        Lizard,
+    LastTowerData,
     Base,
 };
 
 inline bool isEnemy(SpriteType type) { return type > SpriteType::FirstEnemy && type < SpriteType::LastEnemy; }
 inline bool isProjectile(SpriteType type) { return type == SpriteType::Stinger || type == SpriteType::Rock; }
+inline bool isTowerData(SpriteType type) { return type > SpriteType::FirstTowerData && type < SpriteType::LastTowerData; }
 
 // Maybe replace this with bitwise flags?
 inline bool isAnimatable(SpriteType type) {

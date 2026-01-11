@@ -31,6 +31,8 @@ private:
     static constexpr int ATTACKING_ANIM_TYPE = 1;
     static constexpr int DYING_ANIM_TYPE = 2;
 
+    static constexpr float speedDampCoefficient = 30.f;
+
     virtual int getMaxHealth() const = 0;
     virtual float getAttackCooldown() const = 0;
     virtual float getSpeed() const = 0;

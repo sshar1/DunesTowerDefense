@@ -135,8 +135,8 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
     }
     finalDepthAvg /= sampleFinalPoints;
 
-    float speedMultiplier = (finalDepthAvg - initialDepthAvg) / 20.f + 1;
-    speedMultiplier = std::clamp(speedMultiplier, 0.2f, 2.f);
+    float speedMultiplier = ((finalDepthAvg - initialDepthAvg) / speedDampCoefficient) + 1;
+    speedMultiplier = std::clamp(speedMultiplier, 0.2f, 1.5f);
 
     return speedMultiplier * getSpeed();
 }
