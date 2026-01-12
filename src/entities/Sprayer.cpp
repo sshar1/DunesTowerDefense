@@ -14,6 +14,6 @@ Sprayer::Sprayer(glm::vec2 position)
 {
 }
 
-void Sprayer::attack() const {
-    std::cout << "Attacking!" << std::endl;
+void Sprayer::attack() {
+    attackSprite.playAnimation(true);
 }

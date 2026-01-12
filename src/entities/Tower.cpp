@@ -11,6 +11,7 @@ Tower::Tower(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 siz
     : attackSprite(filePath, type, pos, size)
     , state(State::Idle)
     , target(nullptr)
+    , pos(pos)
 {
     setState(State::Idle);
 }
@@ -18,18 +19,31 @@ Tower::Tower(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 siz
 void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies, float dt) {
     attackSprite.update(dt);
 
+    auto foundEnemy = std::find_if(enemies.begin(), enemies.end(), [&](const auto& enemy) {
+        return glm::distance(enemy->getSprite().getPosition(), pos) <= getAttackRange();
+    });
+
     switch (state) {
         case State::Idle: {
-            // TODO find a target from the enemies vector
+            if (foundEnemy != enemies.end()) {
+                target = (*foundEnemy).get();
+                setState(State::Attacking);
+            }
+
             break;
         }
         case State::Attacking:
             elapsedAttackTime += dt;
             if (elapsedAttackTime >= getAttackCooldown()) {
-                attackSprite.playAnimation(false);
+                // attackSprite.playAnimation(true);
                 elapsedAttackTime = 0;
                 attack();
             }
+
+            if (foundEnemy == enemies.end() || target == nullptr) {
+                setState(State::Idle);
+            }
+
             break;
     }
 }
@@ -55,6 +69,9 @@ void Tower::setState(State newState) {
         state = newState;
         // updateAnimation();
     }
+
+    if (state == State::Idle) attackSprite.setVisible(false);
+    else if (state == State::Attacking) attackSprite.setVisible(true);
 }
 
 Sprite Tower::getAttackSprite() {

@@ -14,7 +14,9 @@ private:
     static constexpr glm::vec2 spriteSize = {150, 120};
 
     static constexpr float ATTACK_COOLDOWN = 2.f;
+    static constexpr int ATTACK_RANGE = 100;
 
     float getAttackCooldown() const override { return ATTACK_COOLDOWN; }
-    void attack() const override;
+    int getAttackRange() const override { return ATTACK_RANGE; }
+    void attack() override;
 };

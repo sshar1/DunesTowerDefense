@@ -230,6 +230,7 @@ void Renderer::streamTowerData(const std::vector<std::unique_ptr<Tower>>& towers
     // Push vertices into correct batch
     for (const auto& tower : towers) {
         auto sprite = tower->getAttackSprite();
+        if (!sprite.getVisible()) continue;
         auto type = sprite.getType();
         sprite.pushVertices(spriteBatches[type].vertices);
         spriteBatches[type].textureID = sprite.textureID;

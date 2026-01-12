@@ -21,13 +21,15 @@ public:
 private:
     // virtual void updateAnimation() = 0;
     virtual float getAttackCooldown() const = 0;
-    virtual void attack() const = 0;
+    virtual void attack() = 0;
+    virtual int getAttackRange() const = 0;
 
     void setState(State newState);
 protected:
     Sprite attackSprite;
     State state;
     Enemy* target;
+    glm::vec2 pos;
 
     float elapsedAttackTime = 0.f;
 };

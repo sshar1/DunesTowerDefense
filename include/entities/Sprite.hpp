@@ -77,6 +77,8 @@ public:
     SpriteType getType() const;
     glm::vec2 getPosition() const;
     glm::vec2 getLookVector() const;
+    bool getVisible() const { return visible; }
+    void setVisible(bool vis) { visible = vis; }
     void setPosition(glm::vec2 position);
     void setLookVector(glm::vec2 lookVector);
 
@@ -93,6 +95,7 @@ private:
     int animType;
     UVRect uvRect;
     bool loopAnimation;
+    bool visible;
 
     glm::vec2 position;
     glm::vec2 size;

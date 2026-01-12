@@ -20,7 +20,7 @@ public:
     Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 basePosition);
     virtual ~Enemy() = default;
 
-    Sprite getSprite();
+    Sprite getSprite() const;
 
     void takeDamage(int damage);
 

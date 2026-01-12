@@ -172,6 +172,6 @@ void Enemy::setState(State newState) {
     }
 }
 
-Sprite Enemy::getSprite() {
+Sprite Enemy::getSprite() const {
     return sprite;
 }
