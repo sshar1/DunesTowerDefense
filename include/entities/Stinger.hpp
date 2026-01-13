@@ -11,7 +11,7 @@ public:
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/beeprojectile_sprite.png";
-    static constexpr glm::vec2 spriteSize = {60, 27};
+    static inline const glm::vec2 spriteSize = {60, 27};
 
     static constexpr float SPEED = 400.f;
 

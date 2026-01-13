@@ -13,7 +13,7 @@ public:
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/base_sprite.png";
-    static constexpr glm::vec2 spriteSize = {0.2*1200, 0.2*900};
+    static inline const glm::vec2 spriteSize = {0.2*1200, 0.2*900};
     static constexpr int MAX_HEALTH = 100;
 
     Sprite sprite;

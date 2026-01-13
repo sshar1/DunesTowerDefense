@@ -4,6 +4,8 @@
 
 #pragma once
 #include <vector>
+#include <memory>
+#include <string_view>
 
 /*
  * This class is responsible for taking information from the kinect and

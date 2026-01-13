@@ -4,7 +4,7 @@
 
 #include "MainGame.hpp"
 
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 #include "InputManager.hpp"
 #include "engine/DataLoader.hpp"

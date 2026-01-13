@@ -5,7 +5,7 @@
 #include "engine/Renderer.hpp"
 
 #include <ostream>
-#include <SDL2/SDL_video.h>
+#include <SDL_video.h>
 
 #include "engine/VisionManager.hpp"
 

@@ -4,6 +4,8 @@
 
 #include "../../include/entities/Stinger.hpp"
 
+#include <iostream>
+
 Stinger::Stinger(glm::vec2 pos, glm::vec2 targetPosition)
     : Projectile(spriteFilePath, SpriteType::Stinger, pos, spriteSize, targetPosition)
 {

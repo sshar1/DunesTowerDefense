@@ -9,8 +9,9 @@
 Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 targetPosition)
     : sprite(filePath, type, pos, size)
     , targetPosition(targetPosition)
+    , state(State::Firing)
 {
-    setState(State::Firing);
+    //setState(State::Firing);
 }
 
 Sprite Projectile::getSprite() {

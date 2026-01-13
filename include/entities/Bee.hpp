@@ -13,7 +13,7 @@ public:
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/bee_spritesheet.png";
-    static constexpr glm::vec2 spriteSize = {1200/10, 900/10};
+    static inline const glm::vec2 spriteSize = {1200/10, 900/10};
 
     static constexpr float SPEED = 30.f;
     static constexpr int MAX_HEALTH = 100;
