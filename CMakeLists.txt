@@ -111,5 +111,11 @@ add_custom_command(TARGET DunesTowerDefense POST_BUILD
     COMMENT "Copying runtime DLLs to build directory..."
 )
 
-file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/tests DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#file(COPY ${CMAKE_SOURCE_DIR}/tests DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+add_custom_command(TARGET DunesTowerDefense POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/data
+    ${CMAKE_CURRENT_BINARY_DIR}/data
+    COMMENT "Syncing data folder (shaders, textures, etc.) to build directory..."
+)

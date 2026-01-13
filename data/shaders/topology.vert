@@ -62,7 +62,7 @@ void main() {
 
     float xPos = (warped.x * 2) - 1;
     float yPos = (warped.y * 2) - 1;
-    vec2 pos = vec2(xPos, -yPos);
+    vec2 pos = vec2(-xPos, -yPos);
 
     gl_Position = vec4(pos, 0.f, 1.f);
 
@@ -72,11 +72,4 @@ void main() {
     depthNorm = clamp(depthNorm, 0.f, 1.f);
 
     vertexColor = getColor(depthNorm);
-//    vertexColor = mix(tallColor, shortColor, remap(depthNorm));
-
-//    int difference = depth - realDepth; // How many mm are being shaved off?
-//
-//    // Normalize the difference (e.g., 0mm to 100mm becomes 0.0 to 1.0)
-//    float debugNorm = float(difference) / 100.0;
-//    vertexColor = vec3(debugNorm);
 }
