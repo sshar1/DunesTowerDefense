@@ -50,8 +50,8 @@ private:
     static constexpr const char* SPRITE_VERT_PATH = "data/shaders/sprite.vert";
     static constexpr const char* SPRITE_FRAG_PATH = "data/shaders/sprite.frag";
 
-    static constexpr std::uint16_t TALLEST_DEPTH = 800;
-    static constexpr std::uint16_t SHORTEST_DEPTH = 960;
+    static constexpr std::uint16_t TALLEST_DEPTH = 915;
+    static constexpr std::uint16_t SHORTEST_DEPTH = 1010;
 
     static constexpr std::uint16_t BOX_DEPTH = 750;
 

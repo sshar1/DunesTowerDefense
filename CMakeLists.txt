@@ -30,12 +30,26 @@ set(SOURCE_FILES
     src/entities/DuneWorm.cpp include/entities/DuneWorm.hpp
     src/entities/Base.cpp include/entities/Base.hpp
     include/engine/VisionManager.hpp src/engine/VisionManager.cpp
+    include/engine/KinectSensor.hpp src/engine/KinectSensor.cpp
     src/entities/Bee.cpp include/entities/Bee.hpp
     src/entities/Projectile.cpp include/entities/Projectile.hpp
     src/entities/Stinger.cpp include/entities/Stinger.hpp
     src/entities/Tower.cpp include/entities/Tower.hpp
     src/entities/Sprayer.cpp include/entities/Sprayer.hpp
 )
+
+# --- Kinect SDK Setup ---
+# The SDK usually creates an environment variable KINECTSDK20_DIR
+if(NOT DEFINED ENV{KINECTSDK20_DIR})
+    message(FATAL_ERROR "Kinect SDK 2.0 not found. Please install it.")
+endif()
+
+# Set paths based on the environment variable
+set(KINECT_INC_DIR "$ENV{KINECTSDK20_DIR}/inc")
+set(KINECT_LIB_DIR "$ENV{KINECTSDK20_DIR}/lib/x64")
+
+include_directories(${KINECT_INC_DIR})
+link_directories(${KINECT_LIB_DIR})
 
 add_executable(DunesTowerDefense ${SOURCE_FILES})
 add_executable(UnitTests tests/test.cpp external/glad/src/glad.c)
@@ -74,7 +88,7 @@ elseif(WIN32)
 endif()
 
 # --- Link Everything ---
-target_link_libraries(DunesTowerDefense PRIVATE GameDependencies)
+target_link_libraries(DunesTowerDefense PRIVATE GameDependencies kinect20)
 target_link_libraries(UnitTests PRIVATE GameDependencies)
 
 set(SDL2_DLL_PATH "C:/SDL2-2.32.10/lib/x64/SDL2.dll")

@@ -68,6 +68,8 @@ void MainGame::initSystems() {
     renderer->initVertexObjects();
 
     waveManager.initSystems();
+
+    kinect.initialize();
 }
 
 void MainGame::run() {
@@ -84,10 +86,10 @@ void MainGame::run() {
     float prevTicks = SDL_GetTicks();
 
     // TODO move this inside the loop using multithreading
-    DataLoader& dataLoader = DataLoader::getInstance();
+    //DataLoader& dataLoader = DataLoader::getInstance();
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
-    const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
+    //const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
 
     while (!gameQuit) {
 
@@ -100,6 +102,9 @@ void MainGame::run() {
         float currentTicks = SDL_GetTicks();
         float dt = currentTicks - prevTicks;
         prevTicks = currentTicks;
+
+		kinect.update();
+        const TopographyVertices& topVertices = kinect.getDepthData();
 
         renderer->clearBuffer();
 

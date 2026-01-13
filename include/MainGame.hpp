@@ -8,6 +8,7 @@
 
 #include "WaveManager.hpp"
 #include "engine/Renderer.hpp"
+#include "engine/KinectSensor.hpp"
 
 class MainGame {
 public:
@@ -24,6 +25,7 @@ private:
     SDL_GLContext gl_context;
     std::unique_ptr<Renderer> renderer;
     WaveManager waveManager;
+    KinectSensor kinect;
     bool gameQuit;
 
     static constexpr const char* WINDOW_TITLE = "Dunes Tower Defense";

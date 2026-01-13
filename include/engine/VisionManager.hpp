@@ -20,17 +20,25 @@ namespace Vision {
         }
     };
 
+    //static const std::array<cv::Point2f, 4> inputPointsNorm = {
+    //    {
+    //        {0.25f, 0.03f},     // Top left
+    //        {0.9f, 0.03f},      // Top right
+    //        {0.25f, 0.604f},    // Bottom left
+    //        {0.9f, 0.604f}      // Bottom right
+    //    }
+    //};
     static const std::array<cv::Point2f, 4> inputPointsNorm = {
         {
-            {0.25f, 0.03f},     // Top left
-            {0.9f, 0.03f},      // Top right
-            {0.25f, 0.604f},    // Bottom left
-            {0.9f, 0.604f}      // Bottom right
+            {0.34f, 0.1f},
+            {0.87f, 0.13f},
+            {0.28f, 0.62f},
+            {0.87f, 0.62f}
         }
     };
 
-    static constexpr int MAX_DEPTH_VAL = 1500;
-    static constexpr int MIN_DEPTH_VAL = 500;
+    static constexpr int MAX_DEPTH_VAL = 1300;
+    static constexpr int MIN_DEPTH_VAL = 800;
 
     glm::mat3 calculateWarpMatrix();
 
