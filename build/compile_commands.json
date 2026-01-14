@@ -1,0 +1,128 @@
+[
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/main.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/main.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/main.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/external/glad/src/glad.c.o -c /Users/soumiksinha/Code/DunesTowerDefense/external/glad/src/glad.c",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/external/glad/src/glad.c",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/external/glad/src/glad.c.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/MainGame.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/MainGame.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/MainGame.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/MainGame.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/InputManager.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/InputManager.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/InputManager.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/InputManager.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/engine/Renderer.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/engine/Renderer.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/engine/Renderer.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/engine/Renderer.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/engine/DataLoader.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/engine/DataLoader.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/engine/DataLoader.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/engine/DataLoader.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/DungBeetle.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/DungBeetle.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/DungBeetle.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/DungBeetle.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/Sprite.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/Sprite.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/Sprite.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/Sprite.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/Enemy.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/Enemy.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/Enemy.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/Enemy.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/WaveManager.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/WaveManager.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/WaveManager.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/WaveManager.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/engine/ResourceManager.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/engine/ResourceManager.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/engine/ResourceManager.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/engine/ResourceManager.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/DuneWorm.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/DuneWorm.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/DuneWorm.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/DuneWorm.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/Base.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/Base.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/Base.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/Base.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/engine/VisionManager.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/engine/VisionManager.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/engine/VisionManager.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/engine/VisionManager.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/Bee.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/Bee.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/Bee.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/Bee.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/Projectile.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/Projectile.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/Projectile.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/Projectile.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/Stinger.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/Stinger.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/Stinger.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/Stinger.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/Tower.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/Tower.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/Tower.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/Tower.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/DunesTowerDefense.dir/src/entities/Sprayer.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/src/entities/Sprayer.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/src/entities/Sprayer.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir/src/entities/Sprayer.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang++ -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -std=gnu++20 -arch x86_64 -o CMakeFiles/UnitTests.dir/tests/test.cpp.o -c /Users/soumiksinha/Code/DunesTowerDefense/tests/test.cpp",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/tests/test.cpp",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/UnitTests.dir/tests/test.cpp.o"
+},
+{
+  "directory": "/Users/soumiksinha/Code/DunesTowerDefense/build",
+  "command": "/usr/bin/clang -I/Users/soumiksinha/Code/DunesTowerDefense/include -I/opt/homebrew/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/KHR -I/Users/soumiksinha/Code/DunesTowerDefense/external/rapidcsv -I/Users/soumiksinha/Code/DunesTowerDefense/external/glad/include -I/Users/soumiksinha/Code/DunesTowerDefense/external/glm -I/usr/local/Cellar/sdl2/2.32.10/include -isystem /usr/local/Cellar/opencv/4.13.0_1/include/opencv4 -isystem /usr/local/Cellar/sdl2/2.32.10/include/SDL2 -isystem /usr/local/Cellar/sdl2_image/2.8.8/include/SDL2 -g -arch x86_64 -o CMakeFiles/UnitTests.dir/external/glad/src/glad.c.o -c /Users/soumiksinha/Code/DunesTowerDefense/external/glad/src/glad.c",
+  "file": "/Users/soumiksinha/Code/DunesTowerDefense/external/glad/src/glad.c",
+  "output": "/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/UnitTests.dir/external/glad/src/glad.c.o"
+}
+]

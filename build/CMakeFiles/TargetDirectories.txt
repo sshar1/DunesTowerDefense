@@ -1,0 +1,4 @@
+/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/DunesTowerDefense.dir
+/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/UnitTests.dir
+/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/edit_cache.dir
+/Users/soumiksinha/Code/DunesTowerDefense/build/CMakeFiles/rebuild_cache.dir

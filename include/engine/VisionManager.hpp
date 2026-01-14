@@ -29,6 +29,18 @@ namespace Vision {
         }
     };
 
+    enum class TowerType {
+        CYAN,
+        GRAY,
+        UNKNOWN
+    };
+
+    struct DetectedTower {
+        TowerType type;
+        glm::vec2 screenPos; // window coordinates
+    };
+
+
     static constexpr int MAX_DEPTH_VAL = 1500;
     static constexpr int MIN_DEPTH_VAL = 500;
 
@@ -50,7 +62,8 @@ namespace Vision {
 
         void calculateWarpMatrix(const TopographyVertices& topVertices);
         void evaluateHills();
-
+        
+        std::vector<DetectedTower> detectTowers(const cv::Mat& colorImg);
         std::vector<glm::vec2>& getHills() { return hills; };
         const cv::Mat& getWarpedDepth() { return warpedDepth; };
     private:

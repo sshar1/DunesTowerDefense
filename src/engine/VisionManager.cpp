@@ -118,4 +118,76 @@ namespace Vision {
 
         return glm::vec2{point.x * 2 - 1, -(point.y * 2 - 1)};
     }
+    
+    std::vector<DetectedTower> Manager::detectTowers(const cv::Mat& colorImg) {
+        std::vector<DetectedTower> towers;
+
+        CV_Assert(!colorImg.empty());
+        CV_Assert(colorImg.type() == CV_8UC3);
+
+        cv::Mat hsv;
+        cv::cvtColor(colorImg, hsv, cv::COLOR_BGR2HSV);
+
+        struct ColorRange {
+            TowerType type;
+            cv::Scalar lower;
+            cv::Scalar upper;
+        };
+
+        // --- HSV ranges (tune later with trackbars) ---
+        static const std::vector<ColorRange> colorRanges = {
+            // Cyan tower
+            {
+                TowerType::CYAN,
+                cv::Scalar(80, 100, 100),   // lower H,S,V
+                cv::Scalar(100, 255, 255)  // upper
+            },
+
+            // Gray tower (low saturation)
+            {
+                TowerType::GRAY,
+                cv::Scalar(0, 0, 60),
+                cv::Scalar(180, 50, 200)
+            }
+        };
+
+        static constexpr int MIN_TOWER_AREA = 300;
+        static const cv::Size kernelSize{5, 5};
+        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
+
+        for (const auto& range : colorRanges) {
+            cv::Mat mask;
+            cv::inRange(hsv, range.lower, range.upper, mask);
+
+            // Clean up noise
+            cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernel);
+            cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel);
+
+            std::vector<std::vector<cv::Point>> contours;
+            cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+            for (const auto& contour : contours) {
+                double area = cv::contourArea(contour);
+                if (area < MIN_TOWER_AREA) continue;
+
+                cv::Moments m = cv::moments(contour);
+                if (m.m00 == 0) continue;
+
+                float cx = static_cast<float>(m.m10 / m.m00);
+                float cy = static_cast<float>(m.m01 / m.m00);
+
+                // Convert to window coordinates
+                float screenX = cx * MainGame::WINDOW_WIDTH / colorImg.cols;
+                float screenY = cy * MainGame::WINDOW_HEIGHT / colorImg.rows;
+
+                towers.push_back({
+                    range.type,
+                    glm::vec2(screenX, screenY)
+                });
+            }
+        }
+
+        return towers;
+    }
+
 }
