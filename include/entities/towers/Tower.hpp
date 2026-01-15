@@ -23,6 +23,7 @@ private:
     virtual void updateAnimation();
     virtual float getAttackCooldown() const = 0;
     virtual void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) = 0;
+    virtual void updateOrientation();
     // virtual int getAttackRange() const = 0;
     virtual void findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) = 0;
     virtual bool enemyValid() const = 0;

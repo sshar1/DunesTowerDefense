@@ -80,7 +80,8 @@ void MainGame::run() {
     waveManager.addEnemy(EnemyType::Bee, {300, 400}, basePosition);
 
     waveManager.addTower(TowerType::Sprayer, {400, 400});
-    waveManager.addTower(TowerType::Mortar, {400, 400});
+    // waveManager.addTower(TowerType::Mortar, {400, 400});
+    waveManager.addTower(TowerType::Frog, {300, 400});
 
     float prevTicks = SDL_GetTicks();
 

@@ -15,6 +15,7 @@
 #include "entities/DungBeetle.hpp"
 #include "../include/entities/towers/Mortar.hpp"
 #include "../include/entities/towers/Sprayer.hpp"
+#include "../include/entities/towers/Frog.hpp"
 
 WaveManager::WaveManager()
 {
@@ -54,9 +55,9 @@ void WaveManager::addTower(TowerType type, glm::vec2 position) {
         case TowerType::Sprayer:
             gameStats.towers.push_back(std::make_unique<Sprayer>(position));
             return;
-        // case TowerType::Frog:
-        //     gameStats.enemies.push_back(std::make_unique<Frog>(position, targetPosition));
-        //     return;
+        case TowerType::Frog:
+            gameStats.towers.push_back(std::make_unique<Frog>(position));
+            return;
         case TowerType::Mortar:
             gameStats.towers.push_back(std::make_unique<Mortar>(position));
             return;

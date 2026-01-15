@@ -47,7 +47,9 @@ add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c
         src/entities/towers/Mortar.cpp
         include/entities/towers/Mortar.hpp
         src/entities/projectiles/Rock.cpp
-        include/entities/projectiles/Rock.hpp)
+        include/entities/projectiles/Rock.hpp
+        src/entities/towers/Frog.cpp
+        include/entities/towers/Frog.hpp)
 add_executable(UnitTests tests/test.cpp external/glad/src/glad.c)
 
 add_library(GameDependencies INTERFACE)
