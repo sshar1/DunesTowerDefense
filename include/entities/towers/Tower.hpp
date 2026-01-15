@@ -3,8 +3,8 @@
 //
 
 #pragma once
-#include "Enemy.hpp"
-#include "Sprite.hpp"
+#include "../Enemy.hpp"
+#include "../Sprite.hpp"
 
 class Tower {
 public:

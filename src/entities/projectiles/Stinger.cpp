@@ -19,4 +19,5 @@ void Stinger::updateAnimation()
 
 void Stinger::updateSize()
 {
+    sprite.setSize(spriteSize);
 }

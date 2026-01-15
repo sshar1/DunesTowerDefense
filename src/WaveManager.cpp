@@ -13,8 +13,8 @@
 #include "entities/Bee.hpp"
 #include "entities/DuneWorm.hpp"
 #include "entities/DungBeetle.hpp"
-#include "entities/Mortar.hpp"
-#include "entities/Sprayer.hpp"
+#include "../include/entities/towers/Mortar.hpp"
+#include "../include/entities/towers/Sprayer.hpp"
 
 WaveManager::WaveManager()
 {

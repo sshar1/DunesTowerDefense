@@ -2,7 +2,7 @@
 // Created by Sami Sharif  on 1/10/26.
 //
 
-#include "entities/Sprayer.hpp"
+#include "../../../include/entities/towers/Sprayer.hpp"
 
 #include <iostream>
 #include <ostream>

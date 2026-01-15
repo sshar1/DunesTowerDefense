@@ -40,12 +40,12 @@ add_executable(DunesTowerDefense src/main.cpp external/glad/src/glad.c
         include/entities/projectiles/Projectile.hpp
         src/entities/projectiles/Stinger.cpp
         include/entities/projectiles/Stinger.hpp
-        src/entities/Tower.cpp
-        include/entities/Tower.hpp
-        src/entities/Sprayer.cpp
-        include/entities/Sprayer.hpp
-        src/entities/Mortar.cpp
-        include/entities/Mortar.hpp
+        src/entities/towers/Tower.cpp
+        include/entities/towers/Tower.hpp
+        src/entities/towers/Sprayer.cpp
+        include/entities/towers/Sprayer.hpp
+        src/entities/towers/Mortar.cpp
+        include/entities/towers/Mortar.hpp
         src/entities/projectiles/Rock.cpp
         include/entities/projectiles/Rock.hpp)
 add_executable(UnitTests tests/test.cpp external/glad/src/glad.c)

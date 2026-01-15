@@ -13,7 +13,7 @@
 #include "entities/Enemy.hpp"
 #include "../entities/projectiles/Projectile.hpp"
 #include "entities/Sprite.hpp"
-#include "entities/Tower.hpp"
+#include "../entities/towers/Tower.hpp"
 
 struct SpriteBatch {
     GLuint textureID;

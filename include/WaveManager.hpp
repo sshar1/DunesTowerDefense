@@ -9,7 +9,7 @@
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
 #include "entities/projectiles/Projectile.hpp"
-#include "entities/Tower.hpp"
+#include "entities/towers/Tower.hpp"
 
 enum class GameState {
     PreWave,

@@ -2,7 +2,9 @@
 // Created by Sami Sharif  on 1/13/26.
 //
 
-#include "../../include/entities/Mortar.hpp"
+#include "../../../include/entities/towers/Mortar.hpp"
+
+#include <iostream>
 
 #include "entities/projectiles/Rock.hpp"
 #include "glm/detail/func_geometric.hpp"
@@ -10,10 +12,11 @@
 Mortar::Mortar(glm::vec2 position)
     : Tower(spriteFilePath, SpriteType::Gas, position, spriteSize)
 {
+    // attackSprite.setVisible(false);
 }
 
 void Mortar::attack(std::vector<std::unique_ptr<Projectile>>& projectiles) {
-    attackSprite.playAnimation(true);
+    // attackSprite.playAnimation(true);
 
     if (target != nullptr)
         projectiles.push_back(std::make_unique<Rock>(attackSprite.getPosition(), target->getSprite().getPosition()));

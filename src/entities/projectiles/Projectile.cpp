@@ -10,9 +10,10 @@
 #include "glm/gtc/epsilon.hpp"
 
 Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 targetPosition)
-    : sprite(filePath, type, pos, size)
+    : sprite(filePath, type, pos, {0, 0})
     , targetPosition(targetPosition)
     , originPosition(pos)
+    , state(State::Firing)
 {
     setState(State::Firing);
 }
@@ -43,7 +44,7 @@ void Projectile::update(const std::vector<std::unique_ptr<Enemy>>& enemies, floa
 void Projectile::setState(State newState) {
     if (state != newState) {
         state = newState;
-        updateAnimation();
+        // updateAnimation();
     }
 }
 

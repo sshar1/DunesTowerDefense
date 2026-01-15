@@ -39,6 +39,10 @@ Sprite::Sprite(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 s
     , spriteType(type)
 {
     textureID = ResourceManager::getInstance().loadTexture(filePath);
+
+    if (isAnimatable(spriteType)) {
+        updateUVRect();
+    }
 }
 
 void Sprite::playAnimation(bool loop) {

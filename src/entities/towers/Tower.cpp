@@ -2,7 +2,7 @@
 // Created by Sami Sharif  on 1/10/26.
 //
 
-#include "entities/Tower.hpp"
+#include "../../../include/entities/towers/Tower.hpp"
 
 #include "MainGame.hpp"
 #include "engine/VisionManager.hpp"
