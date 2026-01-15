@@ -2,13 +2,18 @@
 // Created by Sami Sharif  on 1/9/26.
 //
 
-#include "entities/Projectile.hpp"
+#include "../../../include/entities/projectiles/Projectile.hpp"
+
+#include <iostream>
+#include <ostream>
 
 #include "glm/gtc/epsilon.hpp"
 
 Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 targetPosition)
-    : sprite(filePath, type, pos, size)
+    : sprite(filePath, type, pos, {0, 0})
     , targetPosition(targetPosition)
+    , originPosition(pos)
+    , state(State::Firing)
 {
     setState(State::Firing);
 }
@@ -17,7 +22,8 @@ Sprite Projectile::getSprite() {
     return sprite;
 }
 
-void Projectile::update(float dt) {
+void Projectile::update(const std::vector<std::unique_ptr<Enemy>>& enemies, float dt) {
+    if (state == State::Landed) return;
     sprite.update(dt);
 
     switch (state) {
@@ -25,6 +31,11 @@ void Projectile::update(float dt) {
             followPath(dt);
             return;
         case State::Landing:
+            // I know this is dumb. We only do this because there is no longer
+            // a landing animation, so we just go ahead and say the thing has
+            // landed.
+            // TODO do damage to surrounding enemies
+            setState(State::Landed);
         case State::Landed:
             return;
     }
@@ -33,7 +44,7 @@ void Projectile::update(float dt) {
 void Projectile::setState(State newState) {
     if (state != newState) {
         state = newState;
-        updateAnimation();
+        // updateAnimation();
     }
 }
 
@@ -59,4 +70,5 @@ void Projectile::followPath(float dt) {
     }
 
     sprite.setPosition(finalPosition);
+    updateSize();
 }

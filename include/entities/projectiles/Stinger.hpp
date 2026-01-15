@@ -17,4 +17,5 @@ private:
 
     float getSpeed() const override;
     void updateAnimation() override;
+    void updateSize() override;
 };

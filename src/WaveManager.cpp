@@ -13,7 +13,9 @@
 #include "entities/Bee.hpp"
 #include "entities/DuneWorm.hpp"
 #include "entities/DungBeetle.hpp"
-#include "entities/Sprayer.hpp"
+#include "../include/entities/towers/Mortar.hpp"
+#include "../include/entities/towers/Sprayer.hpp"
+#include "../include/entities/towers/Frog.hpp"
 
 WaveManager::WaveManager()
 {
@@ -53,12 +55,12 @@ void WaveManager::addTower(TowerType type, glm::vec2 position) {
         case TowerType::Sprayer:
             gameStats.towers.push_back(std::make_unique<Sprayer>(position));
             return;
-        // case TowerType::Frog:
-        //     gameStats.enemies.push_back(std::make_unique<Frog>(position, targetPosition));
-        //     return;
-        // case TowerType::Mortar:
-        //     gameStats.enemies.push_back(std::make_unique<Mortar>(position, targetPosition));
-        //     return;
+        case TowerType::Frog:
+            gameStats.towers.push_back(std::make_unique<Frog>(position));
+            return;
+        case TowerType::Mortar:
+            gameStats.towers.push_back(std::make_unique<Mortar>(position));
+            return;
         default:
             std::cout << "This is not an enemy, cannot add it" << std::endl;
     }
@@ -71,10 +73,10 @@ void WaveManager::update(const TopographyVertices& topVertices, float dt) {
         enemy->update(topVertices, gameStats.projectiles, dt);
     }
     for (const auto& projectile : gameStats.projectiles) {
-        projectile->update(dt);
+        projectile->update(gameStats.enemies, dt);
     }
     for (const auto& tower : gameStats.towers) {
-        tower->update(gameStats.enemies, dt);
+        tower->update(gameStats.enemies, gameStats.projectiles, dt);
     }
 }
 

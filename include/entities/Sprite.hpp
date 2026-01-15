@@ -81,6 +81,7 @@ public:
     void setVisible(bool vis) { visible = vis; }
     void setPosition(glm::vec2 position);
     void setLookVector(glm::vec2 lookVector);
+    void setSize(glm::vec2 newSize) { size = newSize; };
 
     void update(float dt);
     void playAnimation(bool loop);
