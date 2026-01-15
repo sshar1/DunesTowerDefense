@@ -7,22 +7,25 @@
 #include "Sprite.hpp"
 
 class Tower {
+public:
     enum class State {
         Idle,
         Attacking,
     };
-public:
+
     Tower(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size);
     virtual ~Tower() = default;
 
     Sprite getAttackSprite();
 
-    void update(std::vector<std::unique_ptr<Enemy>>& enemies, float dt);
+    void update(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt);
 private:
-    // virtual void updateAnimation() = 0;
+    virtual void updateAnimation();
     virtual float getAttackCooldown() const = 0;
-    virtual void attack() = 0;
-    virtual int getAttackRange() const = 0;
+    virtual void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) = 0;
+    // virtual int getAttackRange() const = 0;
+    virtual void findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) = 0;
+    virtual bool enemyValid() const = 0;
 
     void setState(State newState);
 protected:

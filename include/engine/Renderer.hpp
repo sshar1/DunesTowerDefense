@@ -11,7 +11,7 @@
 #include "shader_s.h"
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
-#include "entities/Projectile.hpp"
+#include "../entities/projectiles/Projectile.hpp"
 #include "entities/Sprite.hpp"
 #include "entities/Tower.hpp"
 

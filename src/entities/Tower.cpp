@@ -13,23 +13,18 @@ Tower::Tower(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 siz
     , target(nullptr)
     , pos(pos)
 {
-    setState(State::Idle);
+    // setState(State::Idle);
 }
 
-void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies, float dt) {
+void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt) {
     attackSprite.update(dt);
-
-    auto foundEnemy = std::find_if(enemies.begin(), enemies.end(), [&](const auto& enemy) {
-        return glm::distance(enemy->getSprite().getPosition(), pos) <= getAttackRange();
-    });
 
     switch (state) {
         case State::Idle: {
-            if (foundEnemy != enemies.end()) {
-                target = (*foundEnemy).get();
+            findEnemy(enemies);
+            if (target != nullptr) {
                 setState(State::Attacking);
             }
-
             break;
         }
         case State::Attacking:
@@ -37,13 +32,12 @@ void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies, float dt) {
             if (elapsedAttackTime >= getAttackCooldown()) {
                 // attackSprite.playAnimation(true);
                 elapsedAttackTime = 0;
-                attack();
+                attack(projectiles);
             }
 
-            if (foundEnemy == enemies.end() || target == nullptr) {
+            if (!enemyValid()) {
                 setState(State::Idle);
             }
-
             break;
     }
 }
@@ -70,8 +64,20 @@ void Tower::setState(State newState) {
         // updateAnimation();
     }
 
+    // if (state == State::Idle) attackSprite.setVisible(false);
+    // else if (state == State::Attacking) {
+    //     attackSprite.setVisible(true);
+    //     attackSprite.playAnimation(true);
+    // }
+    updateAnimation();
+}
+
+void Tower::updateAnimation() {
     if (state == State::Idle) attackSprite.setVisible(false);
-    else if (state == State::Attacking) attackSprite.setVisible(true);
+    else if (state == State::Attacking) {
+        attackSprite.setVisible(true);
+        attackSprite.playAnimation(true);
+    }
 }
 
 Sprite Tower::getAttackSprite() {

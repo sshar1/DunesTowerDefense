@@ -8,7 +8,7 @@
 #include "engine/DataLoader.hpp"
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
-#include "entities/Projectile.hpp"
+#include "entities/projectiles/Projectile.hpp"
 #include "entities/Tower.hpp"
 
 enum class GameState {

@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "Projectile.hpp"
+#include "projectiles/Projectile.hpp"
 #include "Sprite.hpp"
 #include "engine/DataLoader.hpp"
 

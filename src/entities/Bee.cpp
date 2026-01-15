@@ -5,7 +5,7 @@
 #include "entities/Bee.hpp"
 
 #include "engine/VisionManager.hpp"
-#include "entities/Stinger.hpp"
+#include "../../include/entities/projectiles/Stinger.hpp"
 #include "glm/detail/func_geometric.inl"
 #include "glm/gtx/norm.inl"
 

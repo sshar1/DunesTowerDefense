@@ -3,7 +3,10 @@
 //
 
 #pragma once
-#include "Sprite.hpp"
+#include "../Sprite.hpp"
+// #include "entities/Enemy.hpp"
+
+class Enemy;
 
 class Projectile {
     enum class State {
@@ -17,12 +20,12 @@ public:
 
     Sprite getSprite();
 
-    void update(float dt);
+    void update(const std::vector<std::unique_ptr<Enemy>>& enemies, float dt);
 private:
     virtual float getSpeed() const = 0;
     virtual void updateAnimation() = 0;
+    virtual void updateSize() = 0;
 
-    void followPath(float dt);
     void setState(State newState);
 protected:
     static constexpr int FIRING_ANIM_TYPE = 0;
@@ -31,4 +34,7 @@ protected:
     Sprite sprite;
     State state;
     glm::vec2 targetPosition;
+    glm::vec2 originPosition;
+
+    virtual void followPath(float dt);
 };
