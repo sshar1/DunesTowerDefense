@@ -19,7 +19,7 @@ void Mortar::attack(std::vector<std::unique_ptr<Projectile>>& projectiles) {
     // attackSprite.playAnimation(true);
 
     if (target != nullptr)
-        projectiles.push_back(std::make_unique<Rock>(attackSprite.getPosition(), target->getSprite().getPosition()));
+        projectiles.push_back(std::make_unique<Rock>(attackSprite.getPosition(), target));
 }
 
 void Mortar::findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) {

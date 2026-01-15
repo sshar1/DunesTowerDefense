@@ -24,22 +24,24 @@ struct SpriteVertices {
     SpriteVertex bottomRight;
 };
 
+// This (disgustingly) determines the render order
 enum class SpriteType {
+    Base,
+
     FirstEnemy,
         Beetle,
         Worm,
         Bee,
     LastEnemy,
 
-    Stinger,
-    Rock,
-
     FirstTowerData,
         Gas,
         Tongue,
         Lizard,
     LastTowerData,
-    Base,
+
+    Stinger,
+    Rock,
 };
 
 inline bool isEnemy(SpriteType type) { return type > SpriteType::FirstEnemy && type < SpriteType::LastEnemy; }

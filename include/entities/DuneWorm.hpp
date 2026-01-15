@@ -10,7 +10,7 @@
 class DuneWorm : public Enemy {
 public:
     DuneWorm();
-    explicit DuneWorm(glm::vec2 pos, glm::vec2 targetPosition);
+    explicit DuneWorm(glm::vec2 pos, Base* base);
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/duneworm_spritesheet.png";
@@ -25,5 +25,5 @@ private:
     float getSpeed() const override;
     void calculateWaypoints(const TopographyVertices& topVertices) override;
     bool validAttackPosition(const TopographyVertices &topVertices) override;
-    void attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile>>& projectiles) override;
+    void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) override;
 };

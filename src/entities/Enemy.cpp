@@ -19,11 +19,11 @@ Enemy::Enemy(const char* filePath, int health, SpriteType type)
     setState(State::WALKING);
 }
 
-Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 basePosition)
+Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, Base* base)
     : sprite(filePath, type, pos, size)
     , health(health)
     , state(State::WALKING)
-    , basePosition(basePosition)
+    , base(base)
 {
     setState(State::WALKING);
 }
@@ -41,7 +41,7 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
             break;
         }
         case State::ATTACKING:
-            sprite.setLookVector(glm::normalize(basePosition - sprite.getPosition()));
+            sprite.setLookVector(glm::normalize(base->getPosition() - sprite.getPosition()));
 
             if (!validAttackPosition(topVertices)) {
                 setState(State::WALKING);
@@ -52,7 +52,7 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
             if (elapsedAttackTime >= getAttackCooldown()) {
                 sprite.playAnimation(false);
                 elapsedAttackTime = 0;
-                attack(basePosition, projectiles);
+                attack(projectiles);
             }
 
             break;
@@ -139,14 +139,6 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
     speedMultiplier = std::clamp(speedMultiplier, 0.2f, 1.5f);
 
     return speedMultiplier * getSpeed();
-}
-
-void Enemy::takeDamage(int damage) {
-    health -= damage;
-
-    if (health <= 0) {
-        std::cout << "Enemy died!" << std::endl;
-    }
 }
 
 void Enemy::updateAnimation() {

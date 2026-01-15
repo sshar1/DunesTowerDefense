@@ -46,7 +46,7 @@ public:
 
     void initSystems();
 
-    void addEnemy(EnemyType type, glm::vec2 position, glm::vec2 targetPosition);
+    void addEnemy(EnemyType type, glm::vec2 position, Base* base);
     void addTower(TowerType type, glm::vec2 position);
     void startWave();
 
