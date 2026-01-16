@@ -35,7 +35,8 @@ void WaveManager::initSystems() {
 
     // Log initial state
     std::cout << "[WaveManager] Initialized - Wave " << gameStats.waveNumber
-              << ", State: PreWave, Timer: " << gameStats.preWaveTimer << "s" << std::endl;
+              << ", State: PreWave, Timer: " << gameStats.preWaveTimer << "s"
+              << ", Tower allowance: " << gameStats.towerAllowance << std::endl;
 }
 
 void WaveManager::addEnemy(EnemyType type, glm::vec2 position, Base* base) {
@@ -55,19 +56,30 @@ void WaveManager::addEnemy(EnemyType type, glm::vec2 position, Base* base) {
 }
 
 void WaveManager::addTower(TowerType type, glm::vec2 position) {
+    // Check tower allowance
+    if (!canPlaceTower()) {
+        std::cout << "[WaveManager] Cannot place tower - allowance exceeded ("
+                  << getTowersPlaced() << "/" << getTowerAllowance() << ")" << std::endl;
+        return;
+    }
+
     switch (type) {
         case TowerType::Sprayer:
             gameStats.towers.push_back(std::make_unique<Sprayer>(position));
-            return;
+            break;
         case TowerType::Frog:
             gameStats.towers.push_back(std::make_unique<Frog>(position));
-            return;
+            break;
         case TowerType::Mortar:
             gameStats.towers.push_back(std::make_unique<Mortar>(position));
-            return;
+            break;
         default:
-            std::cout << "This is not an enemy, cannot add it" << std::endl;
+            std::cout << "[WaveManager] Unknown tower type, cannot add" << std::endl;
+            return;
     }
+
+    std::cout << "[WaveManager] Tower placed (" << getTowersPlaced() << "/"
+              << getTowerAllowance() << "), " << getTowersRemaining() << " remaining" << std::endl;
 }
 
 void WaveManager::update(const TopographyVertices& topVertices, float dt) {
@@ -114,6 +126,28 @@ unsigned int WaveManager::getWaveNumber() const {
 
 float WaveManager::getPreWaveTimer() const {
     return gameStats.preWaveTimer;
+}
+
+// ============================================================================
+// TOWER ALLOWANCE
+// ============================================================================
+
+unsigned int WaveManager::getTowerAllowance() const {
+    return gameStats.towerAllowance;
+}
+
+unsigned int WaveManager::getTowersPlaced() const {
+    return gameStats.towers.size();
+}
+
+unsigned int WaveManager::getTowersRemaining() const {
+    unsigned int placed = getTowersPlaced();
+    if (placed >= gameStats.towerAllowance) return 0;
+    return gameStats.towerAllowance - placed;
+}
+
+bool WaveManager::canPlaceTower() const {
+    return getTowersPlaced() < gameStats.towerAllowance;
 }
 
 // ============================================================================
@@ -169,13 +203,17 @@ void WaveManager::onWaveComplete() {
 }
 
 void WaveManager::transitionToNextWave() {
+    // Get the bonus towers for the COMPLETED wave (before incrementing)
+    int bonusTowers = TOWERS_PER_WAVE[gameStats.waveNumber - 1];
+    gameStats.towerAllowance += bonusTowers;
+
     gameStats.waveNumber++;
     gameStats.preWaveTimer = PRE_WAVE_DURATION;  // Reset timer for next pre-wave
 
     // TODO: Apply health boost (Part 4)
-    // TODO: Update tower allowance (Part 3)
 
     setState(GameState::PreWave);
     std::cout << "[WaveManager] Preparing for wave " << gameStats.waveNumber
-              << " - " << gameStats.preWaveTimer << "s to place towers" << std::endl;
+              << " - " << gameStats.preWaveTimer << "s to place towers"
+              << " (+" << bonusTowers << " towers, total allowance: " << gameStats.towerAllowance << ")" << std::endl;
 }

@@ -73,6 +73,9 @@ struct GameStats {
 
     // Wave timing
     float preWaveTimer{PRE_WAVE_DURATION};  // Countdown timer for pre-wave phase
+
+    // Tower allowance
+    unsigned int towerAllowance{STARTING_TOWER_ALLOWANCE};  // Max towers player can place
 };
 
 class WaveManager {
@@ -96,6 +99,12 @@ public:
     GameState getGameState() const;
     unsigned int getWaveNumber() const;
     float getPreWaveTimer() const;
+
+    // Tower allowance getters
+    unsigned int getTowerAllowance() const;
+    unsigned int getTowersPlaced() const;
+    unsigned int getTowersRemaining() const;
+    bool canPlaceTower() const;
 
 private:
     GameStats gameStats;
