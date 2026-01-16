@@ -83,6 +83,11 @@ void WaveManager::addTower(TowerType type, glm::vec2 position) {
 }
 
 void WaveManager::update(const TopographyVertices& topVertices, float dt) {
+    // Don't update if game is over
+    if (gameStats.gameState == GameState::GameOver) {
+        return;
+    }
+
     Vision::Manager::getInstance().calculateWarpMatrix(topVertices);
     Vision::Manager::getInstance().evaluateHills();
     for (const auto& enemy : gameStats.enemies) {
@@ -93,6 +98,13 @@ void WaveManager::update(const TopographyVertices& topVertices, float dt) {
     }
     for (const auto& tower : gameStats.towers) {
         tower->update(gameStats.enemies, gameStats.projectiles, dt);
+    }
+
+    // Check for base destruction (game over - loss)
+    if (gameStats.base->isDestroyed()) {
+        std::cout << "[WaveManager] Base destroyed! Game Over!" << std::endl;
+        setState(GameState::GameOver);
+        return;
     }
 
     // Check for wave completion during InWave state
