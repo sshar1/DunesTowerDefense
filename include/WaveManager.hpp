@@ -19,8 +19,8 @@
 // Total number of waves in the game
 static constexpr int TOTAL_WAVES = 5;
 
-// Time (in seconds) players have between waves to place towers
-static constexpr float PRE_WAVE_DURATION = 10.0f;
+// Time (in seconds) players have between waves to place towers and shape terrain
+static constexpr float PRE_WAVE_DURATION = 30.0f;
 
 // Tower allowance: how many towers can be placed
 static constexpr int STARTING_TOWER_ALLOWANCE = 3;
@@ -124,6 +124,7 @@ public:
     GameState getGameState() const;
     unsigned int getWaveNumber() const;
     float getPreWaveTimer() const;
+    bool isVictory() const { return gameStats.gameState == GameState::GameOver && gameStats.waveNumber > TOTAL_WAVES; }
 
     // Tower allowance getters
     unsigned int getTowerAllowance() const;

@@ -39,6 +39,11 @@ public:
     void streamBase(const Base* base);
     void renderSprites();
     void renderHealthBar(float percent, glm::vec2 position, float vertOffset);
+    void renderHUD(unsigned int waveNumber, unsigned int totalWaves, float preWaveTimer,
+                   bool isPreWave, unsigned int towersRemaining, unsigned int towerAllowance,
+                   bool isGameOver, bool isVictory);
+    void renderEnemyHealthBars(const std::vector<std::unique_ptr<Enemy>>& enemies,
+                               float windowWidth, float windowHeight);
     void DEBUG_rengerMat(const cv::Mat& inputMat);
 
 private:

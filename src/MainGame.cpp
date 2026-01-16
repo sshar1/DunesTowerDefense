@@ -114,6 +114,16 @@ void MainGame::run() {
             float(waveManager.getBase()->getHealth()) / waveManager.getBase()->getMaxHealth(),
             basePosition / windowSize,
             waveManager.getBase()->getVertOffset() / WINDOW_HEIGHT);
+        renderer->renderEnemyHealthBars(waveManager.getEnemies(), WINDOW_WIDTH, WINDOW_HEIGHT);
+        renderer->renderHUD(
+            waveManager.getWaveNumber(),
+            TOTAL_WAVES,
+            waveManager.getPreWaveTimer(),
+            waveManager.getGameState() == GameState::PreWave,
+            waveManager.getTowersRemaining(),
+            waveManager.getTowerAllowance(),
+            waveManager.getGameState() == GameState::GameOver,
+            waveManager.isVictory());
 #endif
 
         SDL_GL_SwapWindow(window);
