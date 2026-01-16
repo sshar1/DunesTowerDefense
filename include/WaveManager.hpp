@@ -142,4 +142,7 @@ private:
     // Enemy spawning
     void spawnWaveEnemies();
     glm::vec2 getRandomEdgePosition();  // Get random position on map edge
+
+    // Wave completion
+    bool areAllEnemiesDead() const;
 };

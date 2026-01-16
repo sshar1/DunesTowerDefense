@@ -23,8 +23,14 @@ public:
     virtual ~Enemy() = default;
 
     Sprite getSprite() const;
+
+    // ITargetable interface
     bool isActive() const override { return state != State::DEAD; }
     void takeDamage(int damage) override { health -= damage; }
+    glm::vec2 getPosition() const override { return getSprite().getPosition(); }
+
+    // Wave system needs this
+    bool isDead() const { return state == State::DEAD || health <= 0; }
 
     void update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt);
 
@@ -41,8 +47,6 @@ private:
     virtual void calculateWaypoints(const TopographyVertices& topVertices) = 0;
     virtual bool validAttackPosition(const TopographyVertices& topVertices) = 0;
     virtual void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) = 0;
-
-    glm::vec2 getPosition() const override { return getSprite().getPosition(); }
 
     void followPath(const TopographyVertices& topVertices, float dt);
     virtual float getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction);

@@ -94,6 +94,24 @@ void WaveManager::update(const TopographyVertices& topVertices, float dt) {
     for (const auto& tower : gameStats.towers) {
         tower->update(gameStats.enemies, gameStats.projectiles, dt);
     }
+
+    // Check for wave completion during InWave state
+    if (gameStats.gameState == GameState::InWave && areAllEnemiesDead()) {
+        onWaveComplete();
+    }
+}
+
+bool WaveManager::areAllEnemiesDead() const {
+    if (gameStats.enemies.empty()) {
+        return false;  // No enemies spawned yet
+    }
+
+    for (const auto& enemy : gameStats.enemies) {
+        if (!enemy->isDead()) {
+            return false;  // At least one enemy still alive
+        }
+    }
+    return true;  // All enemies are dead
 }
 
 std::vector<std::unique_ptr<Enemy>>& WaveManager::getEnemies() {
