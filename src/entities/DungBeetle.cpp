@@ -50,5 +50,5 @@ float DungBeetle::getAttackCooldown() const {
 }
 
 void DungBeetle::attack(std::vector<std::unique_ptr<Projectile> > &projectiles) {
-
+    base->takeDamage(DAMAGE);
 }

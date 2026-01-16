@@ -50,5 +50,5 @@ float DuneWorm::getAttackCooldown() const {
 }
 
 void DuneWorm::attack(std::vector<std::unique_ptr<Projectile> > &projectiles) {
-
+    base->takeDamage(DAMAGE);
 }

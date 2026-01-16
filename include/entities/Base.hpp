@@ -14,6 +14,8 @@ public:
 
     void takeDamage(int damage) override { health -= damage; }
     int getHealth() const { return health; }
+    int getMaxHealth() const { return MAX_HEALTH; }
+    float getVertOffset() const { return spriteSize.y; }
 
     glm::vec2 getPosition() const override { return getSprite().getPosition(); }
     bool isActive() const override { return this->health > 0; }

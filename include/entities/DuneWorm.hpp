@@ -18,6 +18,7 @@ private:
 
     static constexpr float SPEED = 60.f;
     static constexpr int MAX_HEALTH = 100;
+    static constexpr int DAMAGE = 1;
     static constexpr float ATTACK_COOLDOWN = 0.75f;
 
     int getMaxHealth() const override;

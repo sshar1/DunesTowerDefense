@@ -74,6 +74,7 @@ void MainGame::run() {
     initSystems();
 
     glm::vec2 basePosition = waveManager.getBase()->getSprite().getPosition();
+    glm::vec2 windowSize = glm::vec2{WINDOW_WIDTH, WINDOW_HEIGHT};
 
     waveManager.addEnemy(EnemyType::Worm, {100, 200}, waveManager.getBase());
     waveManager.addEnemy(EnemyType::Beetle, {1100, 750}, waveManager.getBase());
@@ -116,11 +117,14 @@ void MainGame::run() {
         renderer->streamProjectiles(waveManager.getProjectiles());
         renderer->streamTowerData(waveManager.getTowers());
         renderer->renderSprites();
+        renderer->renderHealthBar(
+            float(waveManager.getBase()->getHealth()) / waveManager.getBase()->getMaxHealth(),
+            basePosition / windowSize,
+            waveManager.getBase()->getVertOffset() / WINDOW_HEIGHT);
 #endif
 
         SDL_GL_SwapWindow(window);
 
-        std::cout << waveManager.getBase()->getHealth() << std::endl;
 
         // std::cout << calculateFPS() << std::endl;
     }
