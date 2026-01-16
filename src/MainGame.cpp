@@ -58,12 +58,6 @@ void MainGame::initSystems() {
 
     SDL_GL_SetSwapInterval(1);
 
-    // DataLoader& dataLoader = DataLoader::getInstance();
-    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-05-49.csv"); // Flat
-    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
-    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-11-03.csv"); // Single mountain
-    // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
-
     renderer = std::make_unique<Renderer>(DataLoader::DEPTH_WIDTH, DataLoader::DEPTH_HEIGHT);
     renderer->initVertexObjects();
 
@@ -76,13 +70,12 @@ void MainGame::run() {
     glm::vec2 basePosition = waveManager.getBase()->getSprite().getPosition();
     glm::vec2 windowSize = glm::vec2{WINDOW_WIDTH, WINDOW_HEIGHT};
 
-    waveManager.addEnemy(EnemyType::Worm, {100, 300}, waveManager.getBase());
-    waveManager.addEnemy(EnemyType::Beetle, {1100, 750}, waveManager.getBase());
-    // waveManager.addEnemy(EnemyType::Bee, {300, 400}, waveManager.getBase());
+    // Place starting towers near the base for testing
+    waveManager.addTower(TowerType::Sprayer, basePosition + glm::vec2{-100, -80});
+    waveManager.addTower(TowerType::Frog, basePosition + glm::vec2{100, -80});
+    // waveManager.addTower(TowerType::Mortar, basePosition + glm::vec2{0, 120});
 
-    waveManager.addTower(TowerType::Sprayer, {400, 400});
-    waveManager.addTower(TowerType::Mortar, {400, 400});
-    waveManager.addTower(TowerType::Frog, {300, 400});
+    // Wave system handles enemy spawning automatically via timer
 
     float prevTicks = SDL_GetTicks();
 
