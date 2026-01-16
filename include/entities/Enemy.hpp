@@ -32,6 +32,10 @@ public:
     // Wave system needs this
     bool isDead() const { return state == State::DEAD || health <= 0; }
 
+    // Health info for UI
+    int getHealth() const { return health; }
+    float getHealthPercent() const { return float(health) / float(getMaxHealth()); }
+
     void update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt);
 
 private:
