@@ -254,7 +254,6 @@ glm::vec2 WaveManager::getRandomEdgePosition() {
 
 void WaveManager::spawnWaveEnemies() {
     const WaveDefinition& wave = WAVE_DEFINITIONS[gameStats.waveNumber - 1];
-    glm::vec2 targetPosition = gameStats.base->getSprite().getPosition();
 
     int totalEnemies = wave.beetles + wave.worms + wave.bees;
 
@@ -265,17 +264,17 @@ void WaveManager::spawnWaveEnemies() {
 
     // Spawn beetles
     for (int i = 0; i < wave.beetles; i++) {
-        addEnemy(EnemyType::Beetle, getRandomEdgePosition(), targetPosition);
+        addEnemy(EnemyType::Beetle, getRandomEdgePosition(), gameStats.base.get());
     }
 
     // Spawn worms
     for (int i = 0; i < wave.worms; i++) {
-        addEnemy(EnemyType::Worm, getRandomEdgePosition(), targetPosition);
+        addEnemy(EnemyType::Worm, getRandomEdgePosition(), gameStats.base.get());
     }
 
     // Spawn bees
     for (int i = 0; i < wave.bees; i++) {
-        addEnemy(EnemyType::Bee, getRandomEdgePosition(), targetPosition);
+        addEnemy(EnemyType::Bee, getRandomEdgePosition(), gameStats.base.get());
     }
 }
 
