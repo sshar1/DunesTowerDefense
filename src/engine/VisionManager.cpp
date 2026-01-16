@@ -4,6 +4,7 @@
 
 #include "engine/VisionManager.hpp"
 
+#include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core/mat.hpp>
 
@@ -118,8 +119,9 @@ namespace Vision {
 
         return glm::vec2{point.x * 2 - 1, -(point.y * 2 - 1)};
     }
-    
+
     std::vector<DetectedTower> Manager::detectTowers(const cv::Mat& colorImg) {
+    //cv::Mat Manager::detectTowers(const cv::Mat& colorImg){
         std::vector<DetectedTower> towers;
 
         CV_Assert(!colorImg.empty());
@@ -134,21 +136,26 @@ namespace Vision {
             cv::Scalar upper;
         };
 
-        // --- HSV ranges (tune later with trackbars) ---
         static const std::vector<ColorRange> colorRanges = {
             // Cyan tower
             {
                 TowerType::CYAN,
-                cv::Scalar(80, 100, 100),   // lower H,S,V
-                cv::Scalar(100, 255, 255)  // upper
+                cv::Scalar(80, 100, 100),
+                cv::Scalar(100, 255, 255)
             },
 
-            // Gray tower (low saturation)
+            // Gray tower 
             {
                 TowerType::GRAY,
                 cv::Scalar(0, 0, 60),
-                cv::Scalar(180, 50, 200)
+                cv::Scalar(180, 60, 180)
+            },
+            {
+                TowerType::BLACK,
+                cv::Scalar(0, 0, 0),
+                cv::Scalar(180, 255, 30)
             }
+            
         };
 
         static constexpr int MIN_TOWER_AREA = 300;
@@ -156,10 +163,11 @@ namespace Vision {
         cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
 
         for (const auto& range : colorRanges) {
+        //const auto& range = colorRanges[0];
+
             cv::Mat mask;
             cv::inRange(hsv, range.lower, range.upper, mask);
 
-            // Clean up noise
             cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernel);
             cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel);
 
@@ -188,6 +196,7 @@ namespace Vision {
         }
 
         return towers;
+        //return mask;
     }
 
 }

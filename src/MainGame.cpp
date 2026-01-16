@@ -89,7 +89,14 @@ void MainGame::run() {
     // const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-08-15.csv"); // Single ramp
     const TopographyVertices& topVertices = dataLoader.processTopographyVertices("tests/test_data/depth_readings/KinectDepthData-04-13-00.csv"); // Double mountain
 
+    cv::VideoCapture cap(0); 
+    cv::Mat frame;
+    Vision::Manager& visionManager = Vision::Manager::getInstance();
+
     while (!gameQuit) {
+
+        cap >> frame;
+        
 
         InputManager& inputManager = InputManager::getInstance();
         InputResult inputResult = inputManager.processInput();
@@ -103,23 +110,92 @@ void MainGame::run() {
 
         renderer->clearBuffer();
 
-#ifdef DEBUG_MODE
-            // renderer->DEBUG_rengerMat(Vision::findHills(topVertices));
-#else
-        renderer->renderTopography(topVertices);
+// #ifdef DEBUG_MODE
+            renderer->DEBUG_rengerMat(frame);
+            std::vector<Vision::DetectedTower> towers = visionManager.detectTowers(frame);
 
-        waveManager.update(topVertices, dt / 1000.f);
-        renderer->streamEnemies(waveManager.getEnemies());
-        renderer->streamProjectiles(waveManager.getProjectiles());
-        renderer->streamTowerData(waveManager.getTowers());
-        renderer->streamBase(waveManager.getBase());
-        renderer->renderSprites();
-#endif
+            // cv::Mat cyanMask = visionManager.detectTowers(frame);
+            // renderer->DEBUG_rengerMat(cyanMask);
+
+            //std::vector<Vision::DetectedTower> towers = visionManager.detectTowers(frame);
+            
+            // cv::Mat debugFrame = frame.clone();
+            
+            // // Draw detected towers on the frame
+            // for (const auto& tower : towers) {
+            //     // Convert from window coordinates back to image coordinates
+            //     float imgX = tower.screenPos.x * frame.cols / WINDOW_WIDTH;
+            //     float imgY = tower.screenPos.y * frame.rows / WINDOW_HEIGHT;
+            //     cv::Point center(static_cast<int>(imgX), static_cast<int>(imgY));
+                
+            //     // Choose color and label based on tower type
+            //     cv::Scalar color;
+            //     std::string label;
+                
+            //     if (tower.type == Vision::TowerType::CYAN) {
+            //         color = cv::Scalar(255, 255, 0);  // Yellow (BGR)
+            //         label = "CYAN";
+            //     } else if (tower.type == Vision::TowerType::GRAY) {
+            //         color = cv::Scalar(128, 128, 128); // Gray
+            //         label = "GRAY";
+            //     } else { // BLACK
+            //         color = cv::Scalar(255, 255, 255); // White circle so it shows up
+            //         label = "BLACK";
+            //     }
+                
+            //     // Draw circle around detected tower
+            //     cv::circle(debugFrame, center, 20, color, 3);
+                
+            //     // Draw label
+            //     cv::putText(debugFrame, label, 
+            //             cv::Point(center.x + 25, center.y - 10),
+            //             cv::FONT_HERSHEY_SIMPLEX, 0.7, color, 2);
+                
+            //     // Draw crosshair at center
+            //     cv::line(debugFrame, cv::Point(center.x - 10, center.y), 
+            //             cv::Point(center.x + 10, center.y), color, 2);
+            //     cv::line(debugFrame, cv::Point(center.x, center.y - 10), 
+            //             cv::Point(center.x, center.y + 10), color, 2);
+            // }
+            
+            // // Add tower count overlay
+            // std::string countText = "Towers Detected: " + std::to_string(towers.size());
+            // cv::putText(debugFrame, countText, cv::Point(10, 30),
+            //         cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 255, 0), 2);
+            
+            // // Print to console for debugging
+            // if (towers.size() > 0) {
+            //     std::cout << "Found " << towers.size() << " towers: ";
+            //     for (const auto& t : towers) {
+            //         std::cout << (t.type == Vision::TowerType::CYAN ? "CYAN " :
+            //                     t.type == Vision::TowerType::GRAY ? "GRAY " : "BLACK ");
+            //         std::cout << "@ (" << t.screenPos.x << "," << t.screenPos.y << ") ";
+            //     }
+            //     std::cout << std::endl;
+            // }
+
+
+            // renderer->clearBuffer();
+
+            // // Render the debug frame with tower detection overlay
+            // renderer->DEBUG_rengerMat(debugFrame);
+// #else 
+        // renderer->renderTopography(topVertices);
+
+        // waveManager.update(topVertices, dt / 1000.f);
+        // renderer->streamEnemies(waveManager.getEnemies());
+        // renderer->streamProjectiles(waveManager.getProjectiles());
+        // renderer->streamTowerData(waveManager.getTowers());
+        // renderer->streamBase(waveManager.getBase());
+        // renderer->renderSprites();
+// #endif
 
         SDL_GL_SwapWindow(window);
 
         // std::cout << calculateFPS() << std::endl;
     }
+    cap.release();
+    //cv::destroyAllWindows();
 }
 
 float MainGame::calculateFPS() {

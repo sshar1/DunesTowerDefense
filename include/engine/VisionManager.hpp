@@ -32,7 +32,7 @@ namespace Vision {
     enum class TowerType {
         CYAN,
         GRAY,
-        UNKNOWN
+        BLACK
     };
 
     struct DetectedTower {
@@ -64,6 +64,7 @@ namespace Vision {
         void evaluateHills();
         
         std::vector<DetectedTower> detectTowers(const cv::Mat& colorImg);
+        //cv::Mat detectTowers(const cv::Mat& colorImg);
         std::vector<glm::vec2>& getHills() { return hills; };
         const cv::Mat& getWarpedDepth() { return warpedDepth; };
     private:
