@@ -138,4 +138,8 @@ private:
     void setState(GameState newState);
     void transitionToNextWave();
     void onWaveComplete();
+
+    // Enemy spawning
+    void spawnWaveEnemies();
+    glm::vec2 getRandomEdgePosition();  // Get random position on map edge
 };

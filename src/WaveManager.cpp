@@ -185,7 +185,59 @@ void WaveManager::startWave() {
     std::cout << "[WaveManager] Starting wave " << gameStats.waveNumber << std::endl;
     setState(GameState::InWave);
 
-    // TODO: Spawn enemies for this wave (Part 6)
+    // Spawn enemies for this wave
+    spawnWaveEnemies();
+}
+
+glm::vec2 WaveManager::getRandomEdgePosition() {
+    const float w = MainGame::WINDOW_WIDTH;
+    const float h = MainGame::WINDOW_HEIGHT;
+    const float margin = 50.0f;  // Spawn slightly inside the edge
+
+    static std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<int> edgeDist(0, 3);  // 0=top, 1=right, 2=bottom, 3=left
+    std::uniform_real_distribution<float> xDist(margin, w - margin);
+    std::uniform_real_distribution<float> yDist(margin, h - margin);
+
+    int edge = edgeDist(gen);
+    switch (edge) {
+        case 0:  // Top edge
+            return glm::vec2(xDist(gen), margin);
+        case 1:  // Right edge
+            return glm::vec2(w - margin, yDist(gen));
+        case 2:  // Bottom edge
+            return glm::vec2(xDist(gen), h - margin);
+        case 3:  // Left edge
+        default:
+            return glm::vec2(margin, yDist(gen));
+    }
+}
+
+void WaveManager::spawnWaveEnemies() {
+    const WaveDefinition& wave = WAVE_DEFINITIONS[gameStats.waveNumber - 1];
+    glm::vec2 targetPosition = gameStats.base->getSprite().getPosition();
+
+    int totalEnemies = wave.beetles + wave.worms + wave.bees;
+
+    std::cout << "[WaveManager] Spawning " << totalEnemies << " enemies: "
+              << wave.beetles << " beetles, "
+              << wave.worms << " worms, "
+              << wave.bees << " bees" << std::endl;
+
+    // Spawn beetles
+    for (int i = 0; i < wave.beetles; i++) {
+        addEnemy(EnemyType::Beetle, getRandomEdgePosition(), targetPosition);
+    }
+
+    // Spawn worms
+    for (int i = 0; i < wave.worms; i++) {
+        addEnemy(EnemyType::Worm, getRandomEdgePosition(), targetPosition);
+    }
+
+    // Spawn bees
+    for (int i = 0; i < wave.bees; i++) {
+        addEnemy(EnemyType::Bee, getRandomEdgePosition(), targetPosition);
+    }
 }
 
 void WaveManager::onWaveComplete() {
