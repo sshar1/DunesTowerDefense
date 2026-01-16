@@ -23,6 +23,8 @@ public:
     virtual ~Enemy() = default;
 
     Sprite getSprite() const;
+    bool isActive() const override { return state != State::DEAD; }
+    void takeDamage(int damage) override { health -= damage; }
 
     void update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt);
 
@@ -41,8 +43,6 @@ private:
     virtual void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) = 0;
 
     glm::vec2 getPosition() const override { return getSprite().getPosition(); }
-    bool isActive() const override { return state != State::DEAD; }
-    void takeDamage(int damage) override { health -= damage; }
 
     void followPath(const TopographyVertices& topVertices, float dt);
     virtual float getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction);

@@ -194,7 +194,7 @@ void Renderer::streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies)
 
     // Push vertices into correct batch
     for (const auto& enemy : enemies) {
-        // TODO check that enemy is alive
+        if (!enemy->isActive()) continue;
         auto sprite = enemy->getSprite();
         auto type = sprite.getType();
         sprite.pushVertices(spriteBatches[type].vertices);
@@ -212,6 +212,7 @@ void Renderer::streamProjectiles(const std::vector<std::unique_ptr<Projectile>>&
 
     // Push vertices into correct batch
     for (const auto& projectile : projectiles) {
+        if (!projectile->isActive()) continue;
         auto sprite = projectile->getSprite();
         auto type = sprite.getType();
         sprite.pushVertices(spriteBatches[type].vertices);

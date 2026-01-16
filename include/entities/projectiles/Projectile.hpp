@@ -22,6 +22,7 @@ public:
     Sprite getSprite();
 
     void update(const std::vector<std::unique_ptr<Enemy>>& enemies, float dt);
+    bool isActive() const { return state != State::Landed; }
 private:
     virtual float getSpeed() const = 0;
     // virtual int getDamage() const = 0;

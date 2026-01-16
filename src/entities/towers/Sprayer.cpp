@@ -21,7 +21,7 @@ void Sprayer::attack(std::vector<std::unique_ptr<Projectile>>& projectiles) {
 
 void Sprayer::findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) {
     auto foundEnemy = std::find_if(enemies.begin(), enemies.end(), [&](const auto& enemy) {
-        return glm::distance(enemy->getSprite().getPosition(), pos) <= ATTACK_RANGE;
+        return enemy->isActive() && glm::distance(enemy->getSprite().getPosition(), pos) <= ATTACK_RANGE;
     });
     if (foundEnemy != enemies.end()) {
         target = (*foundEnemy).get();
@@ -32,13 +32,6 @@ void Sprayer::findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) {
 }
 
 bool Sprayer::enemyValid() const {
-    return target == nullptr || glm::distance(target->getSprite().getPosition(), pos) <= ATTACK_RANGE;
+    if (target == nullptr) return false;
+    return target->isActive() && glm::distance(target->getSprite().getPosition(), pos) <= ATTACK_RANGE;
 }
-
-// void Sprayer::updateAnimation() {
-//     if (state == State::Idle) attackSprite.setVisible(false);
-//     else if (state == State::Attacking) {
-//         attackSprite.setVisible(true);
-//         attackSprite.playAnimation(true);
-//     }
-// }

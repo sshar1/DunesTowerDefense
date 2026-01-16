@@ -76,9 +76,9 @@ void MainGame::run() {
     glm::vec2 basePosition = waveManager.getBase()->getSprite().getPosition();
     glm::vec2 windowSize = glm::vec2{WINDOW_WIDTH, WINDOW_HEIGHT};
 
-    waveManager.addEnemy(EnemyType::Worm, {100, 200}, waveManager.getBase());
+    waveManager.addEnemy(EnemyType::Worm, {100, 300}, waveManager.getBase());
     waveManager.addEnemy(EnemyType::Beetle, {1100, 750}, waveManager.getBase());
-    waveManager.addEnemy(EnemyType::Bee, {300, 400}, waveManager.getBase());
+    // waveManager.addEnemy(EnemyType::Bee, {300, 400}, waveManager.getBase());
 
     waveManager.addTower(TowerType::Sprayer, {400, 400});
     waveManager.addTower(TowerType::Mortar, {400, 400});

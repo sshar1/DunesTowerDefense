@@ -4,7 +4,11 @@
 
 #include "../../../include/entities/projectiles/Rock.hpp"
 
+#include <iostream>
+#include <ostream>
+
 #include "entities/Base.hpp"
+#include "entities/Enemy.hpp"
 #include "glm/detail/func_geometric.hpp"
 #include "glm/gtc/constants.hpp"
 
@@ -36,5 +40,10 @@ void Rock::followPath(float dt) {
 }
 
 void Rock::attack(const std::vector<std::unique_ptr<Enemy> > &enemies) {
-    // TODO loop through enemies in vicinity
+    for (const auto& enemy : enemies) {
+        if (!enemy->isActive()) continue;
+        if (glm::distance(enemy->getSprite().getPosition(), sprite.getPosition()) <= SPLASH_RANGE) {
+            enemy->takeDamage(DAMAGE);
+        }
+    }
 }

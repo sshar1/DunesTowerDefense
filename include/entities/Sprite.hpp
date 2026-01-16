@@ -84,6 +84,7 @@ public:
     void setPosition(glm::vec2 position);
     void setLookVector(glm::vec2 lookVector);
     void setSize(glm::vec2 newSize) { size = newSize; };
+    bool animDone() { return !loopAnimation && currentAnimateFrame >= ANIM_FRAMES - 1; }
 
     void update(float dt);
     void playAnimation(bool loop);

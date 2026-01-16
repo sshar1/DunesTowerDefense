@@ -29,7 +29,12 @@ Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, g
 }
 
 void Enemy::update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt) {
+    if (state == State::DEAD) return;
     sprite.update(dt);
+
+    if (health <= 0 && state != State::DYING && state != State::DEAD) {
+        setState(State::DYING);
+    }
 
     switch (state) {
         case State::WALKING: {
@@ -57,8 +62,9 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
 
             break;
         case State::DYING:
-            sprite.playAnimation(false);
-            // TODO if animation finished, switch to dead
+            if (sprite.animDone()) {
+                setState(State::DEAD);
+            }
             break;
         case State::DEAD:
             return;
@@ -152,8 +158,10 @@ void Enemy::updateAnimation() {
             sprite.playAnimation(false);
             return;
         case State::DYING:
-        case State::DEAD:
             sprite.setAnimType(DYING_ANIM_TYPE);
+            sprite.playAnimation(false);
+        case State::DEAD:
+            return;
     }
 }
 

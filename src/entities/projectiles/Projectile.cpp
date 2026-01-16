@@ -77,6 +77,7 @@ void Projectile::followPath(float dt) {
     glm::vec2 finalPosition;
     if (travelDistance >= distanceToTarget) {
         finalPosition = targetPosition;
+        setState(State::Landing);
     }
     else {
         finalPosition = sprite.getPosition() + directionVector * travelDistance;
