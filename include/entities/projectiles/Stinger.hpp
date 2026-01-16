@@ -14,7 +14,7 @@ private:
     static constexpr glm::vec2 spriteSize = {60, 27};
 
     static constexpr float SPEED = 400.f;
-    static constexpr int DAMAGE = 1;
+    static constexpr int DAMAGE = 15;
 
     // int getDamage() const override { return DAMAGE; }
     void attack(const std::vector<std::unique_ptr<Enemy>>& enemies) override;

@@ -16,7 +16,7 @@ private:
     static constexpr glm::vec2 spriteSize = {1200/10, 900/10};
 
     static constexpr float SPEED = 30.f;
-    static constexpr int MAX_HEALTH = 75;
+    static constexpr int MAX_HEALTH = 25;
     static constexpr float ATTACK_COOLDOWN = 2.f;
 
     int getMaxHealth() const override;
