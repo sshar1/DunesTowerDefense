@@ -40,6 +40,31 @@ static constexpr std::array<int, TOTAL_WAVES> HEALTH_BOOST_PER_WAVE = {0, 10, 15
 static constexpr int BASE_MAX_HEALTH = 100;
 
 // ============================================================================
+// WAVE DEFINITIONS - Enemy spawns per wave
+// ============================================================================
+
+// Defines which enemies spawn in a wave
+struct WaveDefinition {
+    int beetles;    // Number of DungBeetles
+    int worms;      // Number of DuneWorms
+    int bees;       // Number of Bees
+};
+
+// Enemy counts per wave (indexed by wave number - 1)
+// Wave 1: 3 beetles (easy intro)
+// Wave 2: 4 beetles, 1 worm (introduce worms)
+// Wave 3: 3 beetles, 2 worms, 1 bee (introduce bees)
+// Wave 4: 4 beetles, 3 worms, 2 bees (ramp up)
+// Wave 5: 5 beetles, 4 worms, 3 bees (final challenge)
+static constexpr std::array<WaveDefinition, TOTAL_WAVES> WAVE_DEFINITIONS = {{
+    {3, 0, 0},  // Wave 1
+    {4, 1, 0},  // Wave 2
+    {3, 2, 1},  // Wave 3
+    {4, 3, 2},  // Wave 4
+    {5, 4, 3},  // Wave 5
+}};
+
+// ============================================================================
 // GAME STATE ENUMS
 // ============================================================================
 
