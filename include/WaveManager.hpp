@@ -4,6 +4,7 @@
 
 #pragma once
 #include <vector>
+#include <array>
 
 #include "engine/DataLoader.hpp"
 #include "entities/Base.hpp"
@@ -11,10 +12,41 @@
 #include "entities/projectiles/Projectile.hpp"
 #include "entities/towers/Tower.hpp"
 
+// ============================================================================
+// WAVE SYSTEM CONFIGURATION
+// ============================================================================
+
+// Total number of waves in the game
+static constexpr int TOTAL_WAVES = 5;
+
+// Time (in seconds) players have between waves to place towers
+static constexpr float PRE_WAVE_DURATION = 10.0f;
+
+// Tower allowance: how many towers can be placed
+static constexpr int STARTING_TOWER_ALLOWANCE = 3;
+
+// Additional towers allowed per wave (indexed by wave number - 1)
+// Wave 1: +2, Wave 2: +2, Wave 3: +3, Wave 4: +3, Wave 5: +4
+static constexpr std::array<int, TOTAL_WAVES> TOWERS_PER_WAVE = {2, 2, 3, 3, 4};
+
+// Base health configuration
+static constexpr int BASE_STARTING_HEALTH = 100;
+
+// Health boost per wave (indexed by wave number - 1, wave 1 gives no boost)
+// After wave 1: +10, after wave 2: +15, after wave 3: +20, after wave 4: +25
+static constexpr std::array<int, TOTAL_WAVES> HEALTH_BOOST_PER_WAVE = {0, 10, 15, 20, 25};
+
+// Maximum health the base can have (never exceeds this even with boosts)
+static constexpr int BASE_MAX_HEALTH = 100;
+
+// ============================================================================
+// GAME STATE ENUMS
+// ============================================================================
+
 enum class GameState {
-    PreWave,
-    InWave,
-    GameOver,
+    PreWave,    // Between waves, players can place towers
+    InWave,     // Wave is active, enemies are spawning/attacking
+    GameOver,   // Base destroyed or all waves completed
 };
 
 enum class TowerType {
