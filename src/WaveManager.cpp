@@ -207,13 +207,18 @@ void WaveManager::transitionToNextWave() {
     int bonusTowers = TOWERS_PER_WAVE[gameStats.waveNumber - 1];
     gameStats.towerAllowance += bonusTowers;
 
+    // Get health boost for the COMPLETED wave (before incrementing)
+    int healthBoost = HEALTH_BOOST_PER_WAVE[gameStats.waveNumber - 1];
+    int oldHealth = gameStats.base->getHealth();
+    gameStats.base->heal(healthBoost);
+    int newHealth = gameStats.base->getHealth();
+
     gameStats.waveNumber++;
     gameStats.preWaveTimer = PRE_WAVE_DURATION;  // Reset timer for next pre-wave
-
-    // TODO: Apply health boost (Part 4)
 
     setState(GameState::PreWave);
     std::cout << "[WaveManager] Preparing for wave " << gameStats.waveNumber
               << " - " << gameStats.preWaveTimer << "s to place towers"
-              << " (+" << bonusTowers << " towers, total allowance: " << gameStats.towerAllowance << ")" << std::endl;
+              << " (+" << bonusTowers << " towers, total allowance: " << gameStats.towerAllowance << ")"
+              << " (+" << healthBoost << " health: " << oldHealth << " -> " << newHealth << ")" << std::endl;
 }

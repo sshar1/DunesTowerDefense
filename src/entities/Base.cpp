@@ -13,3 +13,10 @@ Base::Base(glm::vec2 position)
 Sprite Base::getSprite() const {
     return sprite;
 }
+
+void Base::heal(int amount) {
+    health += amount;
+    if (health > MAX_HEALTH) {
+        health = MAX_HEALTH;
+    }
+}

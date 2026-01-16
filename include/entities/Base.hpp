@@ -12,13 +12,17 @@ public:
 
     Sprite getSprite() const;
 
+    // ITargetable interface
     void takeDamage(int damage) override { health -= damage; }
+    glm::vec2 getPosition() const override { return getSprite().getPosition(); }
+    bool isActive() const override { return this->health > 0; }
+
+    // Health management
     int getHealth() const { return health; }
     int getMaxHealth() const { return MAX_HEALTH; }
     float getVertOffset() const { return spriteSize.y; }
-
-    glm::vec2 getPosition() const override { return getSprite().getPosition(); }
-    bool isActive() const override { return this->health > 0; }
+    void heal(int amount);  // Heals up to MAX_HEALTH
+    bool isDestroyed() const { return health <= 0; }
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/base_sprite.png";
@@ -28,4 +32,3 @@ private:
     Sprite sprite;
     int health;
 };
-
