@@ -32,6 +32,10 @@ void WaveManager::initSystems() {
     glm::vec2 basePosition = glm::vec2{xDistribution(gen), yDistribution(gen)};
 
     gameStats.base = std::make_unique<Base>(basePosition);
+
+    // Log initial state
+    std::cout << "[WaveManager] Initialized - Wave " << gameStats.waveNumber
+              << ", State: PreWave, Timer: " << gameStats.preWaveTimer << "s" << std::endl;
 }
 
 void WaveManager::addEnemy(EnemyType type, glm::vec2 position, Base* base) {
@@ -94,4 +98,84 @@ std::vector<std::unique_ptr<Tower>>& WaveManager::getTowers() {
 
 Base* WaveManager::getBase() const {
     return gameStats.base.get();
+}
+
+// ============================================================================
+// STATE GETTERS
+// ============================================================================
+
+GameState WaveManager::getGameState() const {
+    return gameStats.gameState;
+}
+
+unsigned int WaveManager::getWaveNumber() const {
+    return gameStats.waveNumber;
+}
+
+float WaveManager::getPreWaveTimer() const {
+    return gameStats.preWaveTimer;
+}
+
+// ============================================================================
+// STATE TRANSITIONS
+// ============================================================================
+
+void WaveManager::setState(GameState newState) {
+    if (gameStats.gameState == newState) return;
+
+    GameState oldState = gameStats.gameState;
+    gameStats.gameState = newState;
+
+    // Log state transition for debugging
+    std::cout << "[WaveManager] State: ";
+    switch (oldState) {
+        case GameState::PreWave: std::cout << "PreWave"; break;
+        case GameState::InWave: std::cout << "InWave"; break;
+        case GameState::GameOver: std::cout << "GameOver"; break;
+    }
+    std::cout << " -> ";
+    switch (newState) {
+        case GameState::PreWave: std::cout << "PreWave"; break;
+        case GameState::InWave: std::cout << "InWave"; break;
+        case GameState::GameOver: std::cout << "GameOver"; break;
+    }
+    std::cout << " (Wave " << gameStats.waveNumber << ")" << std::endl;
+}
+
+void WaveManager::startWave() {
+    if (gameStats.gameState != GameState::PreWave) {
+        std::cout << "[WaveManager] Cannot start wave - not in PreWave state" << std::endl;
+        return;
+    }
+
+    std::cout << "[WaveManager] Starting wave " << gameStats.waveNumber << std::endl;
+    setState(GameState::InWave);
+
+    // TODO: Spawn enemies for this wave (Part 6)
+}
+
+void WaveManager::onWaveComplete() {
+    std::cout << "[WaveManager] Wave " << gameStats.waveNumber << " complete!" << std::endl;
+
+    // Check if this was the last wave
+    if (gameStats.waveNumber >= TOTAL_WAVES) {
+        std::cout << "[WaveManager] All waves completed! Victory!" << std::endl;
+        setState(GameState::GameOver);
+        return;
+    }
+
+    // Move to next wave
+    transitionToNextWave();
+}
+
+void WaveManager::transitionToNextWave() {
+    gameStats.waveNumber++;
+    gameStats.preWaveTimer = PRE_WAVE_DURATION;  // Reset timer for next pre-wave
+
+    // TODO: Apply health boost (Part 4)
+    // TODO: Update tower allowance (Part 3)
+
+    setState(GameState::PreWave);
+    std::cout << "[WaveManager] Preparing for wave " << gameStats.waveNumber
+              << " - " << gameStats.preWaveTimer << "s to place towers" << std::endl;
 }

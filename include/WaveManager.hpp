@@ -66,10 +66,13 @@ struct GameStats {
     std::vector<std::unique_ptr<Tower>> towers{};
     std::vector<std::unique_ptr<Projectile>> projectiles{};
     std::unique_ptr<Base> base;
-    unsigned int baseHealth{100};
+    unsigned int baseHealth{BASE_STARTING_HEALTH};
     unsigned int waveNumber{1};
     GameState gameState{GameState::PreWave};
     unsigned int aliveEnemies{0};
+
+    // Wave timing
+    float preWaveTimer{PRE_WAVE_DURATION};  // Countdown timer for pre-wave phase
 };
 
 class WaveManager {
@@ -89,6 +92,16 @@ public:
     std::vector<std::unique_ptr<Tower>>& getTowers();
     Base* getBase() const;
 
+    // State getters
+    GameState getGameState() const;
+    unsigned int getWaveNumber() const;
+    float getPreWaveTimer() const;
+
 private:
     GameStats gameStats;
+
+    // State transition helpers
+    void setState(GameState newState);
+    void transitionToNextWave();
+    void onWaveComplete();
 };
