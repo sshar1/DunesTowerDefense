@@ -14,6 +14,10 @@ Frog::Frog(glm::vec2 position)
 
 void Frog::attack(std::vector<std::unique_ptr<Projectile>>& projectiles) {
     attackSprite.playAnimation(false);
+
+    if (enemyValid()) {
+        target->takeDamage(DAMAGE);
+    }
 }
 
 void Frog::updateOrientation() {
@@ -23,7 +27,7 @@ void Frog::updateOrientation() {
 
 void Frog::findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) {
     auto foundEnemy = std::find_if(enemies.begin(), enemies.end(), [&](const auto& enemy) {
-        return glm::distance(enemy->getSprite().getPosition(), pos) <= ATTACK_RANGE;
+        return enemy->isActive() && glm::distance(enemy->getSprite().getPosition(), pos) <= ATTACK_RANGE;
     });
     if (foundEnemy != enemies.end()) {
         target = (*foundEnemy).get();
@@ -34,5 +38,6 @@ void Frog::findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) {
 }
 
 bool Frog::enemyValid() const {
-    return target == nullptr || glm::distance(target->getSprite().getPosition(), pos) <= ATTACK_RANGE;
+    if (target == nullptr) return false;
+    return target->isActive() && glm::distance(target->getSprite().getPosition(), pos) <= ATTACK_RANGE;
 }

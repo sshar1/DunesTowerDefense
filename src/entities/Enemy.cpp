@@ -19,17 +19,22 @@ Enemy::Enemy(const char* filePath, int health, SpriteType type)
     setState(State::WALKING);
 }
 
-Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 basePosition)
+Enemy::Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, Base* base)
     : sprite(filePath, type, pos, size)
     , health(health)
     , state(State::WALKING)
-    , basePosition(basePosition)
+    , base(base)
 {
     setState(State::WALKING);
 }
 
 void Enemy::update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt) {
+    if (state == State::DEAD) return;
     sprite.update(dt);
+
+    if (health <= 0 && state != State::DYING && state != State::DEAD) {
+        setState(State::DYING);
+    }
 
     switch (state) {
         case State::WALKING: {
@@ -41,7 +46,7 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
             break;
         }
         case State::ATTACKING:
-            sprite.setLookVector(glm::normalize(basePosition - sprite.getPosition()));
+            sprite.setLookVector(glm::normalize(base->getPosition() - sprite.getPosition()));
 
             if (!validAttackPosition(topVertices)) {
                 setState(State::WALKING);
@@ -52,13 +57,14 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
             if (elapsedAttackTime >= getAttackCooldown()) {
                 sprite.playAnimation(false);
                 elapsedAttackTime = 0;
-                attack(basePosition, projectiles);
+                attack(projectiles);
             }
 
             break;
         case State::DYING:
-            sprite.playAnimation(false);
-            // TODO if animation finished, switch to dead
+            if (sprite.animDone()) {
+                setState(State::DEAD);
+            }
             break;
         case State::DEAD:
             return;
@@ -141,14 +147,6 @@ float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec
     return speedMultiplier * getSpeed();
 }
 
-void Enemy::takeDamage(int damage) {
-    health -= damage;
-
-    if (health <= 0) {
-        std::cout << "Enemy died!" << std::endl;
-    }
-}
-
 void Enemy::updateAnimation() {
     switch (state) {
         case State::WALKING:
@@ -160,8 +158,10 @@ void Enemy::updateAnimation() {
             sprite.playAnimation(false);
             return;
         case State::DYING:
-        case State::DEAD:
             sprite.setAnimType(DYING_ANIM_TYPE);
+            sprite.playAnimation(false);
+        case State::DEAD:
+            return;
     }
 }
 

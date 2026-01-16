@@ -37,8 +37,3 @@ protected:
 
     float elapsedAttackTime = 0.f;
 };
-
-// Attack cooldown
-// Attack damage
-// Range
-// Current target

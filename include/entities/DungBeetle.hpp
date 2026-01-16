@@ -10,7 +10,7 @@
 class DungBeetle : public Enemy {
 public:
     DungBeetle();
-    explicit DungBeetle(glm::vec2 pos, glm::vec2 targetPosition);
+    explicit DungBeetle(glm::vec2 pos, Base* base);
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/dungbeetle_spritesheet.png";
@@ -18,6 +18,7 @@ private:
 
     static constexpr float SPEED = 30.f;
     static constexpr int MAX_HEALTH = 100;
+    static constexpr int DAMAGE = 2;
     static constexpr float ATTACK_COOLDOWN = 2.f;
 
     int getMaxHealth() const override;
@@ -25,5 +26,5 @@ private:
     float getSpeed() const override;
     void calculateWaypoints(const TopographyVertices& topVertices) override;
     bool validAttackPosition(const TopographyVertices &topVertices) override;
-    void attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile>>& projectiles) override;
+    void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) override;
 };

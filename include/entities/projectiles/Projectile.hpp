@@ -4,6 +4,7 @@
 
 #pragma once
 #include "../Sprite.hpp"
+#include "entities/util/ITargetable.hpp"
 // #include "entities/Enemy.hpp"
 
 class Enemy;
@@ -15,14 +16,17 @@ class Projectile {
         Landed,
     };
 public:
-    Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 targetPosition);
+    Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, ITargetable* target);
     virtual ~Projectile() = default;
 
     Sprite getSprite();
 
     void update(const std::vector<std::unique_ptr<Enemy>>& enemies, float dt);
+    bool isActive() const { return state != State::Landed; }
 private:
     virtual float getSpeed() const = 0;
+    // virtual int getDamage() const = 0;
+    virtual void attack(const std::vector<std::unique_ptr<Enemy>>& enemies) = 0;
     virtual void updateAnimation() = 0;
     virtual void updateSize() = 0;
 
@@ -33,7 +37,8 @@ protected:
 
     Sprite sprite;
     State state;
-    glm::vec2 targetPosition;
+    ITargetable* target;
+    glm::vec2 lastKnownPosition;
     glm::vec2 originPosition;
 
     virtual void followPath(float dt);

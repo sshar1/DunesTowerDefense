@@ -15,6 +15,7 @@ private:
 
     static constexpr float ATTACK_COOLDOWN = 0.75f;
     static constexpr int ATTACK_RANGE = 90;
+    static constexpr int DAMAGE = 30;
 
     float getAttackCooldown() const override { return ATTACK_COOLDOWN; }
     // void updateAnimation() override;

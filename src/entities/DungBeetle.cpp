@@ -11,8 +11,8 @@ DungBeetle::DungBeetle()
 {
 }
 
-DungBeetle::DungBeetle(glm::vec2 pos, glm::vec2 targetPosition)
-    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Beetle, pos, spriteSize, targetPosition)
+DungBeetle::DungBeetle(glm::vec2 pos, Base* base)
+    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Beetle, pos, spriteSize, base)
 {
 }
 
@@ -32,8 +32,8 @@ void DungBeetle::calculateWaypoints(const TopographyVertices& topVertices) {
 
     glm::vec2 origin = getSprite().getPosition();
 
-    glm::vec2 directionVector = glm::normalize(basePosition - origin);
-    glm::vec2 adjustedTarget = basePosition - directionVector * baseRadius;
+    glm::vec2 directionVector = glm::normalize(base->getPosition() - origin);
+    glm::vec2 adjustedTarget = base->getPosition() - directionVector * baseRadius;
 
     waypoints.push_back(origin);
     waypoints.push_back(adjustedTarget);
@@ -42,13 +42,13 @@ void DungBeetle::calculateWaypoints(const TopographyVertices& topVertices) {
 bool DungBeetle::validAttackPosition(const TopographyVertices &topVertices) {
     static constexpr float maxDistSquared = 40000.f;
 
-    return glm::distance2(getSprite().getPosition(), basePosition) < maxDistSquared;
+    return glm::distance2(getSprite().getPosition(), base->getPosition()) < maxDistSquared;
 }
 
 float DungBeetle::getAttackCooldown() const {
     return ATTACK_COOLDOWN;
 }
 
-void DungBeetle::attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile> > &projectiles) {
-
+void DungBeetle::attack(std::vector<std::unique_ptr<Projectile> > &projectiles) {
+    base->takeDamage(DAMAGE);
 }

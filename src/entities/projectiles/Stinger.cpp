@@ -4,8 +4,8 @@
 
 #include "../../../include/entities/projectiles/Stinger.hpp"
 
-Stinger::Stinger(glm::vec2 pos, glm::vec2 targetPosition)
-    : Projectile(spriteFilePath, SpriteType::Stinger, pos, spriteSize, targetPosition)
+Stinger::Stinger(glm::vec2 pos, ITargetable* target)
+    : Projectile(spriteFilePath, SpriteType::Stinger, pos, spriteSize, target)
 {
 }
 
@@ -20,4 +20,8 @@ void Stinger::updateAnimation()
 void Stinger::updateSize()
 {
     sprite.setSize(spriteSize);
+}
+
+void Stinger::attack(const std::vector<std::unique_ptr<Enemy> > &enemies) {
+    target->takeDamage(DAMAGE);
 }

@@ -74,13 +74,14 @@ void MainGame::run() {
     initSystems();
 
     glm::vec2 basePosition = waveManager.getBase()->getSprite().getPosition();
+    glm::vec2 windowSize = glm::vec2{WINDOW_WIDTH, WINDOW_HEIGHT};
 
-    waveManager.addEnemy(EnemyType::Worm, {100, 200}, basePosition);
-    waveManager.addEnemy(EnemyType::Beetle, {1100, 750}, basePosition);
-    waveManager.addEnemy(EnemyType::Bee, {300, 400}, basePosition);
+    waveManager.addEnemy(EnemyType::Worm, {100, 300}, waveManager.getBase());
+    waveManager.addEnemy(EnemyType::Beetle, {1100, 750}, waveManager.getBase());
+    // waveManager.addEnemy(EnemyType::Bee, {300, 400}, waveManager.getBase());
 
     waveManager.addTower(TowerType::Sprayer, {400, 400});
-    // waveManager.addTower(TowerType::Mortar, {400, 400});
+    waveManager.addTower(TowerType::Mortar, {400, 400});
     waveManager.addTower(TowerType::Frog, {300, 400});
 
     float prevTicks = SDL_GetTicks();
@@ -111,14 +112,19 @@ void MainGame::run() {
         renderer->renderTopography(topVertices);
 
         waveManager.update(topVertices, dt / 1000.f);
+        renderer->streamBase(waveManager.getBase());
         renderer->streamEnemies(waveManager.getEnemies());
         renderer->streamProjectiles(waveManager.getProjectiles());
         renderer->streamTowerData(waveManager.getTowers());
-        renderer->streamBase(waveManager.getBase());
         renderer->renderSprites();
+        renderer->renderHealthBar(
+            float(waveManager.getBase()->getHealth()) / waveManager.getBase()->getMaxHealth(),
+            basePosition / windowSize,
+            waveManager.getBase()->getVertOffset() / WINDOW_HEIGHT);
 #endif
 
         SDL_GL_SwapWindow(window);
+
 
         // std::cout << calculateFPS() << std::endl;
     }

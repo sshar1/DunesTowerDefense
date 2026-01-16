@@ -9,12 +9,15 @@
 
 #include "glm/gtc/epsilon.hpp"
 
-Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 targetPosition)
+Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, ITargetable* target)
     : sprite(filePath, type, pos, {0, 0})
-    , targetPosition(targetPosition)
     , originPosition(pos)
     , state(State::Firing)
+    , target(target)
 {
+    if (target) {
+        this->lastKnownPosition = target->getPosition();
+    }
     setState(State::Firing);
 }
 
@@ -34,7 +37,7 @@ void Projectile::update(const std::vector<std::unique_ptr<Enemy>>& enemies, floa
             // I know this is dumb. We only do this because there is no longer
             // a landing animation, so we just go ahead and say the thing has
             // landed.
-            // TODO do damage to surrounding enemies
+            attack(enemies);
             setState(State::Landed);
         case State::Landed:
             return;
@@ -49,6 +52,16 @@ void Projectile::setState(State newState) {
 }
 
 void Projectile::followPath(float dt) {
+    glm::vec2 targetPosition;
+
+    if (target && target->isActive()) {
+        targetPosition = target->getPosition();
+        lastKnownPosition = targetPosition;
+    } else {
+        targetPosition = lastKnownPosition;
+        target = nullptr;
+    }
+
     auto atTarget = glm::epsilonEqual(sprite.getPosition(), targetPosition, glm::epsilon<float>());
     if (glm::all(atTarget)) {
         setState(State::Landing);
@@ -64,6 +77,7 @@ void Projectile::followPath(float dt) {
     glm::vec2 finalPosition;
     if (travelDistance >= distanceToTarget) {
         finalPosition = targetPosition;
+        setState(State::Landing);
     }
     else {
         finalPosition = sprite.getPosition() + directionVector * travelDistance;
