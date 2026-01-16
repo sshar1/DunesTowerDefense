@@ -88,6 +88,15 @@ void WaveManager::update(const TopographyVertices& topVertices, float dt) {
         return;
     }
 
+    // Handle pre-wave countdown
+    if (gameStats.gameState == GameState::PreWave) {
+        gameStats.preWaveTimer -= dt;
+        if (gameStats.preWaveTimer <= 0) {
+            startWave();
+        }
+        return;  // Don't update game entities during pre-wave
+    }
+
     Vision::Manager::getInstance().calculateWarpMatrix(topVertices);
     Vision::Manager::getInstance().evaluateHills();
     for (const auto& enemy : gameStats.enemies) {
