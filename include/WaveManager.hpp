@@ -23,11 +23,12 @@ static constexpr int TOTAL_WAVES = 5;
 static constexpr float PRE_WAVE_DURATION = 30.0f;
 
 // Tower allowance: how many towers can be placed
-static constexpr int STARTING_TOWER_ALLOWANCE = 3;
+// Note: Physical tower detection via Kinect limits actual placement
+static constexpr int STARTING_TOWER_ALLOWANCE = 2;
 
 // Additional towers allowed per wave (indexed by wave number - 1)
-// Wave 1: +2, Wave 2: +2, Wave 3: +3, Wave 4: +3, Wave 5: +4
-static constexpr std::array<int, TOTAL_WAVES> TOWERS_PER_WAVE = {2, 2, 3, 3, 4};
+// Wave 1: +1, Wave 2: +1, Wave 3: +1, Wave 4: +2, Wave 5: +2
+static constexpr std::array<int, TOTAL_WAVES> TOWERS_PER_WAVE = {1, 1, 1, 2, 2};
 
 // Base health configuration
 static constexpr int BASE_STARTING_HEALTH = 100;
@@ -51,17 +52,18 @@ struct WaveDefinition {
 };
 
 // Enemy counts per wave (indexed by wave number - 1)
-// Wave 1: 3 beetles (easy intro)
-// Wave 2: 4 beetles, 1 worm (introduce worms)
-// Wave 3: 3 beetles, 2 worms, 1 bee (introduce bees)
-// Wave 4: 4 beetles, 3 worms, 2 bees (ramp up)
-// Wave 5: 5 beetles, 4 worms, 3 bees (final challenge)
+// More numerous but weaker enemies - requires terrain shaping to slow swarm
+// Wave 1: 6 beetles (swarm intro)
+// Wave 2: 6 beetles, 3 worms (introduce fast worms)
+// Wave 3: 5 beetles, 4 worms, 2 bees (introduce flying bees)
+// Wave 4: 6 beetles, 5 worms, 3 bees (ramp up)
+// Wave 5: 8 beetles, 6 worms, 4 bees (final swarm)
 static constexpr std::array<WaveDefinition, TOTAL_WAVES> WAVE_DEFINITIONS = {{
-    {3, 0, 0},  // Wave 1
-    {4, 1, 0},  // Wave 2
-    {3, 2, 1},  // Wave 3
-    {4, 3, 2},  // Wave 4
-    {5, 4, 3},  // Wave 5
+    {6, 0, 0},  // Wave 1: 90 HP total
+    {6, 3, 0},  // Wave 2: 120 HP total
+    {5, 4, 2},  // Wave 3: 139 HP total
+    {6, 5, 3},  // Wave 4: 176 HP total
+    {8, 6, 4},  // Wave 5: 228 HP total
 }};
 
 // ============================================================================
