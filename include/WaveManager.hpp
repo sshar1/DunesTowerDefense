@@ -50,6 +50,10 @@ public:
     void startWave();
     bool gameOver() { return gameStats.gameState == GameState::GameOver; }
     bool inPreWave() { return gameStats.gameState == GameState::PreWave; }
+    bool gameWon() { return gameStats.waveNumber >= TOTAL_WAVES; }
+    int getWaveNumber() { return gameStats.waveNumber; }
+    int getTotalWaves() { return TOTAL_WAVES; }
+    int getTowerAllowance() { return gameStats.waveNumber - 1 + STARTING_TOWERS_ALLOWANCE; }
 
     void update(const TopographyVertices& topVertices, float dt);
 
@@ -87,7 +91,6 @@ private:
     void onWaveComplete();
     void transitionToNextWave();
     void setState(GameState newState) { gameStats.gameState = newState; }
-    int getTowerAllowance() { return gameStats.waveNumber - 1 + STARTING_TOWERS_ALLOWANCE; }
     void spawnWaveEnemies();
     glm::vec2 getRandomEdgePosition();
 };

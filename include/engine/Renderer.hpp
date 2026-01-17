@@ -40,6 +40,9 @@ public:
     void renderSprites();
     void renderHealthBar(float percent, glm::vec2 position, float vertOffset);
     void DEBUG_rengerMat(const cv::Mat& inputMat);
+    void renderHUD(unsigned int waveNumber, unsigned int totalWaves,
+                   bool isPreWave, unsigned int towersRemaining, unsigned int towerAllowance,
+                   bool isGameOver, bool isVictory);
 
 private:
     static constexpr const char* TOP_VERT_PATH = "data/shaders/topology.vert";

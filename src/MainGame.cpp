@@ -96,10 +96,6 @@ void MainGame::run() {
 
     while (!gameQuit) {
 
-        if (waveManager.gameOver()) {
-            break;
-        }
-
         InputManager& inputManager = InputManager::getInstance();
         InputResult inputResult = inputManager.processInput();
         if (inputResult == InputResult::QUIT) {
@@ -130,6 +126,14 @@ void MainGame::run() {
             float(waveManager.getBase()->getHealth()) / waveManager.getBase()->getMaxHealth(),
             basePosition / windowSize,
             waveManager.getBase()->getVertOffset() / WINDOW_HEIGHT);
+        renderer->renderHUD(
+            waveManager.getWaveNumber(),
+            waveManager.getTotalWaves(),
+            waveManager.inPreWave(),
+            waveManager.getTowers().size() - waveManager.getTowerAllowance(),
+            waveManager.getTowerAllowance(),
+            waveManager.gameOver(),
+            waveManager.gameWon());
 #endif
 
         SDL_GL_SwapWindow(window);

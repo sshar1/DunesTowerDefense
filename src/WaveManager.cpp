@@ -91,6 +91,9 @@ void WaveManager::startWave() {
 }
 
 void WaveManager::onWaveComplete() {
+    gameStats.projectiles.clear();
+    gameStats.enemies.clear();
+    gameStats.towers.clear();
     if (gameStats.waveNumber >= TOTAL_WAVES) {
         std::cout << "[WaveManager] All waves completed! Victory!" << std::endl;
         setState(GameState::GameOver);
