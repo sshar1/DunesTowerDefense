@@ -17,7 +17,7 @@ private:
     static constexpr glm::vec2 spriteSize = {1200/20, 900/20};
 
     static constexpr float SPEED = 60.f;
-    static constexpr int MAX_HEALTH = 20;
+    static constexpr int MAX_HEALTH = 10;
     static constexpr int DAMAGE = 1;
     static constexpr float ATTACK_COOLDOWN = 0.75f;
 
