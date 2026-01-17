@@ -26,7 +26,7 @@ public:
     ~Renderer() = default;
 
     // TODO temporarily take a vector of data from kinect and render it
-    void renderTopography(const TopographyVertices& topVertices);
+    void renderTopography(const TopographyVertices& topVertices, bool makeTransparent);
     void initVertexObjects();
     void clearBuffer();
 

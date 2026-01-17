@@ -15,8 +15,13 @@ Sprayer::Sprayer(glm::vec2 position)
 {
 }
 
-void Sprayer::attack(std::vector<std::unique_ptr<Projectile>>& projectiles) {
-    // attackSprite.playAnimation(false);
+void Sprayer::attack(const std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles) {
+    for (const auto& enemy : enemies) {
+        if (!enemy->isActive()) continue;
+        if (glm::distance(enemy->getSprite().getPosition(), attackSprite.getPosition()) <= ATTACK_RANGE) {
+            enemy->takeDamage(DAMAGE);
+        }
+    }
 }
 
 void Sprayer::findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) {

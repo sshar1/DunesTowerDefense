@@ -7,6 +7,7 @@
 enum class InputResult {
     NONE,
     QUIT,
+    NEXT_WAVE,
 };
 
 class InputManager {

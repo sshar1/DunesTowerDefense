@@ -13,14 +13,14 @@ private:
     static constexpr const char* spriteFilePath = "data/textures/gas_spritesheet.png";
     static constexpr glm::vec2 spriteSize = {200, 160};
 
-    static constexpr float ATTACK_COOLDOWN = 0.1f;
+    static constexpr float ATTACK_COOLDOWN = 0.2f;
     static constexpr int ATTACK_RANGE = 80;
-    static constexpr int DAMAGE = 20;
+    static constexpr int DAMAGE = 5;
 
     float getAttackCooldown() const override { return ATTACK_COOLDOWN; }
     // void updateAnimation() override;
     // int getAttackRange() const override { return ATTACK_RANGE; }
     void findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) override;
     bool enemyValid() const override;
-    void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) override;
+    void attack(const std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles) override;
 };

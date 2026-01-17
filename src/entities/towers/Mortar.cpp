@@ -15,7 +15,7 @@ Mortar::Mortar(glm::vec2 position)
     // attackSprite.setVisible(false);
 }
 
-void Mortar::attack(std::vector<std::unique_ptr<Projectile>>& projectiles) {
+void Mortar::attack(const std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles) {
     // attackSprite.playAnimation(true);
 
     if (target != nullptr)

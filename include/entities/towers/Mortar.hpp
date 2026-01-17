@@ -22,5 +22,5 @@ private:
     // int getAttackRange() const override { return ATTACK_RANGE; }
     void findEnemy(const std::vector<std::unique_ptr<Enemy>>& enemies) override;
     bool enemyValid() const override;
-    void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) override;
+    void attack(const std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles) override;
 };

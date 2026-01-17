@@ -144,8 +144,12 @@ void Renderer::clearBuffer() {
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::renderTopography(const TopographyVertices& topVertices) {
+void Renderer::renderTopography(const TopographyVertices& topVertices, bool makeTransparent) {
     topShader->use();
+    if (makeTransparent)
+        topShader->setFloat("transparency", 0.2f);
+    else
+        topShader->setFloat("transparency", 1.0f);
     // markerShader->use();
     glBindVertexArray(topVAO);
 
