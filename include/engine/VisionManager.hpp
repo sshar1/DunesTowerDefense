@@ -10,6 +10,7 @@
 #include "glm/detail/type_mat.hpp"
 #include "glm/vec2.hpp"
 #include "engine/KinectSensor.hpp"
+#include "WaveManager.hpp"
 
 namespace Vision {
     static const std::array<cv::Point2f, 4> outputPointsNorm = {

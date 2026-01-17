@@ -9,14 +9,6 @@
 
 #include "glm/gtc/epsilon.hpp"
 
-<<<<<<< HEAD:src/entities/Projectile.cpp
-Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 targetPosition)
-    : sprite(filePath, type, pos, size)
-    , targetPosition(targetPosition)
-    , state(State::Firing)
-{
-    //setState(State::Firing);
-=======
 Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, ITargetable* target)
     : sprite(filePath, type, pos, {0, 0})
     , originPosition(pos)
@@ -27,7 +19,6 @@ Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm
         this->lastKnownPosition = target->getPosition();
     }
     setState(State::Firing);
->>>>>>> main:src/entities/projectiles/Projectile.cpp
 }
 
 Sprite Projectile::getSprite() {

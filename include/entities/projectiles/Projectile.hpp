@@ -5,6 +5,7 @@
 #pragma once
 #include "../Sprite.hpp"
 #include "entities/util/ITargetable.hpp"
+#include <memory>
 // #include "entities/Enemy.hpp"
 
 class Enemy;

@@ -116,20 +116,9 @@ void MainGame::run() {
             // renderer->DEBUG_rengerMat(Vision::findHills(topVertices));
 #else
 
-<<<<<<< HEAD
-        //renderer->renderTopography(topVertices);
+        renderer->renderTopography(topVertices);
 
         waveManager.update(topVertices, colorMat, dt / 1000.f);
-        
-        //renderer->streamEnemies(waveManager.getEnemies());
-        //renderer->streamProjectiles(waveManager.getProjectiles());
-        //renderer->streamTowerData(waveManager.getTowers());
-        //renderer->streamBase(waveManager.getBase());
-        //renderer->renderSprites();
-		//renderer->DEBUG_rengerMat(Vision::Manager::getInstance().detectTowers());
-
-=======
-        waveManager.update(topVertices, dt / 1000.f);
         renderer->streamBase(waveManager.getBase());
         renderer->streamEnemies(waveManager.getEnemies());
         renderer->streamProjectiles(waveManager.getProjectiles());
@@ -139,7 +128,6 @@ void MainGame::run() {
             float(waveManager.getBase()->getHealth()) / waveManager.getBase()->getMaxHealth(),
             basePosition / windowSize,
             waveManager.getBase()->getVertOffset() / WINDOW_HEIGHT);
->>>>>>> main
 #endif
 
         SDL_GL_SwapWindow(window);

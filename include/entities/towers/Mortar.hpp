@@ -11,7 +11,7 @@ public:
     explicit Mortar(glm::vec2 position);
 private:
     static constexpr const char* spriteFilePath = "data/textures/rock_spritesheet.png";
-    static constexpr glm::vec2 spriteSize = {150, 120};
+    static inline const glm::vec2 spriteSize = {150, 120};
 
     static constexpr float ATTACK_COOLDOWN = 2.f;
     static constexpr int ATTACK_MAX_RANGE = 800;

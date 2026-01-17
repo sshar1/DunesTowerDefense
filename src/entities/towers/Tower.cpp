@@ -13,6 +13,7 @@ Tower::Tower(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 siz
     , target(nullptr)
     , pos(pos)
 {
+	attackSprite.setVisible(false);
 }
 
 void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt) {

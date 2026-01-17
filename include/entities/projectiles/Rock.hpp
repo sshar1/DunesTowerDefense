@@ -11,7 +11,7 @@ public:
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/rock_spritesheet.png";
-    static constexpr glm::vec2 spriteSize = {150, 120};
+    static inline const glm::vec2 spriteSize = {150, 120};
 
     static constexpr float SPEED = 200.f;
     static constexpr int DAMAGE = 40;
