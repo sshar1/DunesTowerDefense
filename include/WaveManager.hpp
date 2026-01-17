@@ -4,6 +4,7 @@
 
 #pragma once
 #include <vector>
+#include <array>
 
 #include "engine/DataLoader.hpp"
 #include "entities/Base.hpp"

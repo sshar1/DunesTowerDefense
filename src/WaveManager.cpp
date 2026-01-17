@@ -108,7 +108,7 @@ void WaveManager::transitionToNextWave() {
     setState(GameState::PreWave);
 }
 
-void WaveManager::update(const TopographyVertices& topVertices, float dt) {
+void WaveManager::update(const TopographyVertices& topVertices, const std::vector<std::uint8_t>& colorMat, float dt) {
     Vision::Manager::getInstance().calculateWarpMatrix(topVertices);
 
     if (!gameStats.base->isActive()) {
