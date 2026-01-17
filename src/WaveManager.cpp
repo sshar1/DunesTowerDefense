@@ -13,7 +13,9 @@
 #include "entities/Bee.hpp"
 #include "entities/DuneWorm.hpp"
 #include "entities/DungBeetle.hpp"
-#include "entities/Sprayer.hpp"
+#include "../include/entities/towers/Mortar.hpp"
+#include "../include/entities/towers/Sprayer.hpp"
+#include "../include/entities/towers/Frog.hpp"
 
 WaveManager::WaveManager()
 {
@@ -32,16 +34,16 @@ void WaveManager::initSystems() {
     gameStats.base = std::make_unique<Base>(basePosition);
 }
 
-void WaveManager::addEnemy(EnemyType type, glm::vec2 position, glm::vec2 targetPosition) {
+void WaveManager::addEnemy(EnemyType type, glm::vec2 position, Base* base) {
     switch (type) {
         case EnemyType::Beetle:
-            gameStats.enemies.push_back(std::make_unique<DungBeetle>(position, targetPosition));
+            gameStats.enemies.push_back(std::make_unique<DungBeetle>(position, base));
             return;
         case EnemyType::Worm:
-            gameStats.enemies.push_back(std::make_unique<DuneWorm>(position, targetPosition));
+            gameStats.enemies.push_back(std::make_unique<DuneWorm>(position, base));
             return;
         case EnemyType::Bee:
-            gameStats.enemies.push_back(std::make_unique<Bee>(position, targetPosition));
+            gameStats.enemies.push_back(std::make_unique<Bee>(position, base));
             return;
         default:
             std::cout << "This is not an enemy, cannot add it" << std::endl;
@@ -53,12 +55,12 @@ void WaveManager::addTower(TowerType type, glm::vec2 position) {
         case TowerType::Sprayer:
             gameStats.towers.push_back(std::make_unique<Sprayer>(position));
             return;
-        // case TowerType::Frog:
-        //     gameStats.enemies.push_back(std::make_unique<Frog>(position, targetPosition));
-        //     return;
-        // case TowerType::Mortar:
-        //     gameStats.enemies.push_back(std::make_unique<Mortar>(position, targetPosition));
-        //     return;
+        case TowerType::Frog:
+            gameStats.towers.push_back(std::make_unique<Frog>(position));
+            return;
+        case TowerType::Mortar:
+            gameStats.towers.push_back(std::make_unique<Mortar>(position));
+            return;
         default:
             std::cout << "This is not an enemy, cannot add it" << std::endl;
     }
@@ -72,10 +74,10 @@ void WaveManager::update(const TopographyVertices& topVertices, const std::vecto
         enemy->update(topVertices, gameStats.projectiles, dt);
     }
     for (const auto& projectile : gameStats.projectiles) {
-        projectile->update(dt);
+        projectile->update(gameStats.enemies, dt);
     }
     for (const auto& tower : gameStats.towers) {
-        tower->update(gameStats.enemies, dt);
+        tower->update(gameStats.enemies, gameStats.projectiles, dt);
     }
 }
 

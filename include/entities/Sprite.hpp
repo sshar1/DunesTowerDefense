@@ -24,22 +24,24 @@ struct SpriteVertices {
     SpriteVertex bottomRight;
 };
 
+// This (disgustingly) determines the render order
 enum class SpriteType {
+    Base,
+
     FirstEnemy,
         Beetle,
         Worm,
         Bee,
     LastEnemy,
 
-    Stinger,
-    Rock,
-
     FirstTowerData,
         Gas,
         Tongue,
         Lizard,
     LastTowerData,
-    Base,
+
+    Stinger,
+    Rock,
 };
 
 inline bool isEnemy(SpriteType type) { return type > SpriteType::FirstEnemy && type < SpriteType::LastEnemy; }
@@ -81,6 +83,8 @@ public:
     void setVisible(bool vis) { visible = vis; }
     void setPosition(glm::vec2 position);
     void setLookVector(glm::vec2 lookVector);
+    void setSize(glm::vec2 newSize) { size = newSize; };
+    bool animDone() { return !loopAnimation && currentAnimateFrame >= ANIM_FRAMES - 1; }
 
     void update(float dt);
     void playAnimation(bool loop);

@@ -4,18 +4,18 @@
 
 #include "entities/Bee.hpp"
 
+#include "MainGame.hpp"
 #include "engine/VisionManager.hpp"
-#include "entities/Stinger.hpp"
-#include "glm/detail/func_geometric.inl"
-#include "glm/gtx/norm.inl"
+#include "../../include/entities/projectiles/Stinger.hpp"
+#include "glm/gtx/norm.hpp"
 
 Bee::Bee()
     : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Bee)
 {
 }
 
-Bee::Bee(glm::vec2 pos, glm::vec2 targetPosition)
-    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Bee, pos, spriteSize, targetPosition)
+Bee::Bee(glm::vec2 pos, Base* base)
+    : Enemy(spriteFilePath, MAX_HEALTH, SpriteType::Bee, pos, spriteSize, base)
 {
 }
 
@@ -52,7 +52,7 @@ void Bee::calculateWaypoints(const TopographyVertices& topVertices) {
     }
     else {
         glm::vec2 directionVector = glm::normalize(targetPosition - origin);
-        targetPosition = basePosition - directionVector * baseRadius;
+        targetPosition = base->getPosition() - directionVector * baseRadius;
     }
 
     waypoints.push_back(origin);
@@ -77,9 +77,9 @@ float Bee::getAttackCooldown() const {
     return ATTACK_COOLDOWN;
 }
 
-void Bee::attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile>> &projectiles) {
+void Bee::attack(std::vector<std::unique_ptr<Projectile>> &projectiles) {
     static constexpr float spacing = 50.f;
 
     glm::vec2 origin = sprite.getPosition() + sprite.getLookVector() * spacing;
-    projectiles.push_back(std::make_unique<Stinger>(origin, targetPosition));
+    projectiles.push_back(std::make_unique<Stinger>(origin, base));
 }

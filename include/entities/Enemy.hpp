@@ -3,12 +3,14 @@
 //
 
 #pragma once
-#include "Projectile.hpp"
+#include "Base.hpp"
+#include "projectiles/Projectile.hpp"
 #include "Sprite.hpp"
 #include "engine/DataLoader.hpp"
+#include "util/ITargetable.hpp"
 
 
-class Enemy {
+class Enemy : public ITargetable {
     enum class State {
         WALKING,
         ATTACKING,
@@ -17,12 +19,12 @@ class Enemy {
     };
 public:
     Enemy(const char* filePath, int health, SpriteType type);
-    Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 basePosition);
+    Enemy(const char* filePath, int health, SpriteType type, glm::vec2 pos, glm::vec2 size, Base* base);
     virtual ~Enemy() = default;
 
     Sprite getSprite() const;
-
-    void takeDamage(int damage);
+    bool isActive() const override { return state != State::DEAD; }
+    void takeDamage(int damage) override { health -= damage; }
 
     void update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt);
 
@@ -38,7 +40,9 @@ private:
     virtual float getSpeed() const = 0;
     virtual void calculateWaypoints(const TopographyVertices& topVertices) = 0;
     virtual bool validAttackPosition(const TopographyVertices& topVertices) = 0;
-    virtual void attack(glm::vec2 targetPosition, std::vector<std::unique_ptr<Projectile>>& projectiles) = 0;
+    virtual void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) = 0;
+
+    glm::vec2 getPosition() const override { return getSprite().getPosition(); }
 
     void followPath(const TopographyVertices& topVertices, float dt);
     virtual float getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction);
@@ -51,7 +55,7 @@ protected:
     int health;
     State state;
     std::vector<glm::vec2> waypoints;
-    glm::vec2 basePosition;
+    Base* base;
     int currentWaypointIdx;
 
     float elapsedAttackTime = 0.f;

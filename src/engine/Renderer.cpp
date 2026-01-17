@@ -194,7 +194,7 @@ void Renderer::streamEnemies(const std::vector<std::unique_ptr<Enemy>>& enemies)
 
     // Push vertices into correct batch
     for (const auto& enemy : enemies) {
-        // TODO check that enemy is alive
+        if (!enemy->isActive()) continue;
         auto sprite = enemy->getSprite();
         auto type = sprite.getType();
         sprite.pushVertices(spriteBatches[type].vertices);
@@ -212,6 +212,7 @@ void Renderer::streamProjectiles(const std::vector<std::unique_ptr<Projectile>>&
 
     // Push vertices into correct batch
     for (const auto& projectile : projectiles) {
+        if (!projectile->isActive()) continue;
         auto sprite = projectile->getSprite();
         auto type = sprite.getType();
         sprite.pushVertices(spriteBatches[type].vertices);
@@ -278,6 +279,105 @@ void Renderer::renderSprites() {
     }
 
     glBindVertexArray(0);
+}
+
+void Renderer::renderHealthBar(float percent, glm::vec2 position, float vertOffset) {
+    // 1. Safety Clamp (0.0 to 1.0)
+    if (percent < 0.0f) percent = 0.0f;
+    if (percent > 1.0f) percent = 1.0f;
+
+    // --- Static Resources (Initialized only once) ---
+    static GLuint uiProgram = 0;
+    static GLuint uiVAO = 0;
+
+    if (uiProgram == 0) {
+        // A. Create Empty VAO (Required for Core Profile, even if not using VBOs)
+        glGenVertexArrays(1, &uiVAO);
+
+        // B. Define Simple Shader for Colored Rectangles
+        const char* vsSrc = R"(
+            #version 330 core
+            uniform vec2 uPos;
+            uniform vec2 uSize;
+
+            void main() {
+                // Generate a 0.0 to 1.0 quad using VertexID
+                // 0:(0,0), 1:(1,0), 2:(0,1), 3:(1,1)
+                vec2 verts[4] = vec2[](vec2(0, 0), vec2(1, 0), vec2(0, 1), vec2(1, 1));
+                vec2 v = verts[gl_VertexID];
+
+                // Scale and Translate to NDC coordinates (-1 to 1)
+                vec2 finalPos = uPos + (v * uSize);
+                gl_Position = vec4(finalPos, 0.0, 1.0);
+            }
+        )";
+
+        const char* fsSrc = R"(
+            #version 330 core
+            out vec4 FragColor;
+            uniform vec4 uColor;
+
+            void main() {
+                FragColor = uColor;
+            }
+        )";
+
+        // C. Compile and Link
+        auto compile = [](GLenum type, const char* src) {
+            GLuint s = glCreateShader(type);
+            glShaderSource(s, 1, &src, nullptr);
+            glCompileShader(s);
+            return s;
+        };
+        GLuint vs = compile(GL_VERTEX_SHADER, vsSrc);
+        GLuint fs = compile(GL_FRAGMENT_SHADER, fsSrc);
+        uiProgram = glCreateProgram();
+        glAttachShader(uiProgram, vs);
+        glAttachShader(uiProgram, fs);
+        glLinkProgram(uiProgram);
+        glDeleteShader(vs);
+        glDeleteShader(fs);
+    }
+
+    // --- RENDER STATE ---
+    glUseProgram(uiProgram);
+    glBindVertexArray(uiVAO);
+
+    // Save previous state just in case
+    GLboolean wasDepthEnabled = glIsEnabled(GL_DEPTH_TEST);
+
+    // Disable depth so UI draws on top of everything
+    glDisable(GL_DEPTH_TEST);
+    // Also disable blending if you don't need transparency, to avoid mixing with game world
+    // glEnable(GL_BLEND);
+
+    // --- Settings ---
+    float fullWidth = 0.3f;
+    float height = 0.03f;
+    float startX = (position.x * 2) - 1 - fullWidth / 2;
+    float startY = 1 - (position.y * 2) + vertOffset;
+
+    // 1. Draw Background (Black)
+    glUniform2f(glGetUniformLocation(uiProgram, "uPos"), startX, startY);
+    glUniform2f(glGetUniformLocation(uiProgram, "uSize"), fullWidth, height);
+    glUniform4f(glGetUniformLocation(uiProgram, "uColor"), 0.0f, 0.0f, 0.0f, 1.0f);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // 2. Draw Foreground (Green)
+    if (percent > 0.0f) {
+        glUniform2f(glGetUniformLocation(uiProgram, "uSize"), fullWidth * percent, height);
+        glUniform4f(glGetUniformLocation(uiProgram, "uColor"), 0.0f, 1.0f, 0.0f, 1.0f);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
+
+    // --- CLEANUP ---
+    glBindVertexArray(0);
+    glUseProgram(0);
+
+    // RESTORE Depth Test for the next frame's geometry
+    if (wasDepthEnabled) {
+        glEnable(GL_DEPTH_TEST);
+    }
 }
 
 void Renderer::DEBUG_rengerMat(const cv::Mat& inputMat) {

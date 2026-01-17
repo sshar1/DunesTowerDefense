@@ -8,8 +8,8 @@
 #include "engine/DataLoader.hpp"
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
-#include "entities/Projectile.hpp"
-#include "entities/Tower.hpp"
+#include "entities/projectiles/Projectile.hpp"
+#include "entities/towers/Tower.hpp"
 
 enum class GameState {
     PreWave,
@@ -46,7 +46,7 @@ public:
 
     void initSystems();
 
-    void addEnemy(EnemyType type, glm::vec2 position, glm::vec2 targetPosition);
+    void addEnemy(EnemyType type, glm::vec2 position, Base* base);
     void addTower(TowerType type, glm::vec2 position);
     void startWave();
 

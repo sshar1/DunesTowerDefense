@@ -2,23 +2,40 @@
 // Created by Sami Sharif  on 1/9/26.
 //
 
-#include "entities/Projectile.hpp"
+#include "../../../include/entities/projectiles/Projectile.hpp"
+
+#include <iostream>
+#include <ostream>
 
 #include "glm/gtc/epsilon.hpp"
 
+<<<<<<< HEAD:src/entities/Projectile.cpp
 Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, glm::vec2 targetPosition)
     : sprite(filePath, type, pos, size)
     , targetPosition(targetPosition)
     , state(State::Firing)
 {
     //setState(State::Firing);
+=======
+Projectile::Projectile(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 size, ITargetable* target)
+    : sprite(filePath, type, pos, {0, 0})
+    , originPosition(pos)
+    , state(State::Firing)
+    , target(target)
+{
+    if (target) {
+        this->lastKnownPosition = target->getPosition();
+    }
+    setState(State::Firing);
+>>>>>>> main:src/entities/projectiles/Projectile.cpp
 }
 
 Sprite Projectile::getSprite() {
     return sprite;
 }
 
-void Projectile::update(float dt) {
+void Projectile::update(const std::vector<std::unique_ptr<Enemy>>& enemies, float dt) {
+    if (state == State::Landed) return;
     sprite.update(dt);
 
     switch (state) {
@@ -26,6 +43,11 @@ void Projectile::update(float dt) {
             followPath(dt);
             return;
         case State::Landing:
+            // I know this is dumb. We only do this because there is no longer
+            // a landing animation, so we just go ahead and say the thing has
+            // landed.
+            attack(enemies);
+            setState(State::Landed);
         case State::Landed:
             return;
     }
@@ -34,11 +56,21 @@ void Projectile::update(float dt) {
 void Projectile::setState(State newState) {
     if (state != newState) {
         state = newState;
-        updateAnimation();
+        // updateAnimation();
     }
 }
 
 void Projectile::followPath(float dt) {
+    glm::vec2 targetPosition;
+
+    if (target && target->isActive()) {
+        targetPosition = target->getPosition();
+        lastKnownPosition = targetPosition;
+    } else {
+        targetPosition = lastKnownPosition;
+        target = nullptr;
+    }
+
     auto atTarget = glm::epsilonEqual(sprite.getPosition(), targetPosition, glm::epsilon<float>());
     if (glm::all(atTarget)) {
         setState(State::Landing);
@@ -54,10 +86,12 @@ void Projectile::followPath(float dt) {
     glm::vec2 finalPosition;
     if (travelDistance >= distanceToTarget) {
         finalPosition = targetPosition;
+        setState(State::Landing);
     }
     else {
         finalPosition = sprite.getPosition() + directionVector * travelDistance;
     }
 
     sprite.setPosition(finalPosition);
+    updateSize();
 }

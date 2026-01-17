@@ -11,9 +11,9 @@
 #include "shader_s.h"
 #include "entities/Base.hpp"
 #include "entities/Enemy.hpp"
-#include "entities/Projectile.hpp"
+#include "../entities/projectiles/Projectile.hpp"
 #include "entities/Sprite.hpp"
-#include "entities/Tower.hpp"
+#include "../entities/towers/Tower.hpp"
 
 struct SpriteBatch {
     GLuint textureID;
@@ -38,6 +38,7 @@ public:
     void streamTowerData(const std::vector<std::unique_ptr<Tower>>& towers);
     void streamBase(const Base* base);
     void renderSprites();
+    void renderHealthBar(float percent, glm::vec2 position, float vertOffset);
     void DEBUG_rengerMat(const cv::Mat& inputMat);
 
 private:

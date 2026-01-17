@@ -4,12 +4,21 @@
 
 #pragma once
 #include "Sprite.hpp"
+#include "util/ITargetable.hpp"
 
-class Base {
+class Base : public ITargetable {
 public:
     Base(glm::vec2 position);
 
     Sprite getSprite() const;
+
+    void takeDamage(int damage) override { health -= damage; }
+    int getHealth() const { return health; }
+    int getMaxHealth() const { return MAX_HEALTH; }
+    float getVertOffset() const { return spriteSize.y; }
+
+    glm::vec2 getPosition() const override { return getSprite().getPosition(); }
+    bool isActive() const override { return this->health > 0; }
 
 private:
     static constexpr const char* spriteFilePath = "data/textures/base_sprite.png";
