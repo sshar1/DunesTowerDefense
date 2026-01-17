@@ -64,8 +64,9 @@ void WaveManager::addTower(TowerType type, glm::vec2 position) {
     }
 }
 
-void WaveManager::update(const TopographyVertices& topVertices, float dt) {
+void WaveManager::update(const TopographyVertices& topVertices, const std::vector<std::uint8_t>& colorMat, float dt) {
     Vision::Manager::getInstance().calculateWarpMatrix(topVertices);
+    Vision::Manager::getInstance().calculateColorWarpMatrix(colorMat); // TODO only do this when we are in prewave
     Vision::Manager::getInstance().evaluateHills();
     for (const auto& enemy : gameStats.enemies) {
         enemy->update(topVertices, gameStats.projectiles, dt);

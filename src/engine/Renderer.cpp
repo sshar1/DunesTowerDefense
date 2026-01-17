@@ -352,6 +352,34 @@ void Renderer::DEBUG_rengerMat(const cv::Mat& inputMat) {
     GLenum format = GL_BGR; // Standard OpenCV color format
     GLenum internalFormat = GL_RGB;
 
+    if (inputMat.channels() == 4) {
+        // Kinect data is usually RGBA. 
+        // If your colors are swapped (blue skin), change this to GL_BGRA.
+        format = GL_RGBA;
+        internalFormat = GL_RGBA;
+
+        // Reset swizzle to normal RGBA
+        GLint swizzleMask[] = { GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA };
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+    }
+    else if (inputMat.channels() == 3) {
+        // Standard OpenCV BGR images
+        format = GL_BGR;
+        internalFormat = GL_RGB;
+
+        GLint swizzleMask[] = { GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA };
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+    }
+    else if (inputMat.channels() == 1) {
+        // Grayscale / Mask images
+        format = GL_RED;
+        internalFormat = GL_RED;
+
+        // Swizzle to display Red channel as Grayscale (RRR1)
+        GLint swizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_ONE };
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+    }
+
     if (inputMat.channels() == 1) {
         format = GL_RED;
         internalFormat = GL_RED;

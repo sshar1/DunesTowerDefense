@@ -105,20 +105,25 @@ void MainGame::run() {
 
 		kinect.update();
         const TopographyVertices& topVertices = kinect.getDepthData();
+		const std::vector<std::uint8_t>& colorMat = kinect.getColorData();
 
         renderer->clearBuffer();
 
 #ifdef DEBUG_MODE
             // renderer->DEBUG_rengerMat(Vision::findHills(topVertices));
 #else
-        renderer->renderTopography(topVertices);
 
-        waveManager.update(topVertices, dt / 1000.f);
-        renderer->streamEnemies(waveManager.getEnemies());
-        renderer->streamProjectiles(waveManager.getProjectiles());
-        renderer->streamTowerData(waveManager.getTowers());
-        renderer->streamBase(waveManager.getBase());
-        renderer->renderSprites();
+        //renderer->renderTopography(topVertices);
+
+        waveManager.update(topVertices, colorMat, dt / 1000.f);
+        
+        //renderer->streamEnemies(waveManager.getEnemies());
+        //renderer->streamProjectiles(waveManager.getProjectiles());
+        //renderer->streamTowerData(waveManager.getTowers());
+        //renderer->streamBase(waveManager.getBase());
+        //renderer->renderSprites();
+		renderer->DEBUG_rengerMat(Vision::Manager::getInstance().detectTowers());
+
 #endif
 
         SDL_GL_SwapWindow(window);

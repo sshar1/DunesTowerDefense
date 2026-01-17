@@ -9,6 +9,7 @@
 #include "DataLoader.hpp"
 #include "glm/detail/type_mat.hpp"
 #include "glm/vec2.hpp"
+#include "engine/KinectSensor.hpp"
 
 namespace Vision {
     static const std::array<cv::Point2f, 4> outputPointsNorm = {
@@ -30,10 +31,19 @@ namespace Vision {
     //};
     static const std::array<cv::Point2f, 4> inputPointsNorm = {
         {
-            {0.34f, 0.1f},
-            {0.87f, 0.13f},
-            {0.28f, 0.62f},
-            {0.87f, 0.62f}
+            {0.3f, 0.14f},
+            {0.86f, 0.16f},
+            {0.25f, 0.64f},
+            {0.88f, 0.7f}
+        }
+    };
+
+    static const std::array<cv::Point2f, 4> inputColorPointsNorm = {
+        {
+            {0.38f, 0.1f},
+            {0.82f, 0.12f},
+            {0.36f, 0.68f},
+            {0.81f, 0.7f}
         }
     };
 
@@ -57,17 +67,22 @@ namespace Vision {
         }
 
         void calculateWarpMatrix(const TopographyVertices& topVertices);
+		void calculateColorWarpMatrix(const std::vector<std::uint8_t>& colorMat);
         void evaluateHills();
 
         std::vector<glm::vec2>& getHills() { return hills; };
         const cv::Mat& getWarpedDepth() { return warpedDepth; };
+        const cv::Mat& getWarpedColor() { return warpedColor; };
+        cv::Mat detectTowers();
     private:
         Manager() = default;
         ~Manager() = default;
 
         static inline const cv::Size dsize{DataLoader::DEPTH_WIDTH, DataLoader::DEPTH_HEIGHT};
+        static inline const cv::Size dsizeColor{KinectSensor::COLOR_WIDTH, KinectSensor::COLOR_HEIGHT};
 
         std::vector<glm::vec2> hills{};
         cv::Mat warpedDepth;
+        cv::Mat warpedColor;
     };
 }

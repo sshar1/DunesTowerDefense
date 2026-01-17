@@ -50,7 +50,7 @@ public:
     void addTower(TowerType type, glm::vec2 position);
     void startWave();
 
-    void update(const TopographyVertices& topVertices, float dt);
+    void update(const TopographyVertices& topVertices, const std::vector<std::uint8_t>& colorMat, float dt);
 
     std::vector<std::unique_ptr<Enemy>>& getEnemies();
     std::vector<std::unique_ptr<Projectile>>& getProjectiles();
