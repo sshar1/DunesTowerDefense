@@ -31,7 +31,7 @@ void Tower::update(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std
             elapsedAttackTime += dt;
             if (elapsedAttackTime >= getAttackCooldown()) {
                 elapsedAttackTime = 0;
-                attack(projectiles);
+                attack(enemies, projectiles);
             }
 
             if (!enemyValid()) {

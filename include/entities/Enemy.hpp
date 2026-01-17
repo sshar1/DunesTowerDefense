@@ -3,6 +3,8 @@
 //
 
 #pragma once
+#include <functional>
+
 #include "Base.hpp"
 #include "projectiles/Projectile.hpp"
 #include "Sprite.hpp"
@@ -28,6 +30,7 @@ public:
 
     void update(const TopographyVertices& topVertices, std::vector<std::unique_ptr<Projectile>>& projectiles, float dt);
 
+    std::function<void()> onDeath = nullptr;
 private:
     static constexpr int WALK_ANIM_TYPE = 0;
     static constexpr int ATTACKING_ANIM_TYPE = 1;

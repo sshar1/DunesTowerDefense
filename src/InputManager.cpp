@@ -16,6 +16,12 @@ InputResult InputManager::processInput() {
         if (event.type == SDL_QUIT) {
             return InputResult::QUIT;
         }
+
+        if (event.type == SDL_KEYDOWN) {
+            if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER) {
+                return InputResult::NEXT_WAVE;
+            }
+        }
     }
 
     // SDL_GetMouseState(&mouseX, &mouseY);
