@@ -122,7 +122,7 @@ void MainGame::run() {
         //renderer->streamTowerData(waveManager.getTowers());
         //renderer->streamBase(waveManager.getBase());
         //renderer->renderSprites();
-		renderer->DEBUG_rengerMat(Vision::Manager::getInstance().detectTowers());
+		//renderer->DEBUG_rengerMat(Vision::Manager::getInstance().detectTowers());
 
 #endif
 

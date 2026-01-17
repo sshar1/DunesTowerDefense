@@ -119,13 +119,14 @@ namespace Vision {
         cv::warpPerspective(rawData, warpedColor, warpMat, dsizeColor);
     }
 
-    cv::Mat Manager::detectTowers() {
+    std::vector<DetectedTower> Manager::detectTowers() {
+        std::vector<DetectedTower> detectedTowers;
+
         // 1. Prepare Images
         cv::Mat hsv;
         cv::Mat bgr;
 
         // Convert RGBA -> BGR -> HSV
-        // We keep 'bgr' so we can draw dots on a color image (mask is black/white)
         cv::cvtColor(warpedColor, bgr, cv::COLOR_RGBA2BGR);
         cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);
 
@@ -134,28 +135,23 @@ namespace Vision {
             TowerType type;
             cv::Scalar lower;
             cv::Scalar upper;
-            cv::Scalar dotColor; // Added color for the debug dot (B, G, R)
         };
 
         static const std::vector<ColorRange> colorRanges = {
-            // Cyan tower -> Draws Red Dot
-            { TowerType::Frog,    cv::Scalar(80, 100, 100), cv::Scalar(100, 255, 255), cv::Scalar(0, 0, 255) },
+            // Cyan tower
+            { TowerType::Frog,    cv::Scalar(80, 100, 100), cv::Scalar(100, 255, 255) },
 
-            // Gray tower -> Draws Green Dot
-            { TowerType::Mortar,  cv::Scalar(0, 0, 80),     cv::Scalar(180, 60, 200),  cv::Scalar(0, 255, 0) },
+            // Gray tower
+            { TowerType::Mortar,  cv::Scalar(0, 0, 80),     cv::Scalar(180, 60, 200) },
 
-            // Black tower -> Draws Yellow Dot
-            { TowerType::Sprayer, cv::Scalar(0, 0, 0),      cv::Scalar(180, 255, 40),  cv::Scalar(0, 255, 255) }
+            // Black tower
+            { TowerType::Sprayer, cv::Scalar(0, 0, 0),      cv::Scalar(180, 255, 60) }
         };
 
         static constexpr int MIN_TOWER_AREA = 2000;
         static constexpr int MAX_TOWER_AREA = 50000;
         static const cv::Size kernelSize{ 5, 5 };
         cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
-
-        // outputImage will start as the clean BGR image.
-        // We will draw dots onto THIS image.
-        cv::Mat outputImage = bgr.clone();
 
         // 3. Loop through all tower types
         for (const auto& range : colorRanges) {
@@ -177,124 +173,32 @@ namespace Vision {
                 float w = rotRect.size.width;
                 float h = rotRect.size.height;
 
-                // Calculate Aspect Ratio (Longest Side / Shortest Side)
-                // We use std::max/min so it works whether the strip is vertical or horizontal
+                // Aspect Ratio Filter (remove strips)
                 float aspectRatio = (h > 0 && w > 0) ? std::max(w, h) / std::min(w, h) : 0.0f;
-
-                // If the object is 2x longer than it is wide, it's a strip/glitch. Skip it.
                 if (aspectRatio > 2.0f) continue;
 
                 cv::Moments m = cv::moments(contour);
                 if (m.m00 == 0) continue;
 
                 // Calculate Center
-                int cx = static_cast<int>(m.m10 / m.m00);
-                int cy = static_cast<int>(m.m01 / m.m00);
+                float cx = static_cast<float>(m.m10 / m.m00);
+                float cy = static_cast<float>(m.m01 / m.m00);
 
-                // --- DRAW THE DOT ---
-                // Draw on 'outputImage' (BGR)
-                // Position: (cx, cy)
-                // Radius: 10
-                // Color: range.dotColor
-                // Thickness: -1 (Filled circle)
-                cv::circle(outputImage, cv::Point(cx, cy), 10, range.dotColor, -1);
+                // --- SAVE DATA ---
+                DetectedTower tower;
+                tower.type = range.type;
 
-                // Optional: Draw outline around the tower too for better visibility
-                cv::drawContours(outputImage, std::vector<std::vector<cv::Point>>{contour}, -1, range.dotColor, 2);
+                // Normalize coordinates to 0.0 - 1.0 range
+                // This makes it easy to map to your game world regardless of resolution
+                tower.position.x = cx / static_cast<float>(warpedColor.cols);
+                tower.position.y = cy / static_cast<float>(warpedColor.rows);
+
+                detectedTowers.push_back(tower);
             }
         }
 
-        // 4. Return the image with dots (Converted back to RGBA for your renderer)
-        cv::Mat finalOutput;
-        cv::cvtColor(outputImage, finalOutput, cv::COLOR_BGR2RGBA);
-
-        return finalOutput;
+        return detectedTowers;
     }
-
-  //  cv::Mat Manager::detectTowers() {
-  //      //std::vector<DetectedTower> towers;
-
-  //      /*CV_Assert(!colorImg.empty());
-  //      CV_Assert(colorImg.type() == CV_8UC3);*/
-
-  //      cv::Mat hsv;
-  //      cv::cvtColor(warpedColor, hsv, cv::COLOR_RGBA2BGR);
-		//cv::cvtColor(hsv, hsv, cv::COLOR_BGR2HSV);
-
-  //      struct ColorRange {
-  //          TowerType type;
-  //          cv::Scalar lower;
-  //          cv::Scalar upper;
-  //      };
-
-  //      static const std::vector<ColorRange> colorRanges = {
-  //          // Cyan tower
-  //          {
-  //              TowerType::Frog,
-  //              cv::Scalar(80, 100, 100),
-  //              cv::Scalar(100, 255, 255)
-  //          },
-
-  //          // Gray tower 
-  //          {
-  //              TowerType::Mortar,
-  //              cv::Scalar(0, 0, 100),
-  //              cv::Scalar(180, 60, 200)
-  //          },
-
-  //          // Black tower
-  //          {
-  //              TowerType::Sprayer,
-  //              cv::Scalar(0, 0, 0),
-  //              cv::Scalar(180, 255, 50)
-  //          }
-
-  //      };
-
-  //      static constexpr int MIN_TOWER_AREA = 300;
-  //      static const cv::Size kernelSize{ 5, 5 };
-  //      cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
-  //      cv::Mat mask;
-  //      cv::inRange(hsv, colorRanges[2].lower, colorRanges[2].upper, mask);
-
-  //      cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernel);
-  //      cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel);
-
-  //      //for (const auto& range : colorRanges) {
-  //      //    //const auto& range = colorRanges[0];
-
-  //      //    cv::Mat mask;
-  //      //    cv::inRange(hsv, range.lower, range.upper, mask);
-
-  //      //    cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernel);
-  //      //    cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel);
-
-  //      //    std::vector<std::vector<cv::Point>> contours;
-  //      //    cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-  //      //    for (const auto& contour : contours) {
-  //      //        double area = cv::contourArea(contour);
-  //      //        if (area < MIN_TOWER_AREA) continue;
-
-  //      //        cv::Moments m = cv::moments(contour);
-  //      //        if (m.m00 == 0) continue;
-
-  //      //        float cx = static_cast<float>(m.m10 / m.m00);
-  //      //        float cy = static_cast<float>(m.m01 / m.m00);
-
-  //      //        // Convert to window coordinates
-  //      //        float screenX = cx * MainGame::WINDOW_WIDTH / colorImg.cols;
-  //      //        float screenY = cy * MainGame::WINDOW_HEIGHT / colorImg.rows;
-
-  //      //        /*towers.push_back({
-  //      //            range.type,
-  //      //            glm::vec2(screenX, screenY)
-  //      //            });*/
-  //      //    }
-  //      //}
-
-  //      return mask;
-  //  }
 
     glm::vec2 cartesianToNDC(const glm::vec2 point) {
         // Cartesian:

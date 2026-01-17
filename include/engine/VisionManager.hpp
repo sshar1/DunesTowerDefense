@@ -54,6 +54,11 @@ namespace Vision {
 
     glm::vec2 cartesianToNDC(const glm::vec2 point);
 
+    struct DetectedTower {
+        TowerType type;
+        glm::vec2 position; // Normalized (0.0 - 1.0)
+    };
+
     class Manager {
     public:
         Manager(Manager const&) = delete;
@@ -73,7 +78,7 @@ namespace Vision {
         std::vector<glm::vec2>& getHills() { return hills; };
         const cv::Mat& getWarpedDepth() { return warpedDepth; };
         const cv::Mat& getWarpedColor() { return warpedColor; };
-        cv::Mat detectTowers();
+        std::vector<DetectedTower> detectTowers();
     private:
         Manager() = default;
         ~Manager() = default;
