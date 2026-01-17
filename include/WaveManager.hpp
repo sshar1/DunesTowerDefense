@@ -22,13 +22,23 @@ static constexpr int TOTAL_WAVES = 5;
 // Time (in seconds) players have between waves to place towers and shape terrain
 static constexpr float PRE_WAVE_DURATION = 30.0f;
 
-// Tower allowance: how many towers can be placed
+// Tower allowance: how many "tower points" can be spent
 // Note: Physical tower detection via Kinect limits actual placement
-static constexpr int STARTING_TOWER_ALLOWANCE = 2;
+static constexpr int STARTING_TOWER_ALLOWANCE = 3;
 
-// Additional towers allowed per wave (indexed by wave number - 1)
-// Wave 1: +1, Wave 2: +1, Wave 3: +1, Wave 4: +2, Wave 5: +2
-static constexpr std::array<int, TOTAL_WAVES> TOWERS_PER_WAVE = {1, 1, 1, 2, 2};
+// Additional tower points allowed per wave (indexed by wave number - 1)
+// Wave 1: +1 (total 4), Wave 2: +1 (total 5), Wave 3: +2 (total 7), Wave 4: +0, Wave 5: +1 (total 8)
+static constexpr std::array<int, TOTAL_WAVES> TOWERS_PER_WAVE = {1, 1, 2, 0, 1};
+
+// ============================================================================
+// TOWER COSTS - Different towers have different values
+// ============================================================================
+// Sprayer: Close range area denial, worth 1 point
+// Frog: Medium range single target, worth 1 point
+// Mortar: Long range splash damage, worth 2 points
+static constexpr int SPRAYER_COST = 1;
+static constexpr int FROG_COST = 1;
+static constexpr int MORTAR_COST = 2;
 
 // Base health configuration
 static constexpr int BASE_STARTING_HEALTH = 100;
@@ -101,8 +111,9 @@ struct GameStats {
     // Wave timing
     float preWaveTimer{PRE_WAVE_DURATION};  // Countdown timer for pre-wave phase
 
-    // Tower allowance
-    unsigned int towerAllowance{STARTING_TOWER_ALLOWANCE};  // Max towers player can place
+    // Tower allowance (points-based system)
+    unsigned int towerAllowance{STARTING_TOWER_ALLOWANCE};  // Max tower points available
+    unsigned int towerPointsUsed{0};  // Tower points spent
 };
 
 class WaveManager {
@@ -128,11 +139,12 @@ public:
     float getPreWaveTimer() const;
     bool isVictory() const { return gameStats.gameState == GameState::GameOver && gameStats.waveNumber > TOTAL_WAVES; }
 
-    // Tower allowance getters
-    unsigned int getTowerAllowance() const;
-    unsigned int getTowersPlaced() const;
-    unsigned int getTowersRemaining() const;
-    bool canPlaceTower() const;
+    // Tower allowance getters (points-based system)
+    unsigned int getTowerAllowance() const;  // Total points available
+    unsigned int getTowerPointsUsed() const;  // Points spent
+    unsigned int getTowersRemaining() const;  // Points remaining
+    bool canPlaceTower(TowerType type) const;  // Check if enough points for tower
+    static int getTowerCost(TowerType type);  // Get cost of a tower type
 
 private:
     GameStats gameStats;

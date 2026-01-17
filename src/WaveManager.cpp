@@ -56,10 +56,12 @@ void WaveManager::addEnemy(EnemyType type, glm::vec2 position, Base* base) {
 }
 
 void WaveManager::addTower(TowerType type, glm::vec2 position) {
+    int cost = getTowerCost(type);
+
     // Check tower allowance
-    if (!canPlaceTower()) {
-        std::cout << "[WaveManager] Cannot place tower - allowance exceeded ("
-                  << getTowersPlaced() << "/" << getTowerAllowance() << ")" << std::endl;
+    if (!canPlaceTower(type)) {
+        std::cout << "[WaveManager] Cannot place tower - not enough points ("
+                  << getTowersRemaining() << " remaining, need " << cost << ")" << std::endl;
         return;
     }
 
@@ -78,8 +80,10 @@ void WaveManager::addTower(TowerType type, glm::vec2 position) {
             return;
     }
 
-    std::cout << "[WaveManager] Tower placed (" << getTowersPlaced() << "/"
-              << getTowerAllowance() << "), " << getTowersRemaining() << " remaining" << std::endl;
+    gameStats.towerPointsUsed += cost;
+    std::cout << "[WaveManager] Tower placed (cost " << cost << ", "
+              << getTowerPointsUsed() << "/" << getTowerAllowance() << " points used), "
+              << getTowersRemaining() << " points remaining" << std::endl;
 }
 
 void WaveManager::update(const TopographyVertices& topVertices, float dt) {
@@ -168,25 +172,33 @@ float WaveManager::getPreWaveTimer() const {
 }
 
 // ============================================================================
-// TOWER ALLOWANCE
+// TOWER ALLOWANCE (Points-based system)
 // ============================================================================
 
 unsigned int WaveManager::getTowerAllowance() const {
     return gameStats.towerAllowance;
 }
 
-unsigned int WaveManager::getTowersPlaced() const {
-    return gameStats.towers.size();
+unsigned int WaveManager::getTowerPointsUsed() const {
+    return gameStats.towerPointsUsed;
 }
 
 unsigned int WaveManager::getTowersRemaining() const {
-    unsigned int placed = getTowersPlaced();
-    if (placed >= gameStats.towerAllowance) return 0;
-    return gameStats.towerAllowance - placed;
+    if (gameStats.towerPointsUsed >= gameStats.towerAllowance) return 0;
+    return gameStats.towerAllowance - gameStats.towerPointsUsed;
 }
 
-bool WaveManager::canPlaceTower() const {
-    return getTowersPlaced() < gameStats.towerAllowance;
+bool WaveManager::canPlaceTower(TowerType type) const {
+    return getTowersRemaining() >= static_cast<unsigned int>(getTowerCost(type));
+}
+
+int WaveManager::getTowerCost(TowerType type) {
+    switch (type) {
+        case TowerType::Sprayer: return SPRAYER_COST;
+        case TowerType::Frog: return FROG_COST;
+        case TowerType::Mortar: return MORTAR_COST;
+        default: return 1;
+    }
 }
 
 // ============================================================================
