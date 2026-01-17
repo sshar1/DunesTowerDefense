@@ -78,13 +78,15 @@ void MainGame::run() {
     glm::vec2 basePosition = waveManager.getBase()->getSprite().getPosition();
     glm::vec2 windowSize = glm::vec2{WINDOW_WIDTH, WINDOW_HEIGHT};
 
-    waveManager.addEnemy(EnemyType::Worm, {100, 300}, waveManager.getBase());
-    waveManager.addEnemy(EnemyType::Beetle, {1100, 750}, waveManager.getBase());
+    // waveManager.addEnemy(EnemyType::Worm, {100, 300}, waveManager.getBase());
+    // waveManager.addEnemy(EnemyType::Beetle, {1100, 750}, waveManager.getBase());
     // waveManager.addEnemy(EnemyType::Bee, {300, 400}, waveManager.getBase());
-
+    //
     waveManager.addTower(TowerType::Sprayer, {400, 400});
-    waveManager.addTower(TowerType::Mortar, {400, 400});
-    waveManager.addTower(TowerType::Frog, {300, 400});
+    waveManager.addTower(TowerType::Sprayer, {600, 400});
+    waveManager.addTower(TowerType::Sprayer, {400, 600});
+    waveManager.addTower(TowerType::Mortar, {800, 100});
+    waveManager.addTower(TowerType::Frog, {800, 800});
 
     float prevTicks = SDL_GetTicks();
 
@@ -101,6 +103,9 @@ void MainGame::run() {
         if (inputResult == InputResult::QUIT) {
             gameQuit = true;
         }
+        else if (inputResult == InputResult::NEXT_WAVE) {
+            waveManager.startWave();
+        }
 
         float currentTicks = SDL_GetTicks();
         float dt = currentTicks - prevTicks;
@@ -115,8 +120,7 @@ void MainGame::run() {
 #ifdef DEBUG_MODE
             // renderer->DEBUG_rengerMat(Vision::findHills(topVertices));
 #else
-
-        renderer->renderTopography(topVertices);
+        renderer->renderTopography(topVertices, waveManager.inPreWave());
 
         waveManager.update(topVertices, colorMat, dt / 1000.f);
         renderer->streamBase(waveManager.getBase());
@@ -128,6 +132,14 @@ void MainGame::run() {
             float(waveManager.getBase()->getHealth()) / waveManager.getBase()->getMaxHealth(),
             basePosition / windowSize,
             waveManager.getBase()->getVertOffset() / WINDOW_HEIGHT);
+        renderer->renderHUD(
+            waveManager.getWaveNumber(),
+            waveManager.getTotalWaves(),
+            waveManager.inPreWave(),
+            waveManager.getTowers().size() - waveManager.getTowerAllowance(),
+            waveManager.getTowerAllowance(),
+            waveManager.gameOver(),
+            waveManager.gameWon());
 #endif
 
         SDL_GL_SwapWindow(window);
@@ -135,6 +147,8 @@ void MainGame::run() {
 
         // std::cout << calculateFPS() << std::endl;
     }
+
+    std::cout << "Game over!" << std::endl;
 }
 
 float MainGame::calculateFPS() {

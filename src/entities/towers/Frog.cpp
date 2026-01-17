@@ -12,7 +12,7 @@ Frog::Frog(glm::vec2 position)
 {
 }
 
-void Frog::attack(std::vector<std::unique_ptr<Projectile>>& projectiles) {
+void Frog::attack(const std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles) {
     attackSprite.playAnimation(false);
 
     if (enemyValid()) {

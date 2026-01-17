@@ -144,8 +144,12 @@ void Renderer::clearBuffer() {
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::renderTopography(const TopographyVertices& topVertices) {
+void Renderer::renderTopography(const TopographyVertices& topVertices, bool makeTransparent) {
     topShader->use();
+    if (makeTransparent)
+        topShader->setFloat("transparency", 0.2f);
+    else
+        topShader->setFloat("transparency", 1.0f);
     // markerShader->use();
     glBindVertexArray(topVAO);
 
@@ -510,4 +514,145 @@ void Renderer::DEBUG_rengerMat(const cv::Mat& inputMat) {
     // Cleanup state
     glBindVertexArray(0);
     glUseProgram(0);
+}
+
+void Renderer::renderHUD(unsigned int waveNumber, unsigned int totalWaves,
+                         bool isPreWave, unsigned int towersRemaining, unsigned int towerAllowance,
+                         bool isGameOver, bool isVictory) {
+    // Reuse the UI shader from renderHealthBar (static, initialized once)
+    static GLuint hudProgram = 0;
+    static GLuint hudVAO = 0;
+
+    if (hudProgram == 0) {
+        glGenVertexArrays(1, &hudVAO);
+
+        const char* vsSrc = R"(
+            #version 330 core
+            uniform vec2 uPos;
+            uniform vec2 uSize;
+            void main() {
+                vec2 verts[4] = vec2[](vec2(0, 0), vec2(1, 0), vec2(0, 1), vec2(1, 1));
+                vec2 v = verts[gl_VertexID];
+                vec2 finalPos = uPos + (v * uSize);
+                gl_Position = vec4(finalPos, 0.0, 1.0);
+            }
+        )";
+
+        const char* fsSrc = R"(
+            #version 330 core
+            out vec4 FragColor;
+            uniform vec4 uColor;
+            void main() {
+                FragColor = uColor;
+            }
+        )";
+
+        auto compile = [](GLenum type, const char* src) {
+            GLuint s = glCreateShader(type);
+            glShaderSource(s, 1, &src, nullptr);
+            glCompileShader(s);
+            return s;
+        };
+        GLuint vs = compile(GL_VERTEX_SHADER, vsSrc);
+        GLuint fs = compile(GL_FRAGMENT_SHADER, fsSrc);
+        hudProgram = glCreateProgram();
+        glAttachShader(hudProgram, vs);
+        glAttachShader(hudProgram, fs);
+        glLinkProgram(hudProgram);
+        glDeleteShader(vs);
+        glDeleteShader(fs);
+    }
+
+    glUseProgram(hudProgram);
+    glBindVertexArray(hudVAO);
+
+    GLboolean wasDepthEnabled = glIsEnabled(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
+
+    GLint posLoc = glGetUniformLocation(hudProgram, "uPos");
+    GLint sizeLoc = glGetUniformLocation(hudProgram, "uSize");
+    GLint colorLoc = glGetUniformLocation(hudProgram, "uColor");
+
+    // Clean, minimal HUD in top-left
+    float margin = 0.03f;
+    float dotSize = 0.025f;
+    float dotSpacing = 0.015f;
+
+    //WAVE DOTS (top-left)
+    // Simple dots: filled = completed, ring = current, empty = future
+    float waveY = 1.0f - margin - dotSize;
+    for (unsigned int i = 0; i < totalWaves; i++) {
+        float x = -1.0f + margin + i * (dotSize + dotSpacing);
+
+        if (i < waveNumber - 1) {
+            // Completed waves - solid green dot
+            glUniform2f(posLoc, x, waveY);
+            glUniform2f(sizeLoc, dotSize, dotSize);
+            glUniform4f(colorLoc, 0.3f, 0.85f, 0.4f, 1.0f);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        } else if (i == waveNumber - 1) {
+            // Current wave - bright yellow/gold with dark outline
+            glUniform2f(posLoc, x - 0.003f, waveY - 0.003f);
+            glUniform2f(sizeLoc, dotSize + 0.006f, dotSize + 0.006f);
+            glUniform4f(colorLoc, 0.1f, 0.1f, 0.1f, 1.0f);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+            glUniform2f(posLoc, x, waveY);
+            glUniform2f(sizeLoc, dotSize, dotSize);
+            glUniform4f(colorLoc, 1.0f, 0.85f, 0.2f, 1.0f);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        } else {
+            // Future waves - dim outline only
+            glUniform2f(posLoc, x, waveY);
+            glUniform2f(sizeLoc, dotSize, dotSize);
+            glUniform4f(colorLoc, 0.3f, 0.3f, 0.3f, 0.6f);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+            float inner = 0.006f;
+            glUniform2f(posLoc, x + inner, waveY + inner);
+            glUniform2f(sizeLoc, dotSize - 2*inner, dotSize - 2*inner);
+            glUniform4f(colorLoc, 0.0f, 0.0f, 0.0f, 0.0f);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        }
+    }
+
+    // GAME OVER OVERLAY =
+    if (isGameOver) {
+        //TODO: Have other objects disappear and add text
+
+        // Semi-transparent dark overlay
+        glUniform2f(posLoc, -1.0f, -1.0f);
+        glUniform2f(sizeLoc, 2.0f, 2.0f);
+        glUniform4f(colorLoc, 0.0f, 0.0f, 0.0f, 0.6f);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+        // Center indicator box
+        float boxW = 0.4f;
+        float boxH = 0.15f;
+        glUniform2f(posLoc, -boxW/2, -boxH/2);
+        glUniform2f(sizeLoc, boxW, boxH);
+
+        if (isVictory) {
+            // Victory - gold/yellow
+            glUniform4f(colorLoc, 1.0f, 0.85f, 0.2f, 1.0f);
+        } else {
+            // Defeat - red
+            glUniform4f(colorLoc, 0.9f, 0.2f, 0.2f, 1.0f);
+        }
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+        // Inner box (darker)
+        float innerMargin = 0.01f;
+        glUniform2f(posLoc, -boxW/2 + innerMargin, -boxH/2 + innerMargin);
+        glUniform2f(sizeLoc, boxW - 2*innerMargin, boxH - 2*innerMargin);
+        glUniform4f(colorLoc, 0.1f, 0.1f, 0.1f, 1.0f);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
+
+    glBindVertexArray(0);
+    glUseProgram(0);
+
+    if (wasDepthEnabled) {
+        glEnable(GL_DEPTH_TEST);
+    }
 }

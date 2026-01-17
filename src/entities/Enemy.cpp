@@ -169,6 +169,13 @@ void Enemy::setState(State newState) {
     if (state != newState) {
         state = newState;
         updateAnimation();
+
+        if (state == State::DEAD) {
+            if (onDeath) {
+                onDeath();
+                onDeath = nullptr;
+            }
+        }
     }
 }
 
