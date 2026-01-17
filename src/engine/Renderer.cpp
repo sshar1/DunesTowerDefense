@@ -442,7 +442,7 @@ void Renderer::renderHUD(unsigned int waveNumber, unsigned int totalWaves, float
     float dotSize = 0.025f;
     float dotSpacing = 0.015f;
 
-    // === WAVE DOTS (top-left) ===
+    //WAVE DOTS (top-left)
     // Simple dots: filled = completed, ring = current, empty = future
     float waveY = 1.0f - margin - dotSize;
     for (unsigned int i = 0; i < totalWaves; i++) {
@@ -480,7 +480,7 @@ void Renderer::renderHUD(unsigned int waveNumber, unsigned int totalWaves, float
         }
     }
 
-    // === PRE-WAVE COUNTDOWN BAR ===
+    // PRE-WAVE COUNTDOWN BAR 
     if (isPreWave && preWaveTimer > 0) {
         float barY = waveY - dotSize - 0.02f;
         float barWidth = totalWaves * (dotSize + dotSpacing) - dotSpacing;
@@ -505,8 +505,10 @@ void Renderer::renderHUD(unsigned int waveNumber, unsigned int totalWaves, float
         }
     }
 
-    // === GAME OVER OVERLAY ===
+    // GAME OVER OVERLAY =
     if (isGameOver) {
+        //TODO: Have other objects disappear and add text
+
         // Semi-transparent dark overlay
         glUniform2f(posLoc, -1.0f, -1.0f);
         glUniform2f(sizeLoc, 2.0f, 2.0f);
@@ -534,103 +536,6 @@ void Renderer::renderHUD(unsigned int waveNumber, unsigned int totalWaves, float
         glUniform2f(sizeLoc, boxW - 2*innerMargin, boxH - 2*innerMargin);
         glUniform4f(colorLoc, 0.1f, 0.1f, 0.1f, 1.0f);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    }
-
-    glBindVertexArray(0);
-    glUseProgram(0);
-
-    if (wasDepthEnabled) {
-        glEnable(GL_DEPTH_TEST);
-    }
-}
-
-void Renderer::renderEnemyHealthBars(const std::vector<std::unique_ptr<Enemy>>& enemies,
-                                      float windowWidth, float windowHeight) {
-    // Reuse the HUD shader
-    static GLuint healthProgram = 0;
-    static GLuint healthVAO = 0;
-
-    if (healthProgram == 0) {
-        glGenVertexArrays(1, &healthVAO);
-
-        const char* vsSrc = R"(
-            #version 330 core
-            uniform vec2 uPos;
-            uniform vec2 uSize;
-            void main() {
-                vec2 verts[4] = vec2[](vec2(0, 0), vec2(1, 0), vec2(0, 1), vec2(1, 1));
-                vec2 v = verts[gl_VertexID];
-                vec2 finalPos = uPos + (v * uSize);
-                gl_Position = vec4(finalPos, 0.0, 1.0);
-            }
-        )";
-
-        const char* fsSrc = R"(
-            #version 330 core
-            out vec4 FragColor;
-            uniform vec4 uColor;
-            void main() {
-                FragColor = uColor;
-            }
-        )";
-
-        auto compile = [](GLenum type, const char* src) {
-            GLuint s = glCreateShader(type);
-            glShaderSource(s, 1, &src, nullptr);
-            glCompileShader(s);
-            return s;
-        };
-        GLuint vs = compile(GL_VERTEX_SHADER, vsSrc);
-        GLuint fs = compile(GL_FRAGMENT_SHADER, fsSrc);
-        healthProgram = glCreateProgram();
-        glAttachShader(healthProgram, vs);
-        glAttachShader(healthProgram, fs);
-        glLinkProgram(healthProgram);
-        glDeleteShader(vs);
-        glDeleteShader(fs);
-    }
-
-    glUseProgram(healthProgram);
-    glBindVertexArray(healthVAO);
-
-    GLboolean wasDepthEnabled = glIsEnabled(GL_DEPTH_TEST);
-    glDisable(GL_DEPTH_TEST);
-
-    GLint posLoc = glGetUniformLocation(healthProgram, "uPos");
-    GLint sizeLoc = glGetUniformLocation(healthProgram, "uSize");
-    GLint colorLoc = glGetUniformLocation(healthProgram, "uColor");
-
-    float barWidth = 0.04f;
-    float barHeight = 0.008f;
-
-    for (const auto& enemy : enemies) {
-        if (!enemy->isActive()) continue;
-
-        glm::vec2 pos = enemy->getPosition();
-        // Convert to NDC (-1 to 1)
-        float ndcX = (pos.x / windowWidth) * 2.0f - 1.0f;
-        float ndcY = 1.0f - (pos.y / windowHeight) * 2.0f;
-
-        // Position bar above enemy
-        float barX = ndcX - barWidth / 2.0f;
-        float barY = ndcY + 0.05f;
-
-        // Background (dark)
-        glUniform2f(posLoc, barX, barY);
-        glUniform2f(sizeLoc, barWidth, barHeight);
-        glUniform4f(colorLoc, 0.1f, 0.1f, 0.1f, 0.8f);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-        // Health fill (red to green based on health)
-        float healthPct = enemy->getHealthPercent();
-        if (healthPct > 0.0f) {
-            glUniform2f(sizeLoc, barWidth * healthPct, barHeight);
-            // Color: green when full, yellow at half, red when low
-            float r = healthPct < 0.5f ? 1.0f : 1.0f - (healthPct - 0.5f) * 2.0f;
-            float g = healthPct > 0.5f ? 1.0f : healthPct * 2.0f;
-            glUniform4f(colorLoc, r, g, 0.1f, 1.0f);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        }
     }
 
     glBindVertexArray(0);

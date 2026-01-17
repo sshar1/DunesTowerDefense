@@ -4,7 +4,7 @@
 
 #include "MainGame.hpp"
 
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 #include "InputManager.hpp"
 #include "engine/DataLoader.hpp"
@@ -114,7 +114,6 @@ void MainGame::run() {
             float(waveManager.getBase()->getHealth()) / waveManager.getBase()->getMaxHealth(),
             basePosition / windowSize,
             waveManager.getBase()->getVertOffset() / WINDOW_HEIGHT);
-        renderer->renderEnemyHealthBars(waveManager.getEnemies(), WINDOW_WIDTH, WINDOW_HEIGHT);
         renderer->renderHUD(
             waveManager.getWaveNumber(),
             TOTAL_WAVES,
