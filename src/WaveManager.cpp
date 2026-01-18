@@ -85,6 +85,7 @@ void WaveManager::addTower(TowerType type, glm::vec2 position) {
 
 void WaveManager::startWave() {
     if (gameStats.gameState == GameState::PreWave) {
+        std::cout << "running" << std::endl;
         spawnTowers();
         gameStats.gameState = GameState::InWave;
         spawnWaveEnemies();
@@ -187,8 +188,11 @@ void WaveManager::spawnTowers() {
 	static const glm::vec2 screenSize = glm::vec2{ MainGame::WINDOW_WIDTH, MainGame::WINDOW_HEIGHT };
 	std::vector<Vision::DetectedTower> towers = Vision::Manager::getInstance().detectTowers();
 
-    for (int i = 0; i < getTowerAllowance(); i++) {
-        addTower(towers[i].type, towers[i].position / screenSize);
+    for (int i = 0; i < towers.size() && i < getTowerAllowance(); i++) {
+		int xPos = (1 - towers[i].position.x) * MainGame::WINDOW_WIDTH;
+        int yPos = (towers[i].position.y) * MainGame::WINDOW_HEIGHT;
+
+        addTower(towers[i].type, {xPos, yPos});
     }
 }
 

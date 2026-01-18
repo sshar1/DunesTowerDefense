@@ -120,9 +120,9 @@ void MainGame::run() {
 #ifdef DEBUG_MODE
             // renderer->DEBUG_rengerMat(Vision::findHills(topVertices));
 #else
-        //renderer->renderTopography(topVertices, waveManager.inPreWave());
+        renderer->renderTopography(topVertices, waveManager.inPreWave());
 
-        /*waveManager.update(topVertices, colorMat, dt / 1000.f);
+        waveManager.update(topVertices, colorMat, dt / 1000.f);
         renderer->streamBase(waveManager.getBase());
         renderer->streamEnemies(waveManager.getEnemies());
         renderer->streamProjectiles(waveManager.getProjectiles());
@@ -139,11 +139,12 @@ void MainGame::run() {
             waveManager.getTowers().size() - waveManager.getTowerAllowance(),
             waveManager.getTowerAllowance(),
             waveManager.gameOver(),
-            waveManager.gameWon());*/
+            waveManager.gameWon());
 
         //waveManager.update(topVertices, colorMat, dt / 1000.f);
         //renderer->renderTopography(topVertices, waveManager.inPreWave());
 		//renderer->DEBUG_rengerMat(Vision::Manager::getInstance().DEBUG_showHills());
+		//renderer->DEBUG_rengerMat(Vision::Manager::getInstance().DEBUG_showDetectedTowers());
 #endif
 
         SDL_GL_SwapWindow(window);

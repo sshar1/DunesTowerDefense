@@ -68,7 +68,7 @@ private:
 
     /* Wave System Configuration */
     static constexpr int TOTAL_WAVES = 10;
-    static constexpr int STARTING_TOWERS_ALLOWANCE = 10;
+    static constexpr int STARTING_TOWERS_ALLOWANCE = 3;
 
     // Defines which enemies spawn in a wave
     struct WaveDefinition {

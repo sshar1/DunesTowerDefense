@@ -41,8 +41,8 @@ namespace Vision {
 
     static const std::array<cv::Point2f, 4> inputColorPointsNorm = {
         {
-            {0.38f, 0.1f},
-            {0.82f, 0.12f},
+            {0.4f, 0.1f},
+            {0.8f, 0.12f},
             {0.36f, 0.68f},
             {0.81f, 0.7f}
         }

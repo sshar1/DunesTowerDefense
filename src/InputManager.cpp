@@ -21,6 +21,10 @@ InputResult InputManager::processInput() {
             if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER) {
                 return InputResult::NEXT_WAVE;
             }
+
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                return InputResult::QUIT;
+            }
         }
     }
 

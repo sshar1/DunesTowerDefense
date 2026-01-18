@@ -11,10 +11,10 @@ public:
     explicit Sprayer(glm::vec2 position);
 private:
     static constexpr const char* spriteFilePath = "data/textures/gas_spritesheet.png";
-    static inline const glm::vec2 spriteSize = {200, 160};
+    static inline const glm::vec2 spriteSize = {300, 240};
 
     static constexpr float ATTACK_COOLDOWN = 0.2f;
-    static constexpr int ATTACK_RANGE = 80;
+    static constexpr int ATTACK_RANGE = 150;
     static constexpr int DAMAGE = 5;
 
     float getAttackCooldown() const override { return ATTACK_COOLDOWN; }

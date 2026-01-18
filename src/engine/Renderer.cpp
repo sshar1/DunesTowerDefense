@@ -148,7 +148,7 @@ void Renderer::clearBuffer() {
 void Renderer::renderTopography(const TopographyVertices& topVertices, bool makeTransparent) {
     topShader->use();
     if (makeTransparent)
-        topShader->setFloat("transparency", 0.2f);
+        topShader->setFloat("transparency", IDLE_TRANSPARENCY);
     else
         topShader->setFloat("transparency", 1.0f);
     // markerShader->use();

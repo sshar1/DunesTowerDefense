@@ -151,14 +151,14 @@ namespace Vision {
         };
 
         static const std::vector<ColorRange> colorRanges = {
-            // Gray tower
-            { TowerType::Mortar,  cv::Scalar(0, 0, 80),     cv::Scalar(180, 60, 200) },
+            // Cyan tower -> Draws Red Dot
+            { TowerType::Frog,    cv::Scalar(75, 60, 100), cv::Scalar(105, 255, 255)},
 
-            // Black tower
-            { TowerType::Sprayer, cv::Scalar(0, 0, 0),      cv::Scalar(180, 255, 60) },
+            // Pink tower -> Draws Green Dot
+            { TowerType::Mortar,  cv::Scalar(140, 50, 100),     cv::Scalar(170, 255, 255)},
 
-            // Pink tower
-            { TowerType::Mortar,  cv::Scalar(140, 50, 100), cv::Scalar(170, 255, 255) }
+            // Black tower -> Draws Yellow Dot
+            { TowerType::Sprayer, cv::Scalar(0, 0, 0),      cv::Scalar(180, 255, 140)}
         };
 
         static const cv::Size kernelSize{ 3, 3 }; // Smaller kernel for smaller image
@@ -244,7 +244,7 @@ namespace Vision {
 
         static const std::vector<ColorRange> colorRanges = {
             // Cyan tower -> Draws Red Dot
-            { TowerType::Frog,    cv::Scalar(80, 100, 100), cv::Scalar(100, 255, 255), cv::Scalar(0, 0, 255) },
+            { TowerType::Frog,    cv::Scalar(75, 60, 100), cv::Scalar(105, 255, 255), cv::Scalar(0, 0, 255) },
 
             // Pink tower -> Draws Green Dot
             { TowerType::Mortar,  cv::Scalar(140, 50, 100),     cv::Scalar(170, 255, 255),  cv::Scalar(0, 255, 0) },
