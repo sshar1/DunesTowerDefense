@@ -25,12 +25,9 @@ namespace Vision {
         return warpMat;
     }
 
-    void Manager::evaluateHills() {
-        static constexpr int hillThreshold = 200;
-        static constexpr int minHillArea = 200;
-        static const cv::Size kernelSize{5, 5};
-
-        hills.clear();
+    cv::Mat Manager::getHillMask() {
+        static constexpr int hillThreshold = 150;
+        static const cv::Size kernelSize{ 5, 5 };
 
         cv::Mat minMaxMask = (warpedDepth > 100);
         double minVal, maxVal;
@@ -44,39 +41,50 @@ namespace Vision {
         cv::min(hillImg, maxVal, hillImg);
 
         cv::normalize(hillImg, hillImg, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+
         cv::threshold(hillImg, hillImg, hillThreshold, 255, cv::THRESH_BINARY_INV);
 
-        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
+        static cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
         cv::morphologyEx(hillImg, hillImg, cv::MORPH_OPEN, kernel);
-
         cv::copyMakeBorder(hillImg, hillImg, 1, 1, 1, 1, cv::BORDER_CONSTANT, cv::Scalar(0));
 
-        cv::Mat debugImg;
-        cv::cvtColor(hillImg, debugImg, cv::COLOR_GRAY2BGR);
-        cv::Scalar color(255, 0, 0);
+        return hillImg;
+    }
+
+    void Manager::evaluateHills() {
+        static constexpr int minHillArea = 200;
+
+        hills.clear();
+
+        cv::Mat hillMask = getHillMask();
 
         std::vector<std::vector<cv::Point>> contours;
-        cv::findContours(hillImg, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-        for (int i = 0; i < contours.size(); i++) {
-            const auto& contour = contours[i];
+        cv::findContours(hillMask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+        for (const auto& contour : contours) {
+            double area = cv::contourArea(contour);
+            if (area <= minHillArea) continue;
+
             cv::Rect bounds = cv::boundingRect(contour);
 
             bool touchesBorder = (bounds.x <= 1 || bounds.y <= 1 ||
-                                bounds.x + bounds.width >= dsize.width - 2 ||
-                                bounds.y + bounds.height >= dsize.height - 2);
+                bounds.x + bounds.width >= hillMask.cols - 1 ||
+                bounds.y + bounds.height >= hillMask.rows - 1);
 
             if (touchesBorder) continue;
 
-            double area = cv::contourArea(contour);
-            if (area > minHillArea) {
-                cv::drawContours(debugImg, contours, i, color, 2);
-                cv::Moments moment = cv::moments(contour);
-                if (moment.m00 != 0) {
-                    float centerX = moment.m10 / moment.m00;
-                    float centerY = moment.m01 / moment.m00;
+            cv::Moments moment = cv::moments(contour);
+            if (moment.m00 != 0) {
+                float maskX = static_cast<float>(moment.m10 / moment.m00);
+                float maskY = static_cast<float>(moment.m01 / moment.m00);
 
-                    hills.emplace_back(centerX * MainGame::WINDOW_WIDTH / dsize.width, centerY * MainGame::WINDOW_HEIGHT / dsize.height);
-                }
+                float realX = maskX - 1.0f;
+                float realY = maskY - 1.0f;
+
+                float screenX = realX * MainGame::WINDOW_WIDTH / dsize.width;
+                float screenY = realY * MainGame::WINDOW_HEIGHT / dsize.height;
+
+                hills.emplace_back(screenX, screenY);
             }
         }
     }
@@ -97,7 +105,9 @@ namespace Vision {
         cv::Mat rawData = cv::Mat(DataLoader::DEPTH_HEIGHT, DataLoader::DEPTH_WIDTH, CV_16UC1, (void*)topVertices.data());
 
         cv::Mat warpMat = cv::getPerspectiveTransform(inputPointsPixel, outputPointsPixel);
-        cv::warpPerspective(rawData, warpedDepth,warpMat, dsize);
+        cv::warpPerspective(rawData, warpedDepth, warpMat, dsize);
+
+        applyDepthGradient();
     }
 
     void Manager::calculateColorWarpMatrix(const std::vector<std::uint8_t>& colorMat) {
@@ -122,15 +132,18 @@ namespace Vision {
     std::vector<DetectedTower> Manager::detectTowers() {
         std::vector<DetectedTower> detectedTowers;
 
-        // 1. Prepare Images
-        cv::Mat hsv;
-        cv::Mat bgr;
+        static cv::Mat bgr, smallBgr, hsv, mask;
 
-        // Convert RGBA -> BGR -> HSV
         cv::cvtColor(warpedColor, bgr, cv::COLOR_RGBA2BGR);
-        cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);
 
-        // 2. Define Colors
+        float scaleFactor = 0.25f;
+        cv::resize(bgr, smallBgr, cv::Size(), scaleFactor, scaleFactor);
+        cv::cvtColor(smallBgr, hsv, cv::COLOR_BGR2HSV);
+
+        float areaScale = scaleFactor * scaleFactor;
+        int minArea = static_cast<int>(2000 * areaScale);
+        int maxArea = static_cast<int>(50000 * areaScale);
+
         struct ColorRange {
             TowerType type;
             cv::Scalar lower;
@@ -138,27 +151,22 @@ namespace Vision {
         };
 
         static const std::vector<ColorRange> colorRanges = {
-            // Cyan tower
-            { TowerType::Frog,    cv::Scalar(80, 100, 100), cv::Scalar(100, 255, 255) },
-
             // Gray tower
             { TowerType::Mortar,  cv::Scalar(0, 0, 80),     cv::Scalar(180, 60, 200) },
 
             // Black tower
-            { TowerType::Sprayer, cv::Scalar(0, 0, 0),      cv::Scalar(180, 255, 60) }
+            { TowerType::Sprayer, cv::Scalar(0, 0, 0),      cv::Scalar(180, 255, 60) },
+
+            // Pink tower
+            { TowerType::Mortar,  cv::Scalar(140, 50, 100), cv::Scalar(170, 255, 255) }
         };
 
-        static constexpr int MIN_TOWER_AREA = 2000;
-        static constexpr int MAX_TOWER_AREA = 50000;
-        static const cv::Size kernelSize{ 5, 5 };
-        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
+        static const cv::Size kernelSize{ 3, 3 }; // Smaller kernel for smaller image
+        static cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
 
-        // 3. Loop through all tower types
         for (const auto& range : colorRanges) {
-            cv::Mat mask;
             cv::inRange(hsv, range.lower, range.upper, mask);
 
-            // Clean up noise
             cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernel);
             cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel);
 
@@ -167,37 +175,167 @@ namespace Vision {
 
             for (const auto& contour : contours) {
                 double area = cv::contourArea(contour);
-                if (area < MIN_TOWER_AREA || area > MAX_TOWER_AREA) continue;
+                if (area < minArea || area > maxArea) continue;
 
                 cv::RotatedRect rotRect = cv::minAreaRect(contour);
                 float w = rotRect.size.width;
                 float h = rotRect.size.height;
 
-                // Aspect Ratio Filter (remove strips)
                 float aspectRatio = (h > 0 && w > 0) ? std::max(w, h) / std::min(w, h) : 0.0f;
                 if (aspectRatio > 2.0f) continue;
 
                 cv::Moments m = cv::moments(contour);
                 if (m.m00 == 0) continue;
 
-                // Calculate Center
-                float cx = static_cast<float>(m.m10 / m.m00);
-                float cy = static_cast<float>(m.m01 / m.m00);
+                float smallCx = static_cast<float>(m.m10 / m.m00);
+                float smallCy = static_cast<float>(m.m01 / m.m00);
 
-                // --- SAVE DATA ---
                 DetectedTower tower;
                 tower.type = range.type;
 
-                // Normalize coordinates to 0.0 - 1.0 range
-                // This makes it easy to map to your game world regardless of resolution
-                tower.position.x = cx / static_cast<float>(warpedColor.cols);
-                tower.position.y = cy / static_cast<float>(warpedColor.rows);
+                tower.position.x = smallCx / static_cast<float>(smallBgr.cols);
+                tower.position.y = smallCy / static_cast<float>(smallBgr.rows);
 
                 detectedTowers.push_back(tower);
             }
         }
 
         return detectedTowers;
+    }
+
+    void Manager::applyDepthGradient() {
+        static cv::Mat scaleMat;
+        if (scaleMat.empty() || scaleMat.size() != warpedDepth.size()) {
+            scaleMat = cv::Mat(warpedDepth.size(), CV_32F);
+
+            for (int y = 0; y < scaleMat.rows; ++y) {
+                float ratio = static_cast<float>(y) / scaleMat.rows;
+                float factor = 1.0f + (ratio * (BOTTOM_SCALE - 1.0f));
+                scaleMat.row(y).setTo(cv::Scalar(factor));
+            }
+        }
+
+
+        cv::Mat floatDepth;
+        warpedDepth.convertTo(floatDepth, CV_32F);
+        cv::multiply(floatDepth, scaleMat, floatDepth);
+        floatDepth.convertTo(warpedDepth, warpedDepth.type());
+    }
+
+    cv::Mat Manager::DEBUG_showDetectedTowers() {
+        static cv::Mat bgr, smallBgr, hsv, mask, smallOutput;
+
+        cv::cvtColor(warpedColor, bgr, cv::COLOR_RGBA2BGR);
+
+        float scaleFactor = 0.25f;
+        cv::resize(bgr, smallBgr, cv::Size(), scaleFactor, scaleFactor);
+        cv::cvtColor(smallBgr, hsv, cv::COLOR_BGR2HSV);
+
+        float areaScale = scaleFactor * scaleFactor;
+        int minArea = static_cast<int>(2000 * areaScale);
+        int maxArea = static_cast<int>(50000 * areaScale);
+
+        struct ColorRange {
+            TowerType type;
+            cv::Scalar lower;
+            cv::Scalar upper;
+            cv::Scalar dotColor; // Added color for the debug dot (B, G, R)
+        };
+
+        static const std::vector<ColorRange> colorRanges = {
+            // Cyan tower -> Draws Red Dot
+            { TowerType::Frog,    cv::Scalar(80, 100, 100), cv::Scalar(100, 255, 255), cv::Scalar(0, 0, 255) },
+
+            // Pink tower -> Draws Green Dot
+            { TowerType::Mortar,  cv::Scalar(140, 50, 100),     cv::Scalar(170, 255, 255),  cv::Scalar(0, 255, 0) },
+
+            // Black tower -> Draws Yellow Dot
+            { TowerType::Sprayer, cv::Scalar(0, 0, 0),      cv::Scalar(180, 255, 140),  cv::Scalar(0, 255, 255) }
+
+        };
+
+        // We draw on the BIG image, so clone the original BGR
+        cv::Mat outputImage = bgr.clone();
+
+        static const cv::Size kernelSize{ 3, 3 }; // Smaller kernel for smaller image
+        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, kernelSize);
+
+        for (const auto& range : colorRanges) {
+            // Process the SMALL image
+            cv::inRange(hsv, range.lower, range.upper, mask);
+            cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernel);
+            cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel);
+
+            std::vector<std::vector<cv::Point>> contours;
+            cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+            for (const auto& contour : contours) {
+                double area = cv::contourArea(contour);
+                if (area < minArea || area > maxArea) continue;
+
+                cv::RotatedRect rotRect = cv::minAreaRect(contour);
+                float w = rotRect.size.width;
+                float h = rotRect.size.height;
+                float aspectRatio = (h > 0 && w > 0) ? std::max(w, h) / std::min(w, h) : 0.0f;
+                if (aspectRatio > 2.0f) continue;
+
+                cv::Moments m = cv::moments(contour);
+                if (m.m00 == 0) continue;
+
+                float smallCx = static_cast<float>(m.m10 / m.m00);
+                float smallCy = static_cast<float>(m.m01 / m.m00);
+
+                int finalCx = static_cast<int>(smallCx / scaleFactor);
+                int finalCy = static_cast<int>(smallCy / scaleFactor);
+
+                // Draw on the BIG image
+                cv::circle(outputImage, cv::Point(finalCx, finalCy), 10, range.dotColor, -1);
+            }
+        }
+
+        cv::Mat finalOutput;
+        cv::cvtColor(outputImage, finalOutput, cv::COLOR_BGR2RGBA);
+        return finalOutput;
+    }
+
+    cv::Mat Manager::DEBUG_showHills() {
+        cv::Mat hillMask = getHillMask();
+
+        cv::Mat debugImg;
+        cv::cvtColor(hillMask, debugImg, cv::COLOR_GRAY2BGR);
+
+        std::vector<std::vector<cv::Point>> contours;
+        cv::findContours(hillMask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+        static constexpr int minHillArea = 200;
+
+        for (int i = 0; i < contours.size(); i++) {
+            const auto& contour = contours[i];
+
+            if (cv::contourArea(contour) <= minHillArea) continue;
+
+            cv::Rect bounds = cv::boundingRect(contour);
+            bool touchesBorder = (bounds.x <= 1 || bounds.y <= 1 ||
+                bounds.x + bounds.width >= hillMask.cols - 1 ||
+                bounds.y + bounds.height >= hillMask.rows - 1);
+
+            if (touchesBorder) {
+                cv::drawContours(debugImg, contours, i, cv::Scalar(100, 100, 100), 2);
+                continue;
+            }
+
+            cv::drawContours(debugImg, contours, i, cv::Scalar(0, 255, 0), 2);
+
+            cv::Moments m = cv::moments(contour);
+            if (m.m00 != 0) {
+                int cx = static_cast<int>(m.m10 / m.m00);
+                int cy = static_cast<int>(m.m01 / m.m00);
+
+                cv::circle(debugImg, cv::Point(cx, cy), 5, cv::Scalar(0, 0, 255), -1);
+            }
+        }
+
+        return debugImg;
     }
 
     glm::vec2 cartesianToNDC(const glm::vec2 point) {

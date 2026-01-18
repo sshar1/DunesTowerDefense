@@ -47,8 +47,8 @@ private:
 
     glm::vec2 getPosition() const override { return getSprite().getPosition(); }
 
-    void followPath(const TopographyVertices& topVertices, float dt);
-    virtual float getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction);
+    void followPath(float dt);
+    virtual float getDirectionalSpeed(glm::vec2 from, glm::vec2 direction);
 
     void updateAnimation();
     void setState(State newState);

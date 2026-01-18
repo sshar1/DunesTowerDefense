@@ -8,6 +8,7 @@ uniform int gridWidth;
 uniform int gridHeight;
 uniform int tallestDepth;
 uniform int shortestDepth;
+uniform float bottomScale;
 uniform mat3 warpMatrix;
 
 const vec3 c_red    = vec3(0.9, 0.1, 0.1);  // Peaks
@@ -68,7 +69,16 @@ void main() {
 
     float range = shortestDepth - tallestDepth;
     int realDepth = getRealDepth(depth, pos);
-    float depthNorm = float(realDepth - tallestDepth) / range;
+
+    float ratio = clamp(warped.y, 0.0, 1.0);
+    
+    // Calculate the multiplier: 1.0 -> 1.2
+    float gradientFactor = 1.0 + (ratio * (bottomScale - 1.0));
+    
+    // Apply to the depth
+    float adjustedDepth = float(realDepth) * gradientFactor;
+
+    float depthNorm = float(adjustedDepth - tallestDepth) / range;
     depthNorm = clamp(depthNorm, 0.f, 1.f);
 
     vertexColor = getColor(depthNorm);

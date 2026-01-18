@@ -14,7 +14,6 @@ set(SDL2_image_DIR "C:/SDL2_image-2.8.8/cmake")
 find_package(SDL2_image REQUIRED)
 
 # --- Define Sources ---
-# (I kept your list exactly as is)
 set(SOURCE_FILES 
     src/main.cpp 
     external/glad/src/glad.c

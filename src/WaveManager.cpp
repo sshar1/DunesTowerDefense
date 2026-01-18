@@ -117,7 +117,7 @@ void WaveManager::update(const TopographyVertices& topVertices, const std::vecto
 
     switch (gameStats.gameState) {
         case GameState::PreWave:
-            // Only calculate color warp matrix here
+			Vision::Manager::getInstance().calculateColorWarpMatrix(colorMat);
             break;
         case GameState::InWave:
             if (gameStats.aliveEnemies == 0) {

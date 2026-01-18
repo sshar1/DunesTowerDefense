@@ -39,7 +39,7 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
     switch (state) {
         case State::WALKING: {
             calculateWaypoints(topVertices);
-            followPath(topVertices, dt);
+            followPath(dt);
             if (currentWaypointIdx >= waypoints.size() - 1) {
                 setState(State::ATTACKING);
             }
@@ -71,7 +71,7 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
     }
 }
 
-void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
+void Enemy::followPath(float dt) {
     glm::vec2 currentTarget = waypoints[currentWaypointIdx + 1];
     glm::vec2 finalTarget = waypoints[waypoints.size() - 1];
 
@@ -83,7 +83,7 @@ void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
     sprite.setLookVector(directionVector);
 
     float distanceToTarget = glm::distance(sprite.getPosition(), currentTarget);
-    float speed = getDirectionalSpeed(topVertices, sprite.getPosition(), directionVector);
+    float speed = getDirectionalSpeed(sprite.getPosition(), directionVector);
     float travelDistance = speed * dt;
 
     glm::vec2 finalPosition;
@@ -98,7 +98,7 @@ void Enemy::followPath(const TopographyVertices& topVertices, float dt) {
     sprite.setPosition(finalPosition);
 }
 
-float Enemy::getDirectionalSpeed(const TopographyVertices& topVertices, glm::vec2 from, glm::vec2 direction) {
+float Enemy::getDirectionalSpeed(glm::vec2 from, glm::vec2 direction) {
     // To get the directional speed, we sample the destination point to be
     // 5% ahead
     static constexpr float range = 0.05f;

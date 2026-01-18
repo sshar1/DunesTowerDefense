@@ -26,5 +26,5 @@ private:
     bool validAttackPosition(const TopographyVertices &topVertices) override;
     void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) override;
 
-    float getDirectionalSpeed(const TopographyVertices &topVertices, glm::vec2 from, glm::vec2 direction) override;
+    float getDirectionalSpeed(glm::vec2 from, glm::vec2 direction) override;
 };

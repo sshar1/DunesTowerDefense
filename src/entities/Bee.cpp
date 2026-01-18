@@ -69,7 +69,7 @@ bool Bee::validAttackPosition(const TopographyVertices &topVertices) {
     });
 }
 
-float Bee::getDirectionalSpeed(const TopographyVertices &topVertices, glm::vec2 from, glm::vec2 direction) {
+float Bee::getDirectionalSpeed(glm::vec2 from, glm::vec2 direction) {
     return SPEED;
 }
 

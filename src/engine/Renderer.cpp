@@ -29,6 +29,7 @@ Renderer::Renderer(const int depthWidth, const int depthHeight)
     topShader->setInt("gridHeight", depthHeight);
     topShader->setInt("tallestDepth", TALLEST_DEPTH);
     topShader->setInt("shortestDepth", SHORTEST_DEPTH);
+    topShader->setFloat("bottomScale", Vision::BOTTOM_SCALE);
     topShader->setMat3("warpMatrix", Vision::calculateWarpMatrix());
 
     markerShader = std::make_unique<Shader>(MARKER_VERT_PATH, MARKER_FRAG_PATH);

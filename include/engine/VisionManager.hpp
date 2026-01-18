@@ -50,6 +50,7 @@ namespace Vision {
 
     static constexpr int MAX_DEPTH_VAL = 1300;
     static constexpr int MIN_DEPTH_VAL = 800;
+    static constexpr float BOTTOM_SCALE = 1.09f;
 
     glm::mat3 calculateWarpMatrix();
 
@@ -80,6 +81,10 @@ namespace Vision {
         const cv::Mat& getWarpedDepth() { return warpedDepth; };
         const cv::Mat& getWarpedColor() { return warpedColor; };
         std::vector<DetectedTower> detectTowers();
+        cv::Mat getHillMask();
+        void applyDepthGradient();
+        cv::Mat DEBUG_showDetectedTowers();
+        cv::Mat DEBUG_showHills();
     private:
         Manager() = default;
         ~Manager() = default;
