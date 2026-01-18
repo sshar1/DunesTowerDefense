@@ -40,7 +40,7 @@ void Enemy::update(const TopographyVertices& topVertices, std::vector<std::uniqu
         case State::WALKING: {
             calculateWaypoints(topVertices);
             followPath(dt);
-            if (currentWaypointIdx >= waypoints.size() - 1) {
+            if (currentWaypointIdx >= waypoints.size() - 1 || validStartAttackPos()) {
                 setState(State::ATTACKING);
             }
             break;
@@ -75,9 +75,12 @@ void Enemy::followPath(float dt) {
     glm::vec2 currentTarget = waypoints[currentWaypointIdx + 1];
     glm::vec2 finalTarget = waypoints[waypoints.size() - 1];
 
-    auto atTarget = glm::epsilonEqual(sprite.getPosition(), finalTarget, glm::epsilon<float>());
-    if (glm::all(atTarget)) return;
+    /*auto atTarget = glm::epsilonEqual(sprite.getPosition(), finalTarget, glm::epsilon<float>());
+    if (glm::all(atTarget)) return;*/
+    //if (glm::distance(sprite.getPosition(), finalTarget) <= getPositionThresh()) return;
+    
     if (currentWaypointIdx >= waypoints.size() - 1) return;
+    if (validStartAttackPos()) return;
 
     glm::vec2 directionVector = glm::normalize(currentTarget - sprite.getPosition());
     sprite.setLookVector(directionVector);
@@ -96,6 +99,12 @@ void Enemy::followPath(float dt) {
     }
 
     sprite.setPosition(finalPosition);
+}
+
+bool Enemy::validStartAttackPos() {
+    glm::vec2 finalTarget = waypoints[waypoints.size() - 1];
+
+    return glm::distance(sprite.getPosition(), finalTarget) <= getValidStartAttackThresh();
 }
 
 float Enemy::getDirectionalSpeed(glm::vec2 from, glm::vec2 direction) {

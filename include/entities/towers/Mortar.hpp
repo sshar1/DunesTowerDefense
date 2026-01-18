@@ -13,9 +13,9 @@ private:
     static constexpr const char* spriteFilePath = "data/textures/rock_spritesheet.png";
     static inline const glm::vec2 spriteSize = {150, 120};
 
-    static constexpr float ATTACK_COOLDOWN = 2.f;
-    static constexpr int ATTACK_MAX_RANGE = 800;
-    static constexpr int ATTACK_MIN_RANGE = 200;
+    static constexpr float ATTACK_COOLDOWN = 3.f;
+    static constexpr int ATTACK_MAX_RANGE = 700;
+    static constexpr int ATTACK_MIN_RANGE = 250;
 
     float getAttackCooldown() const override { return ATTACK_COOLDOWN; }
     void updateAnimation() override;

@@ -56,7 +56,7 @@ private:
 
     static constexpr std::uint16_t TALLEST_DEPTH = 850;
     static constexpr std::uint16_t SHORTEST_DEPTH = 1010;
-    static constexpr float IDLE_TRANSPARENCY = 0.2f;
+    static constexpr float IDLE_TRANSPARENCY = 0.1f;
 
     static constexpr std::uint16_t BOX_DEPTH = 750;
 

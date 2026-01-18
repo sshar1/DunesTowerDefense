@@ -48,6 +48,8 @@ namespace Vision {
         cv::morphologyEx(hillImg, hillImg, cv::MORPH_OPEN, kernel);
         cv::copyMakeBorder(hillImg, hillImg, 1, 1, 1, 1, cv::BORDER_CONSTANT, cv::Scalar(0));
 
+        cv::flip(hillImg, hillImg, 1);
+
         return hillImg;
     }
 

@@ -60,7 +60,7 @@ void Bee::calculateWaypoints(const TopographyVertices& topVertices) {
 }
 
 bool Bee::validAttackPosition(const TopographyVertices &topVertices) {
-    static constexpr float epsilon = 50;
+    static constexpr float epsilon = 1000.f;
 
     std::vector<glm::vec2>& hills = Vision::Manager::getInstance().getHills();
 

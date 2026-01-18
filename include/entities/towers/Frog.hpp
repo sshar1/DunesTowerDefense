@@ -11,10 +11,10 @@ public:
     explicit Frog(glm::vec2 position);
 private:
     static constexpr const char* spriteFilePath = "data/textures/frogtongue_spritesheet.png";
-    static inline const glm::vec2 spriteSize = {150, 120};
+    static inline const glm::vec2 spriteSize = {225, 180};
 
     static constexpr float ATTACK_COOLDOWN = 0.75f;
-    static constexpr int ATTACK_RANGE = 90;
+    static constexpr int ATTACK_RANGE = 150;
     static constexpr int DAMAGE = 30;
 
     float getAttackCooldown() const override { return ATTACK_COOLDOWN; }

@@ -15,7 +15,7 @@ private:
     static constexpr const char* spriteFilePath = "data/textures/bee_spritesheet.png";
     static inline const glm::vec2 spriteSize = {1200/10, 900/10};
 
-    static constexpr float SPEED = 30.f;
+    static constexpr float SPEED = 40.f;
     static constexpr int MAX_HEALTH = 75;
     static constexpr float ATTACK_COOLDOWN = 2.f;
 
@@ -25,6 +25,7 @@ private:
     void calculateWaypoints(const TopographyVertices& topVertices) override;
     bool validAttackPosition(const TopographyVertices &topVertices) override;
     void attack(std::vector<std::unique_ptr<Projectile>>& projectiles) override;
+    int getValidStartAttackThresh() override { return 30; }
 
     float getDirectionalSpeed(glm::vec2 from, glm::vec2 direction) override;
 };

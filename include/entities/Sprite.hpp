@@ -85,6 +85,7 @@ public:
     void setLookVector(glm::vec2 lookVector);
     void setSize(glm::vec2 newSize) { size = newSize; };
     bool animDone() { return !loopAnimation && currentAnimateFrame >= ANIM_FRAMES - 1; }
+    void setVertFlip(bool flip) { vertFlip = flip; }
 
     void update(float dt);
     void playAnimation(bool loop);
@@ -100,6 +101,7 @@ private:
     UVRect uvRect;
     bool loopAnimation;
     bool visible;
+    bool vertFlip;
 
     glm::vec2 position;
     glm::vec2 size;

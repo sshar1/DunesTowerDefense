@@ -8,6 +8,7 @@ Base::Base(glm::vec2 position)
     : sprite(spriteFilePath, SpriteType::Base, position, spriteSize)
     , health(MAX_HEALTH)
 {
+    sprite.setVertFlip(true);
 }
 
 Sprite Base::getSprite() const {

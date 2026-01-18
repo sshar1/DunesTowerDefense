@@ -15,7 +15,7 @@ private:
 
     static constexpr float SPEED = 200.f;
     static constexpr int DAMAGE = 40;
-    static constexpr float SPLASH_RANGE = 50.f;
+    static constexpr float SPLASH_RANGE = 150.f;
 
     // int getDamage() const override { return DAMAGE; }
     void attack(const std::vector<std::unique_ptr<Enemy>>& enemies) override;

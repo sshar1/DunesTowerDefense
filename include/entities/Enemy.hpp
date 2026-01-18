@@ -36,7 +36,7 @@ private:
     static constexpr int ATTACKING_ANIM_TYPE = 1;
     static constexpr int DYING_ANIM_TYPE = 2;
 
-    static constexpr float speedDampCoefficient = 30.f;
+    static constexpr float speedDampCoefficient = 15.f; // 30
 
     virtual int getMaxHealth() const = 0;
     virtual float getAttackCooldown() const = 0;
@@ -49,6 +49,8 @@ private:
 
     void followPath(float dt);
     virtual float getDirectionalSpeed(glm::vec2 from, glm::vec2 direction);
+    bool validStartAttackPos();
+    virtual int getValidStartAttackThresh() { return 4; }
 
     void updateAnimation();
     void setState(State newState);

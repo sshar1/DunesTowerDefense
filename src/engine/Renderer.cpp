@@ -360,7 +360,7 @@ void Renderer::renderHealthBar(float percent, glm::vec2 position, float vertOffs
     float fullWidth = 0.3f;
     float height = 0.03f;
     float startX = (position.x * 2) - 1 - fullWidth / 2;
-    float startY = 1 - (position.y * 2) + vertOffset;
+    float startY = 1 - (position.y * 2) - vertOffset;
 
     // 1. Draw Background (Black)
     glUniform2f(glGetUniformLocation(uiProgram, "uPos"), startX, startY);

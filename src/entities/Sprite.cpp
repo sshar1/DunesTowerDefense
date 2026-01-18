@@ -33,6 +33,7 @@ Sprite::Sprite(const char* filePath, SpriteType type, glm::vec2 pos, glm::vec2 s
     , animType(0)
     , uvRect(0, 0, 1, 1)
     , loopAnimation(true)
+    , vertFlip(false)
     , position(pos)
     , size(size)
     , lookVector(1, 0)
@@ -141,10 +142,18 @@ const SpriteVertices Sprite::getVertices() const {
         return glm::vec2(projectionMat * rotationMat * glm::vec4(vertex, 0, 1.f));
     };
 
-    vertices.topLeft.position = applyTransformation(corners[0]);
-    vertices.topRight.position = applyTransformation(corners[1]);
-    vertices.bottomLeft.position = applyTransformation(corners[2]);
-    vertices.bottomRight.position = applyTransformation(corners[3]);
+    if (!vertFlip) {
+        vertices.topLeft.position = applyTransformation(corners[0]);
+        vertices.topRight.position = applyTransformation(corners[1]);
+        vertices.bottomLeft.position = applyTransformation(corners[2]);
+        vertices.bottomRight.position = applyTransformation(corners[3]);
+    }
+    else {
+        vertices.topLeft.position = applyTransformation(corners[2]);
+        vertices.topRight.position = applyTransformation(corners[3]);
+        vertices.bottomLeft.position = applyTransformation(corners[0]);
+        vertices.bottomRight.position = applyTransformation(corners[1]);
+    }
 
     vertices.topLeft.u      = uvRect.u;
     vertices.topLeft.v      = uvRect.v;
