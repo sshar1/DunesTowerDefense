@@ -85,6 +85,7 @@ void WaveManager::addTower(TowerType type, glm::vec2 position) {
 
 void WaveManager::startWave() {
     if (gameStats.gameState == GameState::PreWave) {
+        spawnTowers();
         gameStats.gameState = GameState::InWave;
         spawnWaveEnemies();
     }
@@ -179,6 +180,15 @@ glm::vec2 WaveManager::getRandomEdgePosition() {
         case 3:  // Left edge
         default:
             return glm::vec2(margin, yDist(gen));
+    }
+}
+
+void WaveManager::spawnTowers() {
+	static const glm::vec2 screenSize = glm::vec2{ MainGame::WINDOW_WIDTH, MainGame::WINDOW_HEIGHT };
+	std::vector<Vision::DetectedTower> towers = Vision::Manager::getInstance().detectTowers();
+
+    for (int i = 0; i < getTowerAllowance(); i++) {
+        addTower(towers[i].type, towers[i].position / screenSize);
     }
 }
 

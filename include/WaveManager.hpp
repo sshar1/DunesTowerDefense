@@ -93,5 +93,6 @@ private:
     void transitionToNextWave();
     void setState(GameState newState) { gameStats.gameState = newState; }
     void spawnWaveEnemies();
+    void spawnTowers();
     glm::vec2 getRandomEdgePosition();
 };

@@ -82,11 +82,11 @@ void MainGame::run() {
     // waveManager.addEnemy(EnemyType::Beetle, {1100, 750}, waveManager.getBase());
     // waveManager.addEnemy(EnemyType::Bee, {300, 400}, waveManager.getBase());
     //
-    waveManager.addTower(TowerType::Sprayer, {400, 400});
+    /*waveManager.addTower(TowerType::Sprayer, {400, 400});
     waveManager.addTower(TowerType::Sprayer, {600, 400});
     waveManager.addTower(TowerType::Sprayer, {400, 600});
     waveManager.addTower(TowerType::Mortar, {800, 100});
-    waveManager.addTower(TowerType::Frog, {800, 800});
+    waveManager.addTower(TowerType::Frog, {800, 800});*/
 
     float prevTicks = SDL_GetTicks();
 
@@ -141,9 +141,9 @@ void MainGame::run() {
             waveManager.gameOver(),
             waveManager.gameWon());*/
 
-        waveManager.update(topVertices, colorMat, dt / 1000.f);
+        //waveManager.update(topVertices, colorMat, dt / 1000.f);
         //renderer->renderTopography(topVertices, waveManager.inPreWave());
-		renderer->DEBUG_rengerMat(Vision::Manager::getInstance().DEBUG_showHills());
+		//renderer->DEBUG_rengerMat(Vision::Manager::getInstance().DEBUG_showHills());
 #endif
 
         SDL_GL_SwapWindow(window);
